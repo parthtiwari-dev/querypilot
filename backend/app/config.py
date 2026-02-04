@@ -5,6 +5,20 @@ Supports both Groq (primary) and OpenAI (backup) providers
 
 from pydantic_settings import BaseSettings
 from typing import Literal
+import os
+from pathlib import Path
+
+
+# Find the project root directory (where .env is located)
+def find_project_root():
+    """Find project root by looking for .env file"""
+    current = Path(__file__).resolve()
+    
+    # Go up from backend/app/config.py to project root
+    # backend/app/config.py -> backend/app -> backend -> project_root
+    project_root = current.parent.parent.parent
+    
+    return project_root
 
 
 class Settings(BaseSettings):
@@ -32,7 +46,8 @@ class Settings(BaseSettings):
     QUERY_TIMEOUT: int = 30
     
     class Config:
-        env_file = "../.env"  # Load from root .env
+        # Dynamically find .env file in project root
+        env_file = str(find_project_root() / ".env")
         case_sensitive = True
 
 
@@ -67,3 +82,4 @@ if __name__ == "__main__":
     print(f"Groq Model: {settings.GROQ_MODEL_NAME}")
     print(f"Database: {settings.DATABASE_URL}")
     print(f"Chroma: {settings.CHROMA_URL}")
+    print(f".env file location: {find_project_root() / '.env'}")
