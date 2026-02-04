@@ -1,0 +1,21 @@
+# Core Framework
+langgraph==1.0.7
+langchain==1.2.8
+langchain-openai==1.1.7
+
+# Database
+psycopg2-binary==2.9.11
+sqlalchemy==2.0.46
+chromadb==1.4.1
+
+# Data Processing
+pandas==3.0.0
+numpy==2.4.2
+
+# Utilities
+python-dotenv==1.2.1
+sqlparse==0.5.5
+sentence-transformers==5.2.2
+
+# Testing
+pytest==9.0.2
