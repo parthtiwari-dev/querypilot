@@ -1,0 +1,122 @@
+[
+  {
+    "id": "simple_001",
+    "question": "How many products are in the database?",
+    "complexity": "simple",
+    "ground_truth_tables": ["products"]
+  },
+  {
+    "id": "simple_002",
+    "question": "List all customer names",
+    "complexity": "simple",
+    "ground_truth_tables": ["customers"]
+  },
+  {
+    "id": "simple_003",
+    "question": "Show products with price greater than 100",
+    "complexity": "simple",
+    "ground_truth_tables": ["products"]
+  },
+  {
+    "id": "simple_004",
+    "question": "What are the top 5 most expensive products?",
+    "complexity": "simple",
+    "ground_truth_tables": ["products"]
+  },
+  {
+    "id": "simple_005",
+    "question": "Count how many orders have completed status",
+    "complexity": "simple",
+    "ground_truth_tables": ["orders"]
+  },
+  {
+    "id": "simple_006",
+    "question": "Show all product categories",
+    "complexity": "simple",
+    "ground_truth_tables": ["categories"]
+  },
+  {
+    "id": "simple_007",
+    "question": "Find products with low stock (less than 10 units)",
+    "complexity": "simple",
+    "ground_truth_tables": ["products"]
+  },
+  {
+    "id": "simple_008",
+    "question": "List customers from USA",
+    "complexity": "simple",
+    "ground_truth_tables": ["customers"]
+  },
+  {
+    "id": "medium_001",
+    "question": "What are the top 10 products by revenue?",
+    "complexity": "medium",
+    "ground_truth_tables": ["products", "order_items"]
+  },
+  {
+    "id": "medium_002",
+    "question": "Show customers and their total order count",
+    "complexity": "medium",
+    "ground_truth_tables": ["customers", "orders"]
+  },
+  {
+    "id": "medium_003",
+    "question": "Calculate total revenue by product category",
+    "complexity": "medium",
+    "ground_truth_tables": ["categories", "products", "order_items"]
+  },
+  {
+    "id": "medium_004",
+    "question": "Find products that have never been ordered",
+    "complexity": "medium",
+    "ground_truth_tables": ["products", "order_items"]
+  },
+  {
+    "id": "medium_005",
+    "question": "Show average order value by customer",
+    "complexity": "medium",
+    "ground_truth_tables": ["customers", "orders"]
+  },
+  {
+    "id": "medium_006",
+    "question": "List products with their average review rating",
+    "complexity": "medium",
+    "ground_truth_tables": ["products", "reviews"]
+  },
+  {
+    "id": "medium_007",
+    "question": "Count orders per payment method",
+    "complexity": "medium",
+    "ground_truth_tables": ["orders", "payments"]
+  },
+  {
+    "id": "medium_008",
+    "question": "Show total quantity sold for each product",
+    "complexity": "medium",
+    "ground_truth_tables": ["products", "order_items"]
+  },
+  {
+    "id": "hard_001",
+    "question": "Find customers who have placed more orders than average",
+    "complexity": "hard",
+    "ground_truth_tables": ["customers", "orders"]
+  },
+  {
+    "id": "hard_002",
+    "question": "Show monthly revenue trend for the last 6 months",
+    "complexity": "hard",
+    "ground_truth_tables": ["orders", "order_items"]
+  },
+  {
+    "id": "hard_003",
+    "question": "Rank products by revenue within each category",
+    "complexity": "hard",
+    "ground_truth_tables": ["categories", "products", "order_items"]
+  },
+  {
+    "id": "hard_004",
+    "question": "Identify customers who haven't ordered in the last 90 days",
+    "complexity": "hard",
+    "ground_truth_tables": ["customers", "orders"]
+  }
+]

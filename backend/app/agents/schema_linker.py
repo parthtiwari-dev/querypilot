@@ -69,7 +69,7 @@ class SchemaLinker:
         self, 
         question: str, 
         top_k: int = 7
-    ) -> Dict[str, List[str]]:
+    ) -> Dict[str, Dict]:
         """
         Find relevant tables and columns for a question
         
@@ -95,18 +95,25 @@ class SchemaLinker:
         
         return relevant_schema
     
-    def _group_by_table(self, search_results: Dict) -> Dict[str, List[str]]:
+    def _group_by_table(self, search_results: Dict) -> Dict[str, Dict]:
         """
-        Group search results by table name
+        Group search results by table name and return full metadata
         
         Args:
             search_results: Results from Chroma DB search
-            
+        
         Returns:
-            Dictionary mapping table names to column lists
+            Dictionary mapping table names to their full metadata
+            {
+                "products": {
+                    "columns": {"product_id": "INTEGER", ...},
+                    "primary_keys": ["product_id"],
+                    "foreign_keys": {"category_id": "categories.category_id"},
+                    "data_types": {...}
+                }
+            }
         """
         table_schema = {}
-        
         metadatas = search_results['metadatas'][0]
         
         for metadata in metadatas:
@@ -122,17 +129,27 @@ class SchemaLinker:
             if metadata['type'] == 'column':
                 table_schema[table_name]['columns'].add(metadata['column_name'])
         
-        # Convert sets to lists and get all columns for each table
+        # Build full metadata structure for each table
         result = {}
         for table_name in table_schema.keys():
             if self._schema_cache and table_name in self._schema_cache:
-                # Get all columns for this table
-                result[table_name] = self._schema_cache[table_name]['columns']
+                # Get full metadata from cache
+                cached_table = self._schema_cache[table_name]
+                result[table_name] = {
+                    "columns": cached_table.get("data_types", {}),  # {col_name: col_type}
+                    "primary_keys": cached_table.get("primary_keys", []),
+                    "foreign_keys": cached_table.get("foreign_keys", {})
+                }
             else:
-                # Fallback to retrieved columns only
-                result[table_name] = list(table_schema[table_name]['columns'])
+                # Fallback: minimal structure with retrieved columns only
+                result[table_name] = {
+                    "columns": {col: "UNKNOWN" for col in table_schema[table_name]['columns']},
+                    "primary_keys": [],
+                    "foreign_keys": {}
+                }
         
         return result
+
     
     def get_schema_summary(self) -> str:
         """Get a human-readable summary of indexed schema"""
