@@ -1,0 +1,664 @@
+{
+  "summary": {
+    "total_test_cases": 20,
+    "schema_linking_success": 20,
+    "generation_success": 20,
+    "validation_success": 15,
+    "execution_success": 15,
+    "execution_failed": 0,
+    "critic_blocked": 5,
+    "execution_success_rate": 100.0,
+    "avg_execution_latency_ms": 12.752,
+    "total_time_seconds": 9.082893133163452,
+    "criteria_met": {
+      "execution_success_100%": true,
+      "latency_under_5s": true,
+      "error_classification_working": true,
+      "all_passed": true
+    },
+    "executor_metrics": {
+      "total_queries": 15,
+      "successful_queries": 15,
+      "failed_queries": 0,
+      "avg_execution_time_ms": 12.752,
+      "max_execution_time_ms": 61.94,
+      "min_execution_time_ms": 6.32,
+      "error_distribution": {}
+    }
+  },
+  "test_results": [
+    {
+      "id": "simple_001",
+      "question": "How many products are in the database?",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "order_items",
+          "reviews"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT COUNT(product_id) FROM products LIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 1,
+        "execution_time_ms": 61.94,
+        "sql_executed": "SELECT COUNT(product_id) FROM products LIMIT 1000"
+      }
+    },
+    {
+      "id": "simple_002",
+      "question": "List all customer names",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "customers",
+          "orders",
+          "reviews"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT name FROM customers LIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 7.83,
+        "sql_executed": "SELECT name FROM customers LIMIT 1000"
+      }
+    },
+    {
+      "id": "simple_003",
+      "question": "Show products with price greater than 100",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "order_items"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT product_id, name, price \nFROM products \nWHERE price::numeric > 100 \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 1,
+        "execution_time_ms": 17.49,
+        "sql_executed": "SELECT product_id, name, price \nFROM products \nWHERE price::numeric > 100 \nLIMIT 1000"
+      }
+    },
+    {
+      "id": "simple_004",
+      "question": "What are the top 5 most expensive products?",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "order_items"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT name, price \nFROM products \nORDER BY price::DECIMAL DESC \nLIMIT 5;"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 10.33,
+        "sql_executed": "SELECT name, price \nFROM products \nORDER BY price::DECIMAL DESC \nLIMIT 5"
+      }
+    },
+    {
+      "id": "simple_005",
+      "question": "Count how many orders have completed status",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "orders",
+          "payments",
+          "order_items"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT COUNT(order_id) FROM orders WHERE status::TEXT = 'completed' LIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 1,
+        "execution_time_ms": 9.39,
+        "sql_executed": "SELECT COUNT(order_id) FROM orders WHERE status::TEXT = 'completed' LIMIT 1000"
+      }
+    },
+    {
+      "id": "simple_006",
+      "question": "Show all product categories",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "categories"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT name FROM categories LIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 12.02,
+        "sql_executed": "SELECT name FROM categories LIMIT 1000"
+      }
+    },
+    {
+      "id": "simple_007",
+      "question": "Find products with low stock (less than 10 units)",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "order_items"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT product_id \nFROM products \nWHERE stock_quantity::INTEGER < 10 \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 0,
+        "execution_time_ms": 6.32,
+        "sql_executed": "SELECT product_id \nFROM products \nWHERE stock_quantity::INTEGER < 10 \nLIMIT 1000"
+      }
+    },
+    {
+      "id": "simple_008",
+      "question": "List customers from USA",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "customers",
+          "orders",
+          "reviews"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT customer_id, email, name FROM customers WHERE country ILIKE 'USA' LIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 1,
+        "execution_time_ms": 9.54,
+        "sql_executed": "SELECT customer_id, email, name FROM customers WHERE country ILIKE 'USA' LIMIT 1000"
+      }
+    },
+    {
+      "id": "medium_001",
+      "question": "What are the top 10 products by revenue?",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "order_items"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT p.product_id, SUM(oi.subtotal) AS revenue \nFROM products p \nJOIN order_items oi ON p.product_id = oi.product_id::INTEGER \nGROUP BY p.product_id \nORDER BY revenue DESC \nLIMIT 10"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 9.66,
+        "sql_executed": "SELECT p.product_id, SUM(oi.subtotal) AS revenue \nFROM products p \nJOIN order_items oi ON p.product_id = oi.product_id::INTEGER \nGROUP BY p.product_id \nORDER BY revenue DESC \nLIMIT 10"
+      }
+    },
+    {
+      "id": "medium_002",
+      "question": "Show customers and their total order count",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "orders",
+          "order_items",
+          "payments"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 8.7,
+        "sql_executed": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000"
+      }
+    },
+    {
+      "id": "medium_003",
+      "question": "Calculate total revenue by product category",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "orders",
+          "order_items"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT category_id, SUM(subtotal) AS total_revenue \nFROM order_items \nJOIN products ON order_items.product_id = products.id \nGROUP BY category_id \nORDER BY total_revenue DESC \nLIMIT 1000; \n\n-- TODO: Missing table or column: product_id in order_items table and id in products table"
+      },
+      "validation": {
+        "is_valid": false,
+        "confidence": 0.19999999999999996,
+        "issues": [
+          "Column 'product_id' not in table 'order_items' (available: subtotal...)",
+          "Column 'id' not in table 'products' (available: stock_quantity, price, category_id...)"
+        ]
+      },
+      "execution": {
+        "executed": false,
+        "reason": "Blocked by Critic"
+      }
+    },
+    {
+      "id": "medium_004",
+      "question": "Find products that have never been ordered",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "order_items",
+          "products",
+          "reviews",
+          "orders"
+        ],
+        "table_count": 4
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT product_id FROM products WHERE product_id NOT IN (SELECT product_id FROM order_items) LIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 0.8,
+        "issues": [
+          "Multiple tables detected but no JOIN found (possible cartesian product)"
+        ]
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 0,
+        "execution_time_ms": 7.78,
+        "sql_executed": "SELECT product_id FROM products WHERE product_id NOT IN (SELECT product_id FROM order_items) LIMIT 1000"
+      }
+    },
+    {
+      "id": "medium_005",
+      "question": "Show average order value by customer",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "orders",
+          "order_items",
+          "customers"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nORDER BY average_order_value DESC \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 7.58,
+        "sql_executed": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nORDER BY average_order_value DESC \nLIMIT 1000"
+      }
+    },
+    {
+      "id": "medium_006",
+      "question": "List products with their average review rating",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "reviews"
+        ],
+        "table_count": 1
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT product_id, AVG(rating::FLOAT) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 0,
+        "execution_time_ms": 8.55,
+        "sql_executed": "SELECT product_id, AVG(rating::FLOAT) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000"
+      }
+    },
+    {
+      "id": "medium_007",
+      "question": "Count orders per payment method",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "payments",
+          "orders"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT payment_method, COUNT(DISTINCT order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nORDER BY order_count DESC \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 2,
+        "execution_time_ms": 6.52,
+        "sql_executed": "SELECT payment_method, COUNT(DISTINCT order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nORDER BY order_count DESC \nLIMIT 1000"
+      }
+    },
+    {
+      "id": "medium_008",
+      "question": "Show total quantity sold for each product",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "order_items",
+          "products",
+          "orders"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nGROUP BY oi.quantity\nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
+      },
+      "execution": {
+        "executed": true,
+        "success": true,
+        "row_count": 1,
+        "execution_time_ms": 7.63,
+        "sql_executed": "SELECT SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nGROUP BY oi.quantity\nLIMIT 1000"
+      }
+    },
+    {
+      "id": "hard_001",
+      "question": "Find customers who have placed more orders than average",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "orders",
+          "order_items",
+          "customers",
+          "payments"
+        ],
+        "table_count": 4
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT c.name \nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.name\nHAVING COUNT(o.customer_id) > (SELECT AVG(order_count) \n                                FROM (SELECT customer_id, COUNT(customer_id) AS order_count \n                                      FROM orders \n                                      GROUP BY customer_id) AS subquery)\nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": false,
+        "confidence": 0.6,
+        "issues": [
+          "Column 'customer_id' not in table 'customers' (available: lifetime_value, name...)"
+        ]
+      },
+      "execution": {
+        "executed": false,
+        "reason": "Blocked by Critic"
+      }
+    },
+    {
+      "id": "hard_002",
+      "question": "Show monthly revenue trend for the last 6 months",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "customers",
+          "orders",
+          "payments",
+          "order_items"
+        ],
+        "table_count": 4
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT \n    DATE_TRUNC('month', payment_date) AS month,\n    SUM(amount) AS revenue\nFROM \n    payments\nWHERE \n    payment_date >= CURRENT_DATE - INTERVAL '6 month'\nGROUP BY \n    DATE_TRUNC('month', payment_date)\nORDER BY \n    month\nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": false,
+        "confidence": 0.6,
+        "issues": [
+          "Column 'date_trunc('month'' not in table 'payments' (available: payment_date, amount...)"
+        ]
+      },
+      "execution": {
+        "executed": false,
+        "reason": "Blocked by Critic"
+      }
+    },
+    {
+      "id": "hard_003",
+      "question": "Rank products by revenue within each category",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "products",
+          "order_items",
+          "reviews"
+        ],
+        "table_count": 3
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT category_id, product_id, SUM(price * stock_quantity) AS revenue\nFROM products\nJOIN order_items ON products.product_id = order_items.product_id\nGROUP BY category_id, product_id\nORDER BY category_id, revenue DESC\nLIMIT 1000;"
+      },
+      "validation": {
+        "is_valid": false,
+        "confidence": 0.19999999999999996,
+        "issues": [
+          "Column 'product_id' not in table 'products' (available: stock_quantity, price, category_id...)",
+          "Column 'product_id' not in table 'order_items' (available: ...)"
+        ]
+      },
+      "execution": {
+        "executed": false,
+        "reason": "Blocked by Critic"
+      }
+    },
+    {
+      "id": "hard_004",
+      "question": "Identify customers who haven't ordered in the last 90 days",
+      "expected_query": "",
+      "difficulty": "unknown",
+      "category": "unknown",
+      "schema_linking": {
+        "success": true,
+        "tables": [
+          "orders",
+          "customers"
+        ],
+        "table_count": 2
+      },
+      "generation": {
+        "success": true,
+        "sql": "SELECT c.customer_id, c.name \nFROM customers c \nLEFT JOIN orders o ON c.customer_id = o.customer_id \nWHERE o.customer_id IS NULL OR o.customer_id NOT IN (\n    SELECT customer_id \n    FROM orders \n    WHERE CURRENT_DATE - created_at::DATE <= INTERVAL '90 day'\n) \nLIMIT 1000"
+      },
+      "validation": {
+        "is_valid": false,
+        "confidence": 0.0,
+        "issues": [
+          "Unsafe operation detected: CREATE"
+        ]
+      },
+      "execution": {
+        "executed": false,
+        "reason": "Blocked by Critic"
+      }
+    }
+  ]
+}

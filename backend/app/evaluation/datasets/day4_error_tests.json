@@ -1,0 +1,86 @@
+[
+  {
+    "id": "err_001",
+    "name": "Column Not Found",
+    "error_type": "column_not_found",
+    "sql": "SELECT id, name FROM products",
+    "expected_category": "column_not_found",
+    "expected_detail": "missing_column: id",
+    "description": "Querying non-existent column 'id' (should be 'product_id')"
+  },
+  {
+    "id": "err_002",
+    "name": "Table Not Found",
+    "error_type": "table_not_found",
+    "sql": "SELECT * FROM invoices",
+    "expected_category": "table_not_found",
+    "expected_detail": "missing_table: invoices",
+    "description": "Querying non-existent table 'invoices'"
+  },
+  {
+    "id": "err_003",
+    "name": "Syntax Error - Typo",
+    "error_type": "syntax_error",
+    "sql": "SELCT * FRM products",
+    "expected_category": "syntax_error",
+    "expected_detail": "error_near: FRM",
+    "description": "Typo in SQL keywords (SELCT instead of SELECT)"
+  },
+  {
+    "id": "err_004",
+    "name": "Type Mismatch",
+    "error_type": "type_mismatch",
+    "sql": "SELECT * FROM products WHERE price = 'expensive'",
+    "expected_category": "type_mismatch",
+    "description": "Comparing numeric price column to string value"
+  },
+  {
+    "id": "err_005",
+    "name": "Aggregation Error - Missing GROUP BY",
+    "error_type": "aggregation_error",
+    "sql": "SELECT category_id, COUNT(*) FROM products",
+    "expected_category": "aggregation_error",
+    "description": "category_id must be in GROUP BY when using COUNT"
+  },
+  {
+    "id": "err_006",
+    "name": "Join Error - Ambiguous Column",
+    "error_type": "join_error",
+    "sql": "SELECT product_id FROM products JOIN order_items ON products.product_id = order_items.product_id WHERE product_id = 1",
+    "expected_category": "join_error",
+    "description": "Ambiguous column reference 'product_id' in WHERE (exists in both tables)"
+  },
+  {
+    "id": "err_007",
+    "name": "Timeout",
+    "error_type": "timeout",
+    "sql": "SELECT pg_sleep(35)",
+    "expected_category": "timeout",
+    "description": "Query intentionally sleeps for 35 seconds (exceeds 30s timeout)"
+  },
+  {
+    "id": "err_008",
+    "name": "Syntax Error - Missing FROM",
+    "error_type": "syntax_error",
+    "sql": "SELECT product_id, name WHERE price > 100",
+    "expected_category": "syntax_error",
+    "description": "Missing FROM clause"
+  },
+  {
+    "id": "err_009",
+    "name": "Column Not Found - Wrong Table",
+    "error_type": "column_not_found",
+    "sql": "SELECT order_id FROM products",
+    "expected_category": "column_not_found",
+    "expected_detail": "missing_column: order_id",
+    "description": "Querying column from wrong table (order_id is in orders, not products)"
+  },
+  {
+    "id": "err_010",
+    "name": "Type Mismatch - String to Integer",
+    "error_type": "type_mismatch",
+    "sql": "SELECT * FROM products WHERE product_id = 'abc'",
+    "expected_category": "type_mismatch",
+    "description": "Comparing integer product_id to non-numeric string"
+  }
+]

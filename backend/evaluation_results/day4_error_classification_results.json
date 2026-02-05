@@ -1,0 +1,145 @@
+{
+  "summary": {
+    "total": 10,
+    "correct": 9,
+    "accuracy": 90.0,
+    "threshold": 85.0,
+    "passed": true
+  },
+  "test_results": [
+    {
+      "id": "err_001",
+      "name": "Column Not Found",
+      "expected": "column_not_found",
+      "actual": "column_not_found",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.UndefinedColumn) column \"id\" does not exist\nLINE 1: SELECT id, name FROM products LIMIT 1000\n               ^\n\n[SQL: SELECT id, name FROM products LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "Column 'id' does not exist. Check schema for valid column names.",
+      "details": {
+        "missing_column": "id"
+      }
+    },
+    {
+      "id": "err_002",
+      "name": "Table Not Found",
+      "expected": "table_not_found",
+      "actual": "table_not_found",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.UndefinedTable) relation \"invoices\" does not exist\nLINE 1: SELECT * FROM invoices LIMIT 1000\n                      ^\n\n[SQL: SELECT * FROM invoices LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "Table 'invoices' does not exist. Check schema for valid table names.",
+      "details": {
+        "missing_table": "invoices"
+      }
+    },
+    {
+      "id": "err_003",
+      "name": "Syntax Error - Typo",
+      "expected": "syntax_error",
+      "actual": "syntax_error",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.SyntaxError) syntax error at or near \"SELCT\"\nLINE 1: SELCT * FRM products LIMIT 1000\n        ^\n\n[SQL: SELCT * FRM products LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "SQL syntax error near 'SELCT'. Check for typos in SQL keywords (SELECT, FROM, WHERE, JOIN, etc.).",
+      "details": {
+        "error_near": "SELCT"
+      }
+    },
+    {
+      "id": "err_004",
+      "name": "Type Mismatch",
+      "expected": "type_mismatch",
+      "actual": "type_mismatch",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: \"expensive\"\nLINE 1: SELECT * FROM products WHERE price = 'expensive' LIMIT 1000\n                                             ^\n\n[SQL: SELECT * FROM products WHERE price = 'expensive' LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)",
+      "feedback": "Type mismatch error. Check that column data types match comparison values. Use explicit casting if needed (e.g., price::numeric > 100).",
+      "details": {}
+    },
+    {
+      "id": "err_005",
+      "name": "Aggregation Error - Missing GROUP BY",
+      "expected": "aggregation_error",
+      "actual": "aggregation_error",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.GroupingError) column \"products.category_id\" must appear in the GROUP BY clause or be used in an aggregate function\nLINE 1: SELECT category_id, COUNT(*) FROM products LIMIT 1000\n               ^\n\n[SQL: SELECT category_id, COUNT(*) FROM products LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "Aggregation error - missing GROUP BY clause. When using COUNT/SUM/AVG, non-aggregated columns must be in GROUP BY.",
+      "details": {}
+    },
+    {
+      "id": "err_006",
+      "name": "Join Error - Ambiguous Column",
+      "expected": "join_error",
+      "actual": "join_error",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.AmbiguousColumn) column reference \"product_id\" is ambiguous\nLINE 1: SELECT product_id FROM products JOIN order_items ON products...\n               ^\n\n[SQL: SELECT product_id FROM products JOIN order_items ON products.product_id = order_items.product_id WHERE product_id = 1 LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "JOIN error - column reference is ambiguous. Use table aliases (e.g., p.product_id, o.order_id) to clarify which table's column.",
+      "details": {}
+    },
+    {
+      "id": "err_007",
+      "name": "Timeout",
+      "expected": "timeout",
+      "actual": "timeout",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.QueryCanceled) canceling statement due to statement timeout\n\n[SQL: SELECT pg_sleep(35) LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "feedback": "Query execution timeout (exceeded 30 seconds). Query is too complex or slow. Try simplifying, adding indexes, or using LIMIT.",
+      "details": {}
+    },
+    {
+      "id": "err_008",
+      "name": "Syntax Error - Missing FROM",
+      "expected": "syntax_error",
+      "actual": "column_not_found",
+      "correct": false,
+      "status": "FAIL",
+      "error_message": "(psycopg2.errors.UndefinedColumn) column \"product_id\" does not exist\nLINE 1: SELECT product_id, name WHERE price > 100 LIMIT 1000\n               ^\n\n[SQL: SELECT product_id, name WHERE price > 100 LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "Column 'product_id' does not exist. Check schema for valid column names.",
+      "details": {
+        "missing_column": "product_id"
+      }
+    },
+    {
+      "id": "err_009",
+      "name": "Column Not Found - Wrong Table",
+      "expected": "column_not_found",
+      "actual": "column_not_found",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.UndefinedColumn) column \"order_id\" does not exist\nLINE 1: SELECT order_id FROM products LIMIT 1000\n               ^\n\n[SQL: SELECT order_id FROM products LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+      "feedback": "Column 'order_id' does not exist. Check schema for valid column names.",
+      "details": {
+        "missing_column": "order_id"
+      }
+    },
+    {
+      "id": "err_010",
+      "name": "Type Mismatch - String to Integer",
+      "expected": "type_mismatch",
+      "actual": "type_mismatch",
+      "correct": true,
+      "status": "PASS",
+      "error_message": "(psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type integer: \"abc\"\nLINE 1: SELECT * FROM products WHERE product_id = 'abc' LIMIT 1000\n                                                  ^\n\n[SQL: SELECT * FROM products WHERE product_id = 'abc' LIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)",
+      "feedback": "Type mismatch error. Check that column data types match comparison values. Use explicit casting if needed (e.g., price::numeric > 100).",
+      "details": {}
+    }
+  ],
+  "metrics": {
+    "total_queries": 10,
+    "failed_queries": 10,
+    "error_counts": {
+      "column_not_found": 3,
+      "table_not_found": 1,
+      "syntax_error": 1,
+      "type_mismatch": 2,
+      "aggregation_error": 1,
+      "join_error": 1,
+      "timeout": 1
+    },
+    "avg_execution_time_ms": 3032.778
+  }
+}
