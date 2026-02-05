@@ -339,7 +339,7 @@ executor.execute(
 
 ## 🧪 Testing Strategy
 
-### Test Dataset: day4_error_tests.json
+### Test Dataset: error_tests.json
 
 7+ Broken Queries (One Per Error Type):
 
@@ -480,7 +480,7 @@ Day 4 Focus:
 
 ```
 backend/app/agents/executor.py              # ExecutorAgent + ErrorClassifier
-backend/app/evaluation/datasets/day4_error_tests.json  # Error test cases
+backend/app/evaluation/datasets/error_tests.json  # Error test cases
 backend/scripts/test_error_classifier.py    # Accuracy test
 backend/scripts/run_day4_eval.py            # Integration test
 docs/day4_executor_design.md                # This document
@@ -513,7 +513,7 @@ None (Executor is net-new, doesn't modify existing agents)
 
 ### Block 3: Testing & Integration (2 hours)
 
-- ☐ day4_error_tests.json created (7+ broken queries)
+- ☐ error_tests.json created (7+ broken queries)
 - ☐ test_error_classifier.py written + run
 - ☐ Classification accuracy >85% verified
 - ☐ run_day4_eval.py updated with Executor

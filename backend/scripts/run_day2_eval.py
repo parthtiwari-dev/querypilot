@@ -211,7 +211,7 @@ def run_evaluation(dataset_path: str, output_path: str):
 
 if __name__ == "__main__":
     # Paths
-    dataset_path = "app/evaluation/datasets/day2_baseline.json"
+    dataset_path = "app/evaluation/datasets/core_eval.json"
     output_path = "evaluation_results/day2_baseline_results.json"
     
     # Create output directory

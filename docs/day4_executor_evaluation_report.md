@@ -65,7 +65,7 @@ ErrorClassifier:
 
 **Objective:** Validate error classifier with known broken queries
 
-**Dataset:** day4_error_tests.json
+**Dataset:** error_tests.json
 
 - 10 broken SQL queries
 - Each targeting a specific error type
@@ -83,7 +83,7 @@ ErrorClassifier:
 
 **Objective:** Test complete pipeline with Executor Agent
 
-**Dataset:** day2_baseline.json (20 questions from Day 2)
+**Dataset:** core_eval.json (20 questions from Day 2)
 
 - Simple queries (8): Single-table SELECT
 - Medium queries (8): JOINs, aggregations
@@ -681,7 +681,7 @@ Day 4 successfully delivered a production-ready execution layer with intelligent
 
 ### Appendix A: Error Test Dataset
 
-**Full dataset:** `backend/app/evaluation/datasets/day4_error_tests.json`
+**Full dataset:** `backend/app/evaluation/datasets/error_tests.json`
 
 10 test cases covering:
 
@@ -708,7 +708,7 @@ Day 4 successfully delivered a production-ready execution layer with intelligent
 **Created:**
 
 - `backend/app/agents/executor.py` (395 lines)
-- `backend/app/evaluation/datasets/day4_error_tests.json` (10 test cases)
+- `backend/app/evaluation/datasets/error_tests.json` (10 test cases)
 - `backend/scripts/test_error_classifier.py` (Classification test)
 - `backend/scripts/run_day4_eval.py` (Full pipeline integration)
 - `docs/day4_executor_design.md` (Design document)

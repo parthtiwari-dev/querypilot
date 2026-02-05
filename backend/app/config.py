@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     """Application settings with environment variable loading"""
     
     # LLM Provider
-    LLM_PROVIDER: Literal["groq", "openai"] = "groq"  # Default to Groq
+    LLM_PROVIDER: Literal["groq", "openai"] = "openai"  # Default to Groq
     
     # Groq Configuration (FREE - PRIMARY)
     GROQ_API_KEY: str

@@ -3,7 +3,10 @@ Schema Embedder
 Converts schema metadata into embeddings for vector search
 """
 
-from sentence_transformers import SentenceTransformer
+try:
+    from sentence_transformers import SentenceTransformer
+except Exception:  # pragma: no cover - runtime dependency may be missing in some environments
+    SentenceTransformer = None
 from typing import Dict, List, Tuple, Any
 import logging
 
@@ -25,6 +28,11 @@ class SchemaEmbedder:
             model_name: HuggingFace model name (default is fast and good)
         """
         logger.info(f"Loading embedding model: {model_name}")
+        if SentenceTransformer is None:
+            raise RuntimeError(
+                "Missing dependency 'sentence-transformers'. Install with: `pip install sentence-transformers`"
+            )
+
         self.model = SentenceTransformer(model_name)
         logger.info("Embedding model loaded successfully")
     

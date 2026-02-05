@@ -293,9 +293,14 @@ class CriticAgent:
         for pattern in patterns:
             matches = re.findall(pattern, sql_upper)
             tables.update(match.lower() for match in matches)
-        
+
+        # NEW: extract CTE names
+        cte_matches = re.findall(r'WITH\s+(\w+)\s+AS', sql_upper)
+        tables.update(match.lower() for match in cte_matches)
+
         return tables
-    
+
+
     def _extract_column_references(self, sql: str) -> Dict[str, Set[str]]:
         """
         Extract column references grouped by table.
@@ -316,7 +321,34 @@ class CriticAgent:
             if table_key not in references:
                 references[table_key] = set()
             references[table_key].add(column.lower())
-        
+
+        # Also capture columns used as function arguments, e.g. DATE_TRUNC('month', order_date)
+        # and MAX(order_date) — include qualified names like alias.column as well.
+        try:
+            from_tables = self._extract_table_names(sql)
+        except Exception:
+            from_tables = set()
+
+        func_pattern = re.compile(r"\b\w+\s*\([^)]*?,\s*([A-Za-z_][\w\.]*)\)", re.IGNORECASE)
+        func_matches = func_pattern.findall(sql)
+        for col in func_matches:
+            col_clean = col.strip().strip(') ,')
+            col_clean = col_clean.strip('"\'')
+            # If qualified (table.column), split and add
+            if '.' in col_clean:
+                table_part, col_part = col_clean.split('.', 1)
+                table_key = table_part.lower()
+                if table_key not in references:
+                    references[table_key] = set()
+                references[table_key].add(col_part.lower())
+            else:
+                # If single-table query, attribute bare function arg to that table
+                if len(from_tables) == 1:
+                    table = list(from_tables)[0]
+                    if table not in references:
+                        references[table] = set()
+                    references[table].add(col_clean.lower())
+
         # Pattern 2: Bare column names (only for single-table queries)
         # Multi-table queries with bare columns are too ambiguous to validate reliably
         from_tables = self._extract_table_names(sql)

@@ -3,13 +3,13 @@
     "total_test_cases": 20,
     "schema_linking_success": 20,
     "generation_success": 20,
-    "validation_success": 15,
-    "execution_success": 15,
+    "validation_success": 16,
+    "execution_success": 16,
     "execution_failed": 0,
-    "critic_blocked": 5,
+    "critic_blocked": 4,
     "execution_success_rate": 100.0,
-    "avg_execution_latency_ms": 12.752,
-    "total_time_seconds": 9.082893133163452,
+    "avg_execution_latency_ms": 9.7775,
+    "total_time_seconds": 26.615758419036865,
     "criteria_met": {
       "execution_success_100%": true,
       "latency_under_5s": true,
@@ -17,12 +17,12 @@
       "all_passed": true
     },
     "executor_metrics": {
-      "total_queries": 15,
-      "successful_queries": 15,
+      "total_queries": 16,
+      "successful_queries": 16,
       "failed_queries": 0,
-      "avg_execution_time_ms": 12.752,
-      "max_execution_time_ms": 61.94,
-      "min_execution_time_ms": 6.32,
+      "avg_execution_time_ms": 9.7775,
+      "max_execution_time_ms": 52.66,
+      "min_execution_time_ms": 4.24,
       "error_distribution": {}
     }
   },
@@ -44,7 +44,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT COUNT(product_id) FROM products LIMIT 1000"
+        "sql": "SELECT COUNT(product_id) AS total_products FROM products LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -55,8 +55,8 @@
         "executed": true,
         "success": true,
         "row_count": 1,
-        "execution_time_ms": 61.94,
-        "sql_executed": "SELECT COUNT(product_id) FROM products LIMIT 1000"
+        "execution_time_ms": 52.66,
+        "sql_executed": "SELECT COUNT(product_id) AS total_products FROM products LIMIT 1000"
       }
     },
     {
@@ -76,7 +76,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT name FROM customers LIMIT 1000"
+        "sql": "SELECT name FROM customers LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -87,7 +87,7 @@
         "executed": true,
         "success": true,
         "row_count": 3,
-        "execution_time_ms": 7.83,
+        "execution_time_ms": 4.4,
         "sql_executed": "SELECT name FROM customers LIMIT 1000"
       }
     },
@@ -107,7 +107,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT product_id, name, price \nFROM products \nWHERE price::numeric > 100 \nLIMIT 1000"
+        "sql": "SELECT product_id, name, stock_quantity, price FROM products WHERE price > 100 LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -118,8 +118,8 @@
         "executed": true,
         "success": true,
         "row_count": 1,
-        "execution_time_ms": 17.49,
-        "sql_executed": "SELECT product_id, name, price \nFROM products \nWHERE price::numeric > 100 \nLIMIT 1000"
+        "execution_time_ms": 17.54,
+        "sql_executed": "SELECT product_id, name, stock_quantity, price FROM products WHERE price > 100 LIMIT 1000"
       }
     },
     {
@@ -138,7 +138,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT name, price \nFROM products \nORDER BY price::DECIMAL DESC \nLIMIT 5;"
+        "sql": "SELECT product_id, name, price FROM products ORDER BY price DESC LIMIT 5;"
       },
       "validation": {
         "is_valid": true,
@@ -149,8 +149,8 @@
         "executed": true,
         "success": true,
         "row_count": 3,
-        "execution_time_ms": 10.33,
-        "sql_executed": "SELECT name, price \nFROM products \nORDER BY price::DECIMAL DESC \nLIMIT 5"
+        "execution_time_ms": 8.89,
+        "sql_executed": "SELECT product_id, name, price FROM products ORDER BY price DESC LIMIT 5"
       }
     },
     {
@@ -170,7 +170,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT COUNT(order_id) FROM orders WHERE status::TEXT = 'completed' LIMIT 1000"
+        "sql": "SELECT COUNT(order_id) AS completed_orders_count FROM orders WHERE status ILIKE 'completed' LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -181,8 +181,8 @@
         "executed": true,
         "success": true,
         "row_count": 1,
-        "execution_time_ms": 9.39,
-        "sql_executed": "SELECT COUNT(order_id) FROM orders WHERE status::TEXT = 'completed' LIMIT 1000"
+        "execution_time_ms": 6.74,
+        "sql_executed": "SELECT COUNT(order_id) AS completed_orders_count FROM orders WHERE status ILIKE 'completed' LIMIT 1000"
       }
     },
     {
@@ -201,7 +201,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT name FROM categories LIMIT 1000"
+        "sql": "SELECT name, description FROM categories LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -212,8 +212,8 @@
         "executed": true,
         "success": true,
         "row_count": 3,
-        "execution_time_ms": 12.02,
-        "sql_executed": "SELECT name FROM categories LIMIT 1000"
+        "execution_time_ms": 4.52,
+        "sql_executed": "SELECT name, description FROM categories LIMIT 1000"
       }
     },
     {
@@ -232,7 +232,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT product_id \nFROM products \nWHERE stock_quantity::INTEGER < 10 \nLIMIT 1000"
+        "sql": "SELECT product_id, stock_quantity FROM products WHERE stock_quantity < 10 LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -243,8 +243,8 @@
         "executed": true,
         "success": true,
         "row_count": 0,
-        "execution_time_ms": 6.32,
-        "sql_executed": "SELECT product_id \nFROM products \nWHERE stock_quantity::INTEGER < 10 \nLIMIT 1000"
+        "execution_time_ms": 4.38,
+        "sql_executed": "SELECT product_id, stock_quantity FROM products WHERE stock_quantity < 10 LIMIT 1000"
       }
     },
     {
@@ -264,7 +264,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT customer_id, email, name FROM customers WHERE country ILIKE 'USA' LIMIT 1000"
+        "sql": "SELECT name, email, customer_id FROM customers WHERE country ILIKE 'USA' LIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -275,8 +275,8 @@
         "executed": true,
         "success": true,
         "row_count": 1,
-        "execution_time_ms": 9.54,
-        "sql_executed": "SELECT customer_id, email, name FROM customers WHERE country ILIKE 'USA' LIMIT 1000"
+        "execution_time_ms": 4.3,
+        "sql_executed": "SELECT name, email, customer_id FROM customers WHERE country ILIKE 'USA' LIMIT 1000"
       }
     },
     {
@@ -295,7 +295,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT p.product_id, SUM(oi.subtotal) AS revenue \nFROM products p \nJOIN order_items oi ON p.product_id = oi.product_id::INTEGER \nGROUP BY p.product_id \nORDER BY revenue DESC \nLIMIT 10"
+        "sql": "SELECT oi.product_id, SUM(oi.subtotal) AS total_revenue\nFROM order_items oi\nGROUP BY oi.product_id\nORDER BY total_revenue DESC\nLIMIT 10;"
       },
       "validation": {
         "is_valid": true,
@@ -306,8 +306,8 @@
         "executed": true,
         "success": true,
         "row_count": 3,
-        "execution_time_ms": 9.66,
-        "sql_executed": "SELECT p.product_id, SUM(oi.subtotal) AS revenue \nFROM products p \nJOIN order_items oi ON p.product_id = oi.product_id::INTEGER \nGROUP BY p.product_id \nORDER BY revenue DESC \nLIMIT 10"
+        "execution_time_ms": 6.0,
+        "sql_executed": "SELECT oi.product_id, SUM(oi.subtotal) AS total_revenue\nFROM order_items oi\nGROUP BY oi.product_id\nORDER BY total_revenue DESC\nLIMIT 10"
       }
     },
     {
@@ -327,7 +327,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000"
+        "sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -338,7 +338,7 @@
         "executed": true,
         "success": true,
         "row_count": 3,
-        "execution_time_ms": 8.7,
+        "execution_time_ms": 8.33,
         "sql_executed": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000"
       }
     },
@@ -359,14 +359,13 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT category_id, SUM(subtotal) AS total_revenue \nFROM order_items \nJOIN products ON order_items.product_id = products.id \nGROUP BY category_id \nORDER BY total_revenue DESC \nLIMIT 1000; \n\n-- TODO: Missing table or column: product_id in order_items table and id in products table"
+        "sql": "-- TODO: Missing table"
       },
       "validation": {
         "is_valid": false,
-        "confidence": 0.19999999999999996,
+        "confidence": 0.4,
         "issues": [
-          "Column 'product_id' not in table 'order_items' (available: subtotal...)",
-          "Column 'id' not in table 'products' (available: stock_quantity, price, category_id...)"
+          "SQL must start with SELECT or WITH"
         ]
       },
       "execution": {
@@ -392,21 +391,19 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT product_id FROM products WHERE product_id NOT IN (SELECT product_id FROM order_items) LIMIT 1000"
+        "sql": "SELECT p.product_id \nFROM products p \nLEFT JOIN order_items oi ON p.product_id = oi.product_id \nWHERE oi.product_id IS NULL \nLIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
-        "confidence": 0.8,
-        "issues": [
-          "Multiple tables detected but no JOIN found (possible cartesian product)"
-        ]
+        "confidence": 1.0,
+        "issues": []
       },
       "execution": {
         "executed": true,
         "success": true,
         "row_count": 0,
-        "execution_time_ms": 7.78,
-        "sql_executed": "SELECT product_id FROM products WHERE product_id NOT IN (SELECT product_id FROM order_items) LIMIT 1000"
+        "execution_time_ms": 4.58,
+        "sql_executed": "SELECT p.product_id \nFROM products p \nLEFT JOIN order_items oi ON p.product_id = oi.product_id \nWHERE oi.product_id IS NULL \nLIMIT 1000"
       }
     },
     {
@@ -426,7 +423,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nORDER BY average_order_value DESC \nLIMIT 1000"
+        "sql": "SELECT customer_id, AVG(total_amount) AS average_order_value\nFROM orders\nGROUP BY customer_id\nLIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -437,8 +434,8 @@
         "executed": true,
         "success": true,
         "row_count": 3,
-        "execution_time_ms": 7.58,
-        "sql_executed": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nORDER BY average_order_value DESC \nLIMIT 1000"
+        "execution_time_ms": 8.16,
+        "sql_executed": "SELECT customer_id, AVG(total_amount) AS average_order_value\nFROM orders\nGROUP BY customer_id\nLIMIT 1000"
       }
     },
     {
@@ -456,7 +453,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT product_id, AVG(rating::FLOAT) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000"
+        "sql": "SELECT product_id, AVG(rating) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY product_id \nLIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -467,8 +464,8 @@
         "executed": true,
         "success": true,
         "row_count": 0,
-        "execution_time_ms": 8.55,
-        "sql_executed": "SELECT product_id, AVG(rating::FLOAT) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000"
+        "execution_time_ms": 7.03,
+        "sql_executed": "SELECT product_id, AVG(rating) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY product_id \nLIMIT 1000"
       }
     },
     {
@@ -487,7 +484,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT payment_method, COUNT(DISTINCT order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nORDER BY order_count DESC \nLIMIT 1000"
+        "sql": "SELECT payment_method, COUNT(order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nLIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -498,8 +495,8 @@
         "executed": true,
         "success": true,
         "row_count": 2,
-        "execution_time_ms": 6.52,
-        "sql_executed": "SELECT payment_method, COUNT(DISTINCT order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nORDER BY order_count DESC \nLIMIT 1000"
+        "execution_time_ms": 7.61,
+        "sql_executed": "SELECT payment_method, COUNT(order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nLIMIT 1000"
       }
     },
     {
@@ -519,7 +516,7 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nGROUP BY oi.quantity\nLIMIT 1000"
+        "sql": "SELECT oi.quantity, SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nGROUP BY oi.quantity\nORDER BY total_quantity_sold DESC\nLIMIT 1000;"
       },
       "validation": {
         "is_valid": true,
@@ -530,8 +527,8 @@
         "executed": true,
         "success": true,
         "row_count": 1,
-        "execution_time_ms": 7.63,
-        "sql_executed": "SELECT SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nGROUP BY oi.quantity\nLIMIT 1000"
+        "execution_time_ms": 7.06,
+        "sql_executed": "SELECT oi.quantity, SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nGROUP BY oi.quantity\nORDER BY total_quantity_sold DESC\nLIMIT 1000"
       }
     },
     {
@@ -552,12 +549,14 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT c.name \nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.name\nHAVING COUNT(o.customer_id) > (SELECT AVG(order_count) \n                                FROM (SELECT customer_id, COUNT(customer_id) AS order_count \n                                      FROM orders \n                                      GROUP BY customer_id) AS subquery)\nLIMIT 1000"
+        "sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(*) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM order_counts\n)\nSELECT c.name, oc.order_count\nFROM order_counts oc\nJOIN customers c ON oc.customer_id = c.customer_id\nWHERE oc.order_count > (SELECT avg_order_count FROM average_order_count)\nORDER BY oc.order_count DESC\nLIMIT 1000;"
       },
       "validation": {
         "is_valid": false,
-        "confidence": 0.6,
+        "confidence": 0.0,
         "issues": [
+          "Table 'order_counts' not in schema (available: order_items, customers, orders, payments)",
+          "Table 'average_order_count' not in schema (available: order_items, customers, orders, payments)",
           "Column 'customer_id' not in table 'customers' (available: lifetime_value, name...)"
         ]
       },
@@ -584,13 +583,14 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT \n    DATE_TRUNC('month', payment_date) AS month,\n    SUM(amount) AS revenue\nFROM \n    payments\nWHERE \n    payment_date >= CURRENT_DATE - INTERVAL '6 month'\nGROUP BY \n    DATE_TRUNC('month', payment_date)\nORDER BY \n    month\nLIMIT 1000"
+        "sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', payment_date) AS month,\n        SUM(amount) AS total_revenue\n    FROM payments\n    WHERE payment_date >= CURRENT_DATE - INTERVAL '6 months'\n    GROUP BY month\n)\nSELECT month, total_revenue\nFROM monthly_revenue\nORDER BY month\nLIMIT 1000;"
       },
       "validation": {
         "is_valid": false,
-        "confidence": 0.6,
+        "confidence": 0.39999999999999997,
         "issues": [
-          "Column 'date_trunc('month'' not in table 'payments' (available: payment_date, amount...)"
+          "Table 'monthly_revenue' not in schema (available: order_items, customers, orders, payments)",
+          "Multiple tables detected but no JOIN found (possible cartesian product)"
         ]
       },
       "execution": {
@@ -615,19 +615,19 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT category_id, product_id, SUM(price * stock_quantity) AS revenue\nFROM products\nJOIN order_items ON products.product_id = order_items.product_id\nGROUP BY category_id, product_id\nORDER BY category_id, revenue DESC\nLIMIT 1000;"
+        "sql": "SELECT category_id, SUM(price * stock_quantity) AS revenue\nFROM products\nGROUP BY category_id\nORDER BY category_id, revenue DESC\nLIMIT 1000;"
       },
       "validation": {
-        "is_valid": false,
-        "confidence": 0.19999999999999996,
-        "issues": [
-          "Column 'product_id' not in table 'products' (available: stock_quantity, price, category_id...)",
-          "Column 'product_id' not in table 'order_items' (available: ...)"
-        ]
+        "is_valid": true,
+        "confidence": 1.0,
+        "issues": []
       },
       "execution": {
-        "executed": false,
-        "reason": "Blocked by Critic"
+        "executed": true,
+        "success": true,
+        "row_count": 3,
+        "execution_time_ms": 4.24,
+        "sql_executed": "SELECT category_id, SUM(price * stock_quantity) AS revenue\nFROM products\nGROUP BY category_id\nORDER BY category_id, revenue DESC\nLIMIT 1000"
       }
     },
     {
@@ -646,12 +646,13 @@
       },
       "generation": {
         "success": true,
-        "sql": "SELECT c.customer_id, c.name \nFROM customers c \nLEFT JOIN orders o ON c.customer_id = o.customer_id \nWHERE o.customer_id IS NULL OR o.customer_id NOT IN (\n    SELECT customer_id \n    FROM orders \n    WHERE CURRENT_DATE - created_at::DATE <= INTERVAL '90 day'\n) \nLIMIT 1000"
+        "sql": "WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name, c.lifetime_value\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000;"
       },
       "validation": {
         "is_valid": false,
         "confidence": 0.0,
         "issues": [
+          "Table 'recent_orders' not in schema (available: customers, orders)",
           "Unsafe operation detected: CREATE"
         ]
       },

@@ -402,7 +402,7 @@ GROQ_MODEL_NAME=llama-3.1-70b-versatile
 
 ### **4.4 Evaluation Dataset (20 Questions)**
 
-**File:** `backend/app/evaluation/datasets/day2_baseline.json`
+**File:** `backend/app/evaluation/datasets/core_eval.json`
 
 **Distribution:**
 

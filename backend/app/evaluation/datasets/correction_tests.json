@@ -1,0 +1,152 @@
+[
+  {
+    "id": "corr_001",
+    "question": "Show me all product ids and names",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should fix 'id' \u2192 'product_id' on retry",
+    "correction_hint": "Column 'id' likely doesn't exist, should use 'product_id'",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_002",
+    "question": "List all customer names and their ids",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should fix 'id' \u2192 'customer_id', 'name' \u2192 'customer_name'",
+    "correction_hint": "Column names might need table prefix",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_003",
+    "question": "Show order ids and their dates",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should fix 'id' \u2192 'order_id', 'date' \u2192 'order_date'",
+    "correction_hint": "Generic column names need specific names",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_004",
+    "question": "Get all product prices",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should fix 'price' \u2192 'unit_price' or correct column name",
+    "correction_hint": "Price column might have different name",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_005",
+    "question": "Show customer email addresses",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should find correct email column name",
+    "correction_hint": "Email column name might be different",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_006",
+    "question": "List all product categories",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should fix column name or use JOIN to categories table",
+    "correction_hint": "Category might be in separate table",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_007",
+    "question": "Show order statuses",
+    "expected_first_error": "column_not_found",
+    "expected_behavior": "Should fix 'status' \u2192 'order_status' or correct column",
+    "correction_hint": "Status column needs correct name",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "column_not_found"
+  },
+  {
+    "id": "corr_008",
+    "question": "Count products by category",
+    "expected_first_error": "aggregation_error",
+    "expected_behavior": "Should add GROUP BY category_id on retry",
+    "correction_hint": "Non-aggregated columns need GROUP BY",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "aggregation_error"
+  },
+  {
+    "id": "corr_009",
+    "question": "Show total sales amount per customer",
+    "expected_first_error": "aggregation_error",
+    "expected_behavior": "Should add GROUP BY customer_id with SUM",
+    "correction_hint": "Customer column needs GROUP BY when using SUM",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "aggregation_error"
+  },
+  {
+    "id": "corr_010",
+    "question": "Average order value by month",
+    "expected_first_error": "aggregation_error",
+    "expected_behavior": "Should add GROUP BY for date aggregation",
+    "correction_hint": "Date grouping with AVG needs proper GROUP BY",
+    "should_succeed": true,
+    "priority": "high",
+    "category": "aggregation_error"
+  },
+  {
+    "id": "corr_011",
+    "question": "Select all data from orders without any limit",
+    "expected_first_error": "timeout",
+    "expected_behavior": "Should add LIMIT on retry to avoid timeout",
+    "correction_hint": "Large table scan needs LIMIT",
+    "should_succeed": true,
+    "priority": "medium",
+    "category": "timeout"
+  },
+  {
+    "id": "corr_012",
+    "question": "Show all products with all order details joined",
+    "expected_first_error": "timeout",
+    "expected_behavior": "Should add LIMIT or simplify JOIN on retry",
+    "correction_hint": "Complex JOIN without LIMIT times out",
+    "should_succeed": true,
+    "priority": "medium",
+    "category": "timeout"
+  },
+  {
+    "id": "corr_013",
+    "question": "Drop table products",
+    "expected_first_error": "permission_denied",
+    "expected_behavior": "Should fail immediately (non-retryable)",
+    "correction_hint": "Destructive operation not allowed",
+    "should_succeed": false,
+    "priority": "low",
+    "category": "non_retryable"
+  },
+  {
+    "id": "corr_014",
+    "question": "Connect to external database",
+    "expected_first_error": "connection_error",
+    "expected_behavior": "Should fail immediately (non-retryable)",
+    "correction_hint": "Connection errors can't be retried",
+    "should_succeed": false,
+    "priority": "low",
+    "category": "non_retryable"
+  },
+  {
+    "id": "corr_015",
+    "question": "Select products where price is text",
+    "expected_first_error": "type_mismatch",
+    "expected_behavior": "Should fix type casting on retry",
+    "correction_hint": "Type mismatch needs proper casting",
+    "should_succeed": true,
+    "priority": "medium",
+    "category": "generic"
+  }
+]

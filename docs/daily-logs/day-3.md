@@ -28,7 +28,7 @@
 
 - `backend/app/agents/critic.py` - Main validation logic
 - `backend/scripts/run_day3_eval.py` - Integration pipeline
-- `backend/app/evaluation/datasets/day3_critic_adversarial.json` - Test cases
+- `backend/app/evaluation/datasets/adversarial_tests.json` - Test cases
 - `docs/day3_critic_design.md` - Design document
 - `docs/day3_critic_evaluation_report.md` - Results analysis
 - `evaluation_results/day3_normal_results.json` - Day 2 questions + Critic
@@ -1235,7 +1235,7 @@ backend/
 │   │   └── critic.py                               # 4-layer validation (370 lines)
 │   └── evaluation/
 │       └── datasets/
-│           └── day3_critic_adversarial.json        # 12 broken queries
+│           └── adversarial_tests.json        # 12 broken queries
 ├── scripts/
 │   └── run_day3_eval.py                            # Integration pipeline (330 lines)
 └── evaluation_results/

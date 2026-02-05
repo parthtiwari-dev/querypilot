@@ -1,7 +1,7 @@
 """
 Test error classification accuracy
 
-Runs broken queries from day4_error_tests.json and validates:
+Runs broken queries from error_tests.json and validates:
 1. Error category matches expected
 2. Error details extracted correctly
 3. Feedback is helpful and actionable
@@ -25,7 +25,7 @@ def test_error_classification():
     """Test error classification on known broken queries"""
     
     # Load test dataset
-    dataset_path = backend_path / "app" / "evaluation" / "datasets" / "day4_error_tests.json"
+    dataset_path = backend_path / "app" / "evaluation" / "datasets" / "error_tests.json"
     
     print(f"\nLoading error test dataset: {dataset_path}")
     with open(dataset_path) as f:

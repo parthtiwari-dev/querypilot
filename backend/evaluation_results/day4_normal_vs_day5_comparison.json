@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-02-06T01:58:04.776722",
+  "day4": {
+    "mode": "normal",
+    "filepath": "backend/evaluation_results/day4_normal_results.json",
+    "success_rate": 80.0,
+    "successful_queries": 16,
+    "total_queries": 20,
+    "validation_success": 16
+  },
+  "day5": {
+    "filepath": "backend/evaluation_results/day5_correction_results.json",
+    "first_attempt_rate": 70.0,
+    "overall_success_rate": 75.0,
+    "first_attempt_success": 14,
+    "corrected_queries": 1,
+    "correction_effectiveness": 16.666666666666664,
+    "avg_attempts": 1.6,
+    "total_queries": 20
+  },
+  "improvement": {
+    "percentage_points": -5.0,
+    "queries_gained": 1,
+    "is_improvement": false
+  },
+  "criteria": {
+    "day4_passed": true,
+    "day5_passed": false
+  }
+}

@@ -100,7 +100,7 @@ backend/app/agents/
 └── executor.py                    # 395 lines, 2 classes, 10 error categories
 
 backend/app/evaluation/datasets/
-└── day4_error_tests.json          # 10 broken queries for testing
+└── error_tests.json          # 10 broken queries for testing
 
 backend/scripts/
 ├── test_error_classifier.py       # Error classification accuracy test
@@ -1196,7 +1196,7 @@ else:
 
 ### Task 3.1: Error Test Dataset
 
-**Created:** `backend/app/evaluation/datasets/day4_error_tests.json`
+**Created:** `backend/app/evaluation/datasets/error_tests.json`
 
 **10 broken queries covering all error types:**
 
@@ -1994,7 +1994,7 @@ self.metrics.update(result)
 
 ```bash
 git add backend/app/agents/executor.py
-git add backend/app/evaluation/datasets/day4_error_tests.json
+git add backend/app/evaluation/datasets/error_tests.json
 git add backend/scripts/test_error_classifier.py
 git add backend/scripts/run_day4_eval.py
 git add backend/evaluation_results/day4_*

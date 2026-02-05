@@ -36,7 +36,7 @@ def run_day4_evaluation(
     Run full pipeline evaluation with Executor Agent
     
     Args:
-        dataset_path: Path to evaluation dataset (default: day2_baseline.json)
+        dataset_path: Path to evaluation dataset (default: core_eval.json)
         output_path: Path to save results (default: day4_executor_results.json)
         mode: "normal" for Day 2 baseline, "adversarial" for Day 3 adversarial tests
     """
@@ -44,9 +44,9 @@ def run_day4_evaluation(
     # Default paths
     if dataset_path is None:
         if mode == "adversarial":
-            dataset_path = backend_path / "app" / "evaluation" / "datasets" / "day3_critic_adversarial.json"
+            dataset_path = backend_path / "app" / "evaluation" / "datasets" / "adversarial_tests.json"
         else:
-            dataset_path = backend_path / "app" / "evaluation" / "datasets" / "day2_baseline.json"
+            dataset_path = backend_path / "app" / "evaluation" / "datasets" / "core_eval.json"
     
     if output_path is None:
         output_path = backend_path / "evaluation_results" / f"day4_{mode}_results.json"

@@ -332,7 +332,7 @@ if __name__ == "__main__":
         # Run on Day 2 baseline questions
         print("\n🔵 Running NORMAL evaluation (Day 2 baseline questions)...\n")
         run_evaluation(
-            dataset_path="backend/app/evaluation/datasets/day2_baseline.json",
+            dataset_path="backend/app/evaluation/datasets/core_eval.json",
             output_path="backend/evaluation_results/day3_normal_results.json",
             mode="normal"
         )
@@ -341,7 +341,7 @@ if __name__ == "__main__":
         # Run on adversarial test set
         print("\n\n🔴 Running ADVERSARIAL evaluation (intentionally broken queries)...\n")
         run_evaluation(
-            dataset_path="backend/app/evaluation/datasets/day3_critic_adversarial.json",
+            dataset_path="backend/app/evaluation/datasets/adversarial_tests.json",
             output_path="backend/evaluation_results/day3_adversarial_results.json",
             mode="adversarial"
         )

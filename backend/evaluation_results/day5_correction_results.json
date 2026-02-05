@@ -1,0 +1,556 @@
+{
+  "timestamp": "2026-02-06T02:38:45.869638",
+  "dataset": "backend/app/evaluation/datasets/core_eval.json",
+  "total_tests": 20,
+  "summary": {
+    "first_attempt_success": 13,
+    "first_attempt_rate": 0.65,
+    "corrected_success": 3,
+    "correction_effectiveness": 0.42857142857142855,
+    "final_failures": 4,
+    "overall_success_rate": 0.8,
+    "avg_attempts": 1.65,
+    "total_attempts": 33
+  },
+  "criteria": {
+    "first_attempt_above_30": true,
+    "correction_above_60": false,
+    "overall_above_85": false,
+    "all_passed": false
+  },
+  "category_breakdown": {
+    "core_eval": {
+      "total": 20,
+      "first_success": 13,
+      "corrected": 3,
+      "failed": 4
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "simple_001",
+      "question": "How many products are in the database?",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT COUNT(product_id) AS total_products FROM products LIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "total_products": 3
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 29.88,
+        "row_count": 1
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_002",
+      "question": "List all customer names",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT name FROM customers LIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "name": "Alice Johnson"
+          },
+          {
+            "name": "Bob Smith"
+          },
+          {
+            "name": "Charlie Brown"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 8.98,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_003",
+      "question": "Show products with price greater than 100",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT product_id, name, price, stock_quantity FROM products WHERE price > 100 LIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "product_id": 1,
+            "name": "Laptop",
+            "price": "999.99",
+            "stock_quantity": 50
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.11,
+        "row_count": 1
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_004",
+      "question": "What are the top 5 most expensive products?",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT product_id, price, name FROM products ORDER BY price DESC LIMIT 5;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "product_id": 1,
+            "price": "999.99",
+            "name": "Laptop"
+          },
+          {
+            "product_id": 3,
+            "price": "39.99",
+            "name": "Python Programming Book"
+          },
+          {
+            "product_id": 2,
+            "price": "29.99",
+            "name": "T-Shirt"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 9.68,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_005",
+      "question": "Count how many orders have completed status",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT COUNT(*) AS completed_orders_count \nFROM orders \nWHERE status ILIKE 'completed' \nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "completed_orders_count": 2
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.21,
+        "row_count": 1
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_006",
+      "question": "Show all product categories",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT category_id, name, description FROM categories LIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "category_id": 1,
+            "name": "Electronics",
+            "description": "Electronic devices and accessories"
+          },
+          {
+            "category_id": 2,
+            "name": "Clothing",
+            "description": "Apparel and fashion items"
+          },
+          {
+            "category_id": 3,
+            "name": "Books",
+            "description": "Physical and digital books"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 6.83,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_007",
+      "question": "Find products with low stock (less than 10 units)",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT product_id, stock_quantity FROM products WHERE stock_quantity < 10 LIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 3.55,
+        "row_count": 0
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "simple_008",
+      "question": "List customers from USA",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT email, name, customer_id, country FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "email": "alice@example.com",
+            "name": "Alice Johnson",
+            "customer_id": 1,
+            "country": "USA"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 4.95,
+        "row_count": 1
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_001",
+      "question": "What are the top 10 products by revenue?",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT oi.product_id, SUM(oi.subtotal) AS total_revenue\nFROM order_items oi\nGROUP BY oi.product_id\nORDER BY total_revenue DESC\nLIMIT 10;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "product_id": 1,
+            "total_revenue": "999.99"
+          },
+          {
+            "product_id": 3,
+            "total_revenue": "39.99"
+          },
+          {
+            "product_id": 2,
+            "total_revenue": "29.99"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 8.42,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_002",
+      "question": "Show customers and their total order count",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "customer_id": 3,
+            "total_order_count": 1
+          },
+          {
+            "customer_id": 2,
+            "total_order_count": 1
+          },
+          {
+            "customer_id": 1,
+            "total_order_count": 1
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.1,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_003",
+      "question": "Calculate total revenue by product category",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 3,
+      "was_corrected": true,
+      "final_sql": "SELECT p.category_id, SUM(oi.subtotal) AS total_revenue\nFROM products p\nJOIN order_items oi ON p.category_id = oi.subtotal::numeric\nJOIN orders o ON oi.subtotal = o.total_amount::numeric\nGROUP BY p.category_id\nLIMIT 100;",
+      "execution_result": {
+        "success": true,
+        "data": [],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.9,
+        "row_count": 0
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_004",
+      "question": "Find products that have never been ordered",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT p.product_id \nFROM products p \nLEFT JOIN order_items oi ON p.product_id = oi.product_id \nWHERE oi.product_id IS NULL \nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 8.1,
+        "row_count": 0
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_005",
+      "question": "Show average order value by customer",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "customer_id": 3,
+            "average_order_value": "39.9900000000000000"
+          },
+          {
+            "customer_id": 2,
+            "average_order_value": "29.9900000000000000"
+          },
+          {
+            "customer_id": 1,
+            "average_order_value": "999.9900000000000000"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 3.13,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_006",
+      "question": "List products with their average review rating",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 1,
+      "was_corrected": false,
+      "final_sql": "SELECT product_id, AVG(rating) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.67,
+        "row_count": 0
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_007",
+      "question": "Count orders per payment method",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 2,
+      "was_corrected": true,
+      "final_sql": "SELECT payment_method, COUNT(DISTINCT p.order_id) AS order_count\nFROM payments p\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "payment_method": "credit_card",
+            "order_count": 2
+          },
+          {
+            "payment_method": "paypal",
+            "order_count": 1
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 4.79,
+        "row_count": 2
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "medium_008",
+      "question": "Show total quantity sold for each product",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": true,
+      "attempts": 3,
+      "was_corrected": true,
+      "final_sql": "SELECT SUM(oi.quantity) AS total_quantity_sold, p.price \nFROM order_items oi\nJOIN products p ON oi.subtotal = p.price\nGROUP BY p.price\nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "total_quantity_sold": 1,
+            "price": "29.99"
+          },
+          {
+            "total_quantity_sold": 1,
+            "price": "39.99"
+          },
+          {
+            "total_quantity_sold": 1,
+            "price": "999.99"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 5.6,
+        "row_count": 3
+      },
+      "validation_issues": []
+    },
+    {
+      "test_id": "hard_001",
+      "question": "Find customers who have placed more orders than average",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": false,
+      "attempts": 3,
+      "was_corrected": false,
+      "final_sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(*) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM (\n        SELECT COUNT(*) AS order_count\n        FROM orders\n        GROUP BY customer_id\n    ) AS subquery\n)\nSELECT oc.customer_id, oc.order_count\nFROM order_counts oc\nJOIN average_order_count aoc ON oc.order_count > aoc.avg_order_count\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Table 'average_order_count' not in schema (available: orders, order_items, customers, payments)",
+        "Table 'order_counts' not in schema (available: orders, order_items, customers, payments)"
+      ]
+    },
+    {
+      "test_id": "hard_002",
+      "question": "Show monthly revenue trend for the last 6 months",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": false,
+      "attempts": 3,
+      "was_corrected": false,
+      "final_sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', p.payment_date) AS month,\n        SUM(p.amount) AS total_revenue\n    FROM payments p\n    WHERE p.payment_date >= CURRENT_DATE - INTERVAL '6 months'\n    GROUP BY DATE_TRUNC('month', p.payment_date)\n)\nSELECT month, total_revenue\nFROM monthly_revenue\nORDER BY month\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Table 'monthly_revenue' not in schema (available: orders, customers, order_items, payments)",
+        "Multiple tables detected but no JOIN found (possible cartesian product)"
+      ]
+    },
+    {
+      "test_id": "hard_003",
+      "question": "Rank products by revenue within each category",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": false,
+      "attempts": 3,
+      "was_corrected": false,
+      "final_sql": "SELECT p.category_id, SUM(p.price * oi.quantity) AS revenue\nFROM products p\nJOIN order_items oi ON p.product_id = oi.product_id\nGROUP BY p.category_id\nORDER BY p.category_id, revenue DESC\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Column 'product_id' not in table 'products' (available: category_id, price, stock_quantity...)",
+        "Column 'product_id' not in table 'order_items' (available: ...)",
+        "Column 'quantity' not in table 'order_items' (available: ...)"
+      ]
+    },
+    {
+      "test_id": "hard_004",
+      "question": "Identify customers who haven't ordered in the last 90 days",
+      "category": "core_eval",
+      "expected_error": "N/A",
+      "should_succeed": true,
+      "actual_success": false,
+      "attempts": 3,
+      "was_corrected": false,
+      "final_sql": "SELECT c.customer_id, c.name, c.lifetime_value\nFROM customers c\nLEFT JOIN (\n    SELECT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n) ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Unsafe operation detected: CREATE"
+      ]
+    }
+  ]
+}
