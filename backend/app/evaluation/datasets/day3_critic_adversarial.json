@@ -1,0 +1,192 @@
+[
+  {
+    "id": "adv_001",
+    "question": "Show all products",
+    "sql": "SELECT id FROM products LIMIT 1000",
+    "expected_issue": "column_not_found",
+    "should_be_valid": false,
+    "notes": "Column 'id' doesn't exist (should be 'product_id')",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "name": "VARCHAR", "price": "DECIMAL"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_002",
+    "question": "Show customer emails",
+    "sql": "SELECT user_id, email FROM customers LIMIT 1000",
+    "expected_issue": "column_not_found",
+    "should_be_valid": false,
+    "notes": "Column 'user_id' doesn't exist (should be 'customer_id')",
+    "schema": {
+      "customers": {
+        "columns": {"customer_id": "INTEGER", "name": "VARCHAR", "email": "VARCHAR"},
+        "primary_keys": ["customer_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_003",
+    "question": "Count total orders",
+    "sql": "SELECT COUNT(*) FROM orders WHERE status = completed LIMIT 1000",
+    "expected_issue": "syntax_error",
+    "should_be_valid": false,
+    "notes": "Missing quotes around 'completed'",
+    "schema": {
+      "orders": {
+        "columns": {"order_id": "INTEGER", "status": "VARCHAR", "total": "DECIMAL"},
+        "primary_keys": ["order_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_004",
+    "question": "Delete expensive products",
+    "sql": "DELETE FROM products WHERE price > 1000",
+    "expected_issue": "unsafe_operation",
+    "should_be_valid": false,
+    "notes": "Destructive DELETE operation",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "name": "VARCHAR", "price": "DECIMAL"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_005",
+    "question": "Show all invoices",
+    "sql": "SELECT * FROM invoices LIMIT 1000",
+    "expected_issue": "table_not_found",
+    "should_be_valid": false,
+    "notes": "Table 'invoices' doesn't exist in schema",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_006",
+    "question": "Drop products table",
+    "sql": "DROP TABLE products",
+    "expected_issue": "unsafe_operation",
+    "should_be_valid": false,
+    "notes": "Destructive DROP operation",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_007",
+    "question": "Show products and orders",
+    "sql": "SELECT * FROM products, orders",
+    "expected_issue": "semantic_no_join",
+    "should_be_valid": true,
+    "notes": "Multiple tables without JOIN - generates warning but syntactically valid",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "name": "VARCHAR"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      },
+      "orders": {
+        "columns": {"order_id": "INTEGER", "product_id": "INTEGER"},
+        "primary_keys": ["order_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_008",
+    "question": "Show product categories with count",
+    "sql": "SELECT category_id, COUNT(*) FROM products",
+    "expected_issue": "semantic_no_group_by",
+    "should_be_valid": true,
+    "notes": "Aggregation without GROUP BY - warning but may be valid PostgreSQL with implicit grouping",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "category_id": "INTEGER", "name": "VARCHAR"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_009",
+    "question": "Get order transactions",
+    "sql": "SELECT * FROM transactions WHERE order_id = 123",
+    "expected_issue": "table_not_found",
+    "should_be_valid": false,
+    "notes": "Table 'transactions' doesn't exist",
+    "schema": {
+      "orders": {
+        "columns": {"order_id": "INTEGER"},
+        "primary_keys": ["order_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_010",
+    "question": "Update product prices",
+    "sql": "UPDATE products SET price = price * 1.1 WHERE category_id = 1",
+    "expected_issue": "unsafe_operation",
+    "should_be_valid": false,
+    "notes": "Destructive UPDATE operation",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "price": "DECIMAL", "category_id": "INTEGER"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  },
+  {
+    "id": "adv_011",
+    "question": "Show product revenue",
+    "sql": "SELECT product_name, SUM(subtotal) FROM order_items JOIN products ON order_items.prod_id = products.product_id GROUP BY product_name",
+    "expected_issue": "column_not_found",
+    "should_be_valid": false,
+    "notes": "Column 'prod_id' doesn't exist (should be 'product_id')",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "product_name": "VARCHAR"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      },
+      "order_items": {
+        "columns": {"order_item_id": "INTEGER", "product_id": "INTEGER", "subtotal": "DECIMAL"},
+        "primary_keys": ["order_item_id"],
+        "foreign_keys": {"product_id": "products.product_id"}
+      }
+    }
+  },
+  {
+    "id": "adv_012",
+    "question": "Broken syntax query",
+    "sql": "SELCT product_id FRM products WERE price > 100",
+    "expected_issue": "syntax_error",
+    "should_be_valid": false,
+    "notes": "Multiple typos: SELCT, FRM, WERE",
+    "schema": {
+      "products": {
+        "columns": {"product_id": "INTEGER", "price": "DECIMAL"},
+        "primary_keys": ["product_id"],
+        "foreign_keys": {}
+      }
+    }
+  }
+]

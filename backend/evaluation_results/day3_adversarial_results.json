@@ -1,0 +1,510 @@
+{
+  "metadata": {
+    "mode": "adversarial",
+    "total_queries": 12,
+    "valid_queries": 3,
+    "invalid_queries": 9,
+    "avg_confidence": 0.517,
+    "avg_validation_latency_ms": 0.86,
+    "critic_threshold": 0.7
+  },
+  "results": [
+    {
+      "id": "adv_001",
+      "question": "Show all products",
+      "complexity": "unknown",
+      "generated_sql": "SELECT id FROM products LIMIT 1000",
+      "validation": {
+        "confidence": 0.6,
+        "is_valid": false,
+        "issues": [
+          "Column 'id' not in table 'products' (available: price, name, product_id...)"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": false,
+            "issues": [
+              "Column 'id' not in table 'products' (available: price, name, product_id...)"
+            ]
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 0.96,
+      "expected_issue": "column_not_found",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_002",
+      "question": "Show customer emails",
+      "complexity": "unknown",
+      "generated_sql": "SELECT user_id, email FROM customers LIMIT 1000",
+      "validation": {
+        "confidence": 0.6,
+        "is_valid": false,
+        "issues": [
+          "Column 'user_id' not in table 'customers' (available: customer_id, email, name...)"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": false,
+            "issues": [
+              "Column 'user_id' not in table 'customers' (available: customer_id, email, name...)"
+            ]
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 1.06,
+      "expected_issue": "column_not_found",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_003",
+      "question": "Count total orders",
+      "complexity": "unknown",
+      "generated_sql": "SELECT COUNT(*) FROM orders WHERE status = completed LIMIT 1000",
+      "validation": {
+        "confidence": 1.0,
+        "is_valid": true,
+        "issues": [],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": false,
+        "error_type": "column_not_found",
+        "error_message": "column \"completed\" does not exist\nLINE 1: SELECT COUNT(*) FROM orders WHERE status = completed LIMIT 1...\n                                                   ^\n",
+        "execution_time_ms": 73.63
+      },
+      "validation_time_ms": 1.62,
+      "expected_issue": "syntax_error",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_004",
+      "question": "Delete expensive products",
+      "complexity": "unknown",
+      "generated_sql": "DELETE FROM products WHERE price > 1000",
+      "validation": {
+        "confidence": 0.0,
+        "is_valid": false,
+        "issues": [
+          "SQL must start with SELECT or WITH",
+          "Unsafe operation detected: DELETE"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": false,
+            "issues": [
+              "SQL must start with SELECT or WITH"
+            ]
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": false,
+            "issues": [
+              "Unsafe operation detected: DELETE"
+            ]
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 0.17,
+      "expected_issue": "unsafe_operation",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_005",
+      "question": "Show all invoices",
+      "complexity": "unknown",
+      "generated_sql": "SELECT * FROM invoices LIMIT 1000",
+      "validation": {
+        "confidence": 0.6,
+        "is_valid": false,
+        "issues": [
+          "Table 'invoices' not in schema (available: products)"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": false,
+            "issues": [
+              "Table 'invoices' not in schema (available: products)"
+            ]
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 1.14,
+      "expected_issue": "table_not_found",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_006",
+      "question": "Drop products table",
+      "complexity": "unknown",
+      "generated_sql": "DROP TABLE products",
+      "validation": {
+        "confidence": 0.0,
+        "is_valid": false,
+        "issues": [
+          "SQL must start with SELECT or WITH",
+          "Unsafe operation detected: DROP"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": false,
+            "issues": [
+              "SQL must start with SELECT or WITH"
+            ]
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": false,
+            "issues": [
+              "Unsafe operation detected: DROP"
+            ]
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 0.08,
+      "expected_issue": "unsafe_operation",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_007",
+      "question": "Show products and orders",
+      "complexity": "unknown",
+      "generated_sql": "SELECT * FROM products, orders",
+      "validation": {
+        "confidence": 1.0,
+        "is_valid": true,
+        "issues": [],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": true,
+        "error_type": null,
+        "error_message": null,
+        "execution_time_ms": 41.24,
+        "row_count": 9
+      },
+      "validation_time_ms": 1.39,
+      "expected_issue": "semantic_no_join",
+      "should_be_valid": true
+    },
+    {
+      "id": "adv_008",
+      "question": "Show product categories with count",
+      "complexity": "unknown",
+      "generated_sql": "SELECT category_id, COUNT(*) FROM products",
+      "validation": {
+        "confidence": 0.8,
+        "is_valid": true,
+        "issues": [
+          "Aggregation with multiple columns but no GROUP BY"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": false,
+            "issues": [
+              "Aggregation with multiple columns but no GROUP BY"
+            ]
+          }
+        }
+      },
+      "execution": {
+        "success": false,
+        "error_type": "aggregation_error",
+        "error_message": "column \"products.category_id\" must appear in the GROUP BY clause or be used in an aggregate function\nLINE 1: SELECT category_id, COUNT(*) FROM products\n               ^\n",
+        "execution_time_ms": 38.43
+      },
+      "validation_time_ms": 1.09,
+      "expected_issue": "semantic_no_group_by",
+      "should_be_valid": true
+    },
+    {
+      "id": "adv_009",
+      "question": "Get order transactions",
+      "complexity": "unknown",
+      "generated_sql": "SELECT * FROM transactions WHERE order_id = 123",
+      "validation": {
+        "confidence": 0.6,
+        "is_valid": false,
+        "issues": [
+          "Table 'transactions' not in schema (available: orders)"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": false,
+            "issues": [
+              "Table 'transactions' not in schema (available: orders)"
+            ]
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 0.97,
+      "expected_issue": "table_not_found",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_010",
+      "question": "Update product prices",
+      "complexity": "unknown",
+      "generated_sql": "UPDATE products SET price = price * 1.1 WHERE category_id = 1",
+      "validation": {
+        "confidence": 0.0,
+        "is_valid": false,
+        "issues": [
+          "SQL must start with SELECT or WITH",
+          "Unsafe operation detected: UPDATE"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": false,
+            "issues": [
+              "SQL must start with SELECT or WITH"
+            ]
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": false,
+            "issues": [
+              "Unsafe operation detected: UPDATE"
+            ]
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 0.07,
+      "expected_issue": "unsafe_operation",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_011",
+      "question": "Show product revenue",
+      "complexity": "unknown",
+      "generated_sql": "SELECT product_name, SUM(subtotal) FROM order_items JOIN products ON order_items.prod_id = products.product_id GROUP BY product_name",
+      "validation": {
+        "confidence": 0.6,
+        "is_valid": false,
+        "issues": [
+          "Column 'prod_id' not in table 'order_items' (available: subtotal, order_item_id, product_id...)"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": true,
+            "issues": []
+          },
+          "schema": {
+            "valid": false,
+            "issues": [
+              "Column 'prod_id' not in table 'order_items' (available: subtotal, order_item_id, product_id...)"
+            ]
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 1.69,
+      "expected_issue": "column_not_found",
+      "should_be_valid": false
+    },
+    {
+      "id": "adv_012",
+      "question": "Broken syntax query",
+      "complexity": "unknown",
+      "generated_sql": "SELCT product_id FRM products WERE price > 100",
+      "validation": {
+        "confidence": 0.4,
+        "is_valid": false,
+        "issues": [
+          "SQL must start with SELECT or WITH"
+        ],
+        "layer_results": {
+          "syntax": {
+            "valid": false,
+            "issues": [
+              "SQL must start with SELECT or WITH"
+            ]
+          },
+          "schema": {
+            "valid": true,
+            "issues": []
+          },
+          "safety": {
+            "valid": true,
+            "issues": []
+          },
+          "semantic": {
+            "valid": true,
+            "issues": []
+          }
+        }
+      },
+      "execution": {
+        "success": null,
+        "skipped": true,
+        "reason": "Failed validation"
+      },
+      "validation_time_ms": 0.06,
+      "expected_issue": "syntax_error",
+      "should_be_valid": false
+    }
+  ]
+}
