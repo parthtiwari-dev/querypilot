@@ -92,6 +92,8 @@ class SchemaLinker:
         """
          
         logger.info(f"Linking schema for question: {question}")
+        
+        self._get_full_schema() # Ensure cache is loaded
 
         # Step 1: Embed question
         question_embedding = self.embedder.embed_question(question)
