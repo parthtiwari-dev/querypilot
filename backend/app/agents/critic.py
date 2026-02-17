@@ -222,18 +222,34 @@ class CriticAgent:
     def _validate_safety(self, sql: str) -> Dict:
         """
         Layer 3: Check for dangerous operations.
-        
-        Returns:
-            {'valid': bool, 'issues': List[str]}
+
+        Only block when SQL actually starts with
+        destructive commands, not when keywords appear
+        inside valid syntax or CTE names.
         """
         issues = []
-        sql_upper = sql.upper()
-        
-        for keyword in self.UNSAFE_KEYWORDS:
-            if keyword in sql_upper:
-                issues.append(f"Unsafe operation detected: {keyword}")
-        
+
+        sql_upper = sql.upper().strip()
+
+        # Only check first command
+        destructive_patterns = [
+            r'^DROP\s+',
+            r'^DELETE\s+',
+            r'^ALTER\s+',
+            r'^TRUNCATE\s+',
+            r'^UPDATE\s+',
+            r'^INSERT\s+',
+            r'^CREATE\s+',
+            r'^REPLACE\s+',
+        ]
+
+        for pattern in destructive_patterns:
+            if re.search(pattern, sql_upper):
+                cmd = pattern.replace(r'^', '').replace(r'\s+', '').strip('\\')
+                issues.append(f"Unsafe operation detected: {cmd}")
+
         return {'valid': len(issues) == 0, 'issues': issues}
+
     
     def _validate_semantics(self, sql: str) -> Dict:
         """

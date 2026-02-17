@@ -108,6 +108,7 @@ def run_correction_tests():
                 "actual_success": result.success,
                 "attempts": result.attempts,
                 "was_corrected": result.was_corrected,
+                "used_fallback": getattr(result, "used_fallback", False),
                 "final_sql": result.final_sql,
                 "execution_result": result.execution_result,
                 "validation_issues": result.validation_issues
@@ -194,6 +195,19 @@ def run_correction_tests():
         print(f"\n🎉 ALL CRITERIA PASSED!")
     else:
         print(f"\n⚠️  Some criteria not met - may need tuning")
+
+    # Fallback usage summary
+    fallback_total = sum(1 for r in detailed_results if r.get("used_fallback"))
+    true_corrected = sum(
+        1
+        for r in detailed_results
+        if r["was_corrected"] and not r.get("used_fallback")
+    )
+
+    print(f"\n⚠️ Fallback-based successes: {fallback_total}")
+    print("   (These used generic simplified queries like SELECT * ... LIMIT 100)")
+    print(f"   True corrected (no fallback): {true_corrected}")
+
 
     # Breakdown by category
     print(f"\n📋 Breakdown by Category:")

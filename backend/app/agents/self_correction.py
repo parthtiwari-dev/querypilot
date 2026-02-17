@@ -67,6 +67,7 @@ class SQLCorrectionState(TypedDict):
 
     # Output
     final_success: bool
+    fallback_used: bool 
 
 
 # ============================================================================
@@ -247,6 +248,7 @@ def schema_link_node(state: SQLCorrectionState) -> SQLCorrectionState:
 
 
 def generate_sql_node(state: SQLCorrectionState) -> SQLCorrectionState:
+
     """Node 2: Generate or regenerate SQL with correction prompt if retry
 
     🔧 Improvement 1: Correction prompts use:
@@ -261,6 +263,7 @@ def generate_sql_node(state: SQLCorrectionState) -> SQLCorrectionState:
     Returns:
         Updated state with generated_sql
     """
+
     attempt = state["attempt_number"]
     max_attempts = state["max_attempts"]
 
@@ -268,54 +271,63 @@ def generate_sql_node(state: SQLCorrectionState) -> SQLCorrectionState:
     logger.info(f"[Generate] Attempt {attempt}/{max_attempts}")
     logger.info("-" * 80)
 
-    # Ensure SQL generator is set
     assert _sql_generator is not None, "SQLGenerator not initialized"
 
+    # ---------- ATTEMPT 1 ----------
     if attempt == 1:
-        # First attempt: normal generation
         logger.info("[Generate] First attempt - generating SQL...")
+
         sql = _sql_generator.generate(
             question=state["question"],
             filtered_schema=state["filtered_schema"]
         )
-        logger.info(f"[Generate] Generated SQL:")
-        logger.info(f"  {sql[:100]}{'...' if len(sql) > 100 else ''}")
-    else:
-        # Retry: generate with correction prompt
-        logger.info("[Generate] Retry - generating with correction prompt...")
-        correction_prompt = build_correction_prompt(state)
 
-        logger.info(f"[Generate] Correction prompt:")
-        logger.info(f"  {correction_prompt[:150]}{'...' if len(correction_prompt) > 150 else ''}")
+    # ---------- ATTEMPT 2 ----------
+    elif attempt == 2:
+        logger.info("[Generate] Attempt 2 - auto column repair")
 
-        # 🔧 Use generate_with_correction() (no more temporary workaround!)
-        sql = _sql_generator.generate_with_correction(
-            question=state["question"],
-            filtered_schema=state["filtered_schema"],
-            correction_prompt=correction_prompt
-        )
-        
-
-        # 🔧 Improvement 4: Enhanced SQL diff logging
         previous_sql = state["previous_sqls"][-1]
-        logger.info(f"[Generate] Regenerated SQL:")
-        logger.info(f"  {sql[:100]}{'...' if len(sql) > 100 else ''}")
 
+        sql = auto_fix_columns(
+            previous_sql,
+            state["filtered_schema"]
+        )
+
+        logger.info("[Generate] Column repair applied")
+
+    # ---------- ATTEMPT 3 ----------
+    else:
+        logger.warning("[Generate] Attempt 3 - fallback simplified query")
+
+        first_table = list(state["filtered_schema"].keys())[0]
+
+        sql = f"SELECT * FROM {first_table} LIMIT 100"
+
+    # ---------- Logging ----------
+    logger.info(f"[Generate] SQL:")
+    logger.info(f"  {sql[:100]}{'...' if len(sql) > 100 else ''}")
+
+    # Diff logging
+    if state["previous_sqls"]:
+        previous_sql = state["previous_sqls"][-1]
         diff_summary = get_sql_diff(previous_sql, sql)
-       
         logger.info(f"[Diff] {diff_summary}")
-    
 
     state["generated_sql"] = sql
     state["previous_sqls"].append(sql)
+    state["fallback_used"] = True 
+
+    # Retry guard
     if len(state["previous_sqls"]) >= 2:
         prev = normalize_sql(state["previous_sqls"][-2])
         curr = normalize_sql(state["previous_sqls"][-1])
+
         if prev == curr:
             logger.warning("[Generate] SQL unchanged after correction")
             state["final_success"] = False
 
     return state
+
 
 
 def critic_node(state: SQLCorrectionState) -> SQLCorrectionState:
@@ -746,7 +758,8 @@ class CorrectionResult:
     attempts: int
     execution_result: Dict[str, Any]
     validation_issues: Optional[List[str]] = None
-
+    used_fallback: bool = False
+    
     @property
     def was_corrected(self) -> bool:
         """Fixed by retry"""
@@ -851,7 +864,8 @@ class CorrectionAgent:
             "attempt_number": 1,
             "max_attempts": self.max_attempts,
             "previous_sqls": [],
-            "final_success": False
+            "final_success": False,
+            "fallback_used": False
         }
 
         # Run LangGraph workflow
@@ -868,7 +882,8 @@ class CorrectionAgent:
             success=final_state["final_success"],
             attempts=final_state["attempt_number"],
             execution_result=final_state["execution_result"],
-            validation_issues=final_state["validation_result"].get("issues", [])
+            validation_issues=final_state["validation_result"].get("issues", []),
+            used_fallback=final_state.get("fallback_used", False)
         )
 
         # Update metrics

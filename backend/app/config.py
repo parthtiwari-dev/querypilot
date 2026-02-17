@@ -73,6 +73,7 @@ def get_llm():
             model=settings.OPENAI_MODEL_NAME,
             api_key=settings.OPENAI_API_KEY,
             temperature=0,
+            top_p=1,
         )
 
 

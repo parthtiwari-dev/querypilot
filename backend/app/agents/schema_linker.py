@@ -34,6 +34,14 @@ class SchemaLinker:
         
         logger.info("Schema Linker initialized successfully")
     
+    def _get_full_schema(self):
+        """Lazy-load full schema metadata"""
+        if self._schema_cache is None:
+            logger.info("Extracting full schema metadata...")
+            self._schema_cache = self.extractor.extract_schema()
+        return self._schema_cache
+
+
     def index_schema(self, reset: bool = True):
         """
         Extract database schema and index it in Chroma DB
@@ -65,11 +73,13 @@ class SchemaLinker:
             'status': 'success'
         }
     
+       
     def link_schema(
-        self, 
-        question: str, 
+        self,
+        question: str,
         top_k: int = 7
     ) -> Dict[str, Dict]:
+        
         """
         Find relevant tables and columns for a question
         
@@ -80,21 +90,44 @@ class SchemaLinker:
         Returns:
             Dictionary mapping table names to their relevant columns
         """
+         
         logger.info(f"Linking schema for question: {question}")
-        
-        # Step 1: Embed the question
+
+        # Step 1: Embed question
         question_embedding = self.embedder.embed_question(question)
-        
-        # Step 2: Search Chroma DB for similar schema elements
-        results = self.chroma.search_schema(question_embedding, n_results=top_k)
-        
-        # Step 3: Group results by table
+
+        # Step 2: Vector search
+        results = self.chroma.search_schema(
+            question_embedding,
+            n_results=top_k
+        )
+
+        # Step 3: Group by table
         relevant_schema = self._group_by_table(results)
-        
+
         logger.info(f"Found {len(relevant_schema)} relevant tables")
-        
-        return relevant_schema
+
+        # ---- FK EXPANSION ----
+        full_schema = self.extractor.extract_schema()
+
+        expanded_schema = dict(relevant_schema)
+
+        for table, info in relevant_schema.items():
+            fks = info.get("foreign_keys", {})
+
+            for _, ref in fks.items():
+                ref_table = ref.split(".")[0]
+
+                if ref_table in full_schema and ref_table not in expanded_schema:
+                    expanded_schema[ref_table] = full_schema[ref_table]
+
+        logger.info(
+            f"Expanded to {len(expanded_schema)} tables after FK expansion"
+        )
+
+        return expanded_schema
     
+
     def _group_by_table(self, search_results: Dict) -> Dict[str, Dict]:
         """
         Group search results by table name and return full metadata
