@@ -62,23 +62,26 @@ class SchemaMetadataExtractor:
         
         # Get foreign keys
         foreign_keys = self.inspector.get_foreign_keys(table_name)
-        fk_info = []
+        
+        # ✅ FIX: Format FK as {column: referred_table.referred_column}
+        # This matches what SQL Generator expects!
+        fk_dict = {}
         for fk in foreign_keys:
-            fk_info.append({
-                'constrained_columns': fk['constrained_columns'],
-                'referred_table': fk['referred_table'],
-                'referred_columns': fk['referred_columns']
-            })
+            if fk['constrained_columns'] and fk['referred_columns']:
+                col = fk['constrained_columns'][0]
+                ref_table = fk['referred_table']
+                ref_col = fk['referred_columns'][0]
+                fk_dict[col] = f"{ref_table}.{ref_col}"
         
         # Get primary key
         pk_constraint = self.inspector.get_pk_constraint(table_name)
         primary_keys = pk_constraint.get('constrained_columns', [])
         
         return {
-            'columns': column_names,
+            'columns': data_types,  # ✅ Dict format
             'data_types': data_types,
             'primary_keys': primary_keys,
-            'foreign_keys': fk_info,
+            'foreign_keys': fk_dict,  # ✅ FIX: Use dict format
             'column_count': len(column_names)
         }
     
@@ -151,3 +154,5 @@ if __name__ == "__main__":
     print("DATABASE SUMMARY:")
     print("-"*50)
     print(extractor.get_database_summary())
+
+

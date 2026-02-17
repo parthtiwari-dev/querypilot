@@ -903,31 +903,49 @@ def auto_fix_columns(sql: str, schema: dict) -> str:
     """
     from difflib import get_close_matches
     import re
-    
+
     # Build table → columns map
     column_map = {}
     for table, info in schema.items():
         cols = info.get("columns", {})
         column_map[table.lower()] = [c.lower() for c in cols.keys()]
-    
-    # ✅ FIX #8A: Handle qualified references (table.column)
+
+    # Minimal alias support
+    COLUMN_ALIASES = {
+        "created_at": "order_date",
+        "updated_at": "order_date",
+    }
+
+    # ---------- QUALIFIED references ----------
     pattern_qualified = r'(\w+)\.(\w+)'
     matches = re.findall(pattern_qualified, sql)
-    
+
     for table, column in matches:
         table_lower = table.lower()
         column_lower = column.lower()
-        
+
         if table_lower not in column_map:
             continue
-        
+
         candidates = column_map[table_lower]
-        
-        # Column already valid
+
+        # Already valid
         if column_lower in candidates:
             continue
-        
-        # Find closest column name
+
+        # Alias fix first
+        if column_lower in COLUMN_ALIASES:
+            correct = COLUMN_ALIASES[column_lower]
+            if correct in candidates:
+                sql = re.sub(
+                    rf'\b{table}\.{column}\b',
+                    f"{table}.{correct}",
+                    sql,
+                    flags=re.IGNORECASE
+                )
+                continue
+
+        # Fuzzy fallback
         match = get_close_matches(column_lower, candidates, n=1, cutoff=0.6)
         if match:
             correct = match[0]
@@ -937,48 +955,49 @@ def auto_fix_columns(sql: str, schema: dict) -> str:
                 sql,
                 flags=re.IGNORECASE
             )
-    
-    # ✅ FIX #8B: Handle bare column references (no table prefix)
-    # Extract error message from logs to find which table is missing the column
-    # For now, try all tables and use first match
-    pattern_bare = r'\b(\w+)\b'
-    
-    # Get all possible columns across all tables
-    all_columns = {}
-    for table, cols in column_map.items():
-        for col in cols:
-            if col not in all_columns:
-                all_columns[col] = table
-    
-    # Find potential bare columns (keywords excluded)
-    sql_keywords = {'select', 'from', 'where', 'and', 'or', 'order', 'by', 'limit', 
-                    'group', 'having', 'join', 'on', 'as', 'with', 'case', 'when', 
-                    'then', 'else', 'end', 'distinct', 'count', 'sum', 'avg', 'max', 'min'}
-    
+
+    # ---------- BARE references ----------
+    sql_keywords = {
+        'select', 'from', 'where', 'and', 'or', 'order', 'by', 'limit',
+        'group', 'having', 'join', 'on', 'as', 'with', 'case', 'when',
+        'then', 'else', 'end', 'distinct', 'count', 'sum', 'avg', 'max', 'min'
+    }
+
     words = re.findall(r'\b(\w+)\b', sql.lower())
+
+    all_columns = [col for cols in column_map.values() for col in cols]
+
     for word in words:
         if word in sql_keywords or word in column_map:
             continue
-        
-        # Check if this word looks like a column name that doesn't exist
+
         found = False
-        for table, cols in column_map.items():
+        for cols in column_map.values():
             if word in cols:
                 found = True
                 break
-        
+
         if not found:
-            # Try to find similar column
-            all_col_names = [col for cols in column_map.values() for col in cols]
-            matches = get_close_matches(word, all_col_names, n=1, cutoff=0.7)
+            # Alias first
+            if word in COLUMN_ALIASES:
+                sql = re.sub(
+                    rf'\b{word}\b',
+                    COLUMN_ALIASES[word],
+                    sql,
+                    flags=re.IGNORECASE,
+                    count=1
+                )
+                continue
+
+            # Fuzzy fallback
+            matches = get_close_matches(word, all_columns, n=1, cutoff=0.7)
             if matches:
-                # Replace bare column with corrected version
                 sql = re.sub(
                     rf'\b{word}\b',
                     matches[0],
                     sql,
                     flags=re.IGNORECASE,
-                    count=1  # Only replace first occurrence
+                    count=1
                 )
-    
+
     return sql

@@ -1,8 +1,8 @@
 {
   "metadata": {
     "total_queries": 20,
-    "successful_queries": 19,
-    "overall_success_rate": 0.95,
+    "successful_queries": 17,
+    "overall_success_rate": 0.85,
     "prompt_version": "v1"
   },
   "results": [
@@ -14,17 +14,17 @@
         "products"
       ],
       "retrieved_tables": [
-        "products",
         "order_items",
+        "products",
         "reviews"
       ],
-      "generated_sql": "SELECT COUNT(product_id) FROM products LIMIT 1000",
+      "generated_sql": "SELECT COUNT(product_id) AS total_products FROM products LIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 153.49,
-      "sql_generation_time_ms": 462.4,
-      "execution_time_ms": 20.63
+      "schema_linking_time_ms": 386.36,
+      "sql_generation_time_ms": 1427.33,
+      "execution_time_ms": 293.37
     },
     {
       "id": "simple_002",
@@ -38,13 +38,13 @@
         "orders",
         "reviews"
       ],
-      "generated_sql": "SELECT name FROM customers LIMIT 1000",
+      "generated_sql": "SELECT name FROM customers LIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 65.67,
-      "sql_generation_time_ms": 119.06,
-      "execution_time_ms": 28.54
+      "schema_linking_time_ms": 139.29,
+      "sql_generation_time_ms": 633.49,
+      "execution_time_ms": 75.61
     },
     {
       "id": "simple_003",
@@ -57,13 +57,13 @@
         "products",
         "order_items"
       ],
-      "generated_sql": "SELECT name, price, stock_quantity, product_id FROM products WHERE price::INTEGER > 100 LIMIT 1000",
+      "generated_sql": "SELECT name, price, product_id, stock_quantity FROM products WHERE price > 100 LIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 70.68,
-      "sql_generation_time_ms": 187.09,
-      "execution_time_ms": 25.84
+      "schema_linking_time_ms": 143.06,
+      "sql_generation_time_ms": 860.7,
+      "execution_time_ms": 39.18
     },
     {
       "id": "simple_004",
@@ -76,13 +76,13 @@
         "products",
         "order_items"
       ],
-      "generated_sql": "SELECT name, price \nFROM products \nORDER BY price::DECIMAL DESC \nLIMIT 5;",
+      "generated_sql": "SELECT name, price FROM products ORDER BY price DESC LIMIT 5;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 84.95,
-      "sql_generation_time_ms": 470.17,
-      "execution_time_ms": 26.79
+      "schema_linking_time_ms": 93.01,
+      "sql_generation_time_ms": 1070.03,
+      "execution_time_ms": 24.68
     },
     {
       "id": "simple_005",
@@ -96,13 +96,13 @@
         "payments",
         "order_items"
       ],
-      "generated_sql": "SELECT COUNT(order_id) FROM orders WHERE status::TEXT = 'completed' LIMIT 1000",
+      "generated_sql": "SELECT COUNT(*) AS completed_orders_count \nFROM orders \nWHERE status ILIKE 'completed' \nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 82.91,
-      "sql_generation_time_ms": 191.38,
-      "execution_time_ms": 29.52
+      "schema_linking_time_ms": 95.47,
+      "sql_generation_time_ms": 995.16,
+      "execution_time_ms": 50.54
     },
     {
       "id": "simple_006",
@@ -113,15 +113,16 @@
       ],
       "retrieved_tables": [
         "products",
-        "categories"
+        "categories",
+        "order_items"
       ],
-      "generated_sql": "SELECT DISTINCT c.name \nFROM categories c \nJOIN products p ON c.category_id::INTEGER = p.category_id::INTEGER \nLIMIT 1000",
+      "generated_sql": "SELECT name, description FROM categories LIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 67.31,
-      "sql_generation_time_ms": 358.1,
-      "execution_time_ms": 31.04
+      "schema_linking_time_ms": 98.13,
+      "sql_generation_time_ms": 1284.41,
+      "execution_time_ms": 37.07
     },
     {
       "id": "simple_007",
@@ -134,13 +135,13 @@
         "products",
         "order_items"
       ],
-      "generated_sql": "SELECT product_id \nFROM products \nWHERE stock_quantity::INTEGER < 10 \nLIMIT 1000",
+      "generated_sql": "SELECT product_id, stock_quantity FROM products WHERE stock_quantity < 10 LIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 71.37,
-      "sql_generation_time_ms": 178.96,
-      "execution_time_ms": 55.23
+      "schema_linking_time_ms": 84.33,
+      "sql_generation_time_ms": 971.93,
+      "execution_time_ms": 35.26
     },
     {
       "id": "simple_008",
@@ -154,13 +155,13 @@
         "orders",
         "reviews"
       ],
-      "generated_sql": "SELECT name, email, customer_id FROM customers WHERE country ILIKE 'USA' LIMIT 1000",
+      "generated_sql": "SELECT customer_id, name, country, email FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 97.95,
-      "sql_generation_time_ms": 279.1,
-      "execution_time_ms": 37.81
+      "schema_linking_time_ms": 73.0,
+      "sql_generation_time_ms": 974.1,
+      "execution_time_ms": 38.3
     },
     {
       "id": "medium_001",
@@ -174,13 +175,13 @@
         "products",
         "order_items"
       ],
-      "generated_sql": "SELECT p.product_id, SUM(oi.subtotal) AS revenue \nFROM products p \nJOIN order_items oi ON p.product_id = oi.product_id::INTEGER \nGROUP BY p.product_id \nORDER BY revenue DESC \nLIMIT 10;",
+      "generated_sql": "SELECT oi.product_id, SUM(oi.subtotal) AS total_revenue\nFROM order_items oi\nGROUP BY oi.product_id\nORDER BY total_revenue DESC\nLIMIT 10;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 66.89,
-      "sql_generation_time_ms": 292.93,
-      "execution_time_ms": 47.8
+      "schema_linking_time_ms": 77.23,
+      "sql_generation_time_ms": 1580.45,
+      "execution_time_ms": 39.13
     },
     {
       "id": "medium_002",
@@ -195,13 +196,13 @@
         "order_items",
         "payments"
       ],
-      "generated_sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000",
+      "generated_sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 69.18,
-      "sql_generation_time_ms": 179.7,
-      "execution_time_ms": 37.94
+      "schema_linking_time_ms": 94.89,
+      "sql_generation_time_ms": 1201.95,
+      "execution_time_ms": 38.78
     },
     {
       "id": "medium_003",
@@ -217,13 +218,13 @@
         "orders",
         "order_items"
       ],
-      "generated_sql": "SELECT category_id::INTEGER, SUM(price * stock_quantity) AS total_revenue \nFROM products \nGROUP BY category_id::INTEGER \nORDER BY total_revenue DESC \nLIMIT 1000",
-      "execution_success": true,
-      "error_type": null,
-      "error_message": null,
-      "schema_linking_time_ms": 81.8,
-      "sql_generation_time_ms": 190.36,
-      "execution_time_ms": 34.57
+      "generated_sql": "SELECT category_id, SUM(order_items.subtotal) AS total_revenue\nFROM order_items\nJOIN orders ON order_items.order_id = orders.id -- TODO: Missing table\nJOIN products ON order_items.product_id = products.id -- TODO: Missing table\nGROUP BY category_id\nORDER BY total_revenue DESC\nLIMIT 1000;",
+      "execution_success": false,
+      "error_type": "column_not_found",
+      "error_message": "column orders.id does not exist\nLINE 3: JOIN orders ON order_items.order_id = orders.id -- TODO: Mis...\n                                              ^\n",
+      "schema_linking_time_ms": 94.75,
+      "sql_generation_time_ms": 2136.76,
+      "execution_time_ms": 35.96
     },
     {
       "id": "medium_004",
@@ -236,16 +237,16 @@
       "retrieved_tables": [
         "order_items",
         "products",
-        "reviews",
-        "orders"
+        "orders",
+        "reviews"
       ],
-      "generated_sql": "SELECT product_id FROM products WHERE product_id NOT IN (SELECT product_id FROM order_items) LIMIT 1000",
+      "generated_sql": "SELECT p.product_id \nFROM products p \nLEFT JOIN order_items oi ON p.product_id = oi.product_id \nWHERE oi.product_id IS NULL \nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 73.95,
-      "sql_generation_time_ms": 153.5,
-      "execution_time_ms": 26.42
+      "schema_linking_time_ms": 85.31,
+      "sql_generation_time_ms": 1331.48,
+      "execution_time_ms": 21.83
     },
     {
       "id": "medium_005",
@@ -260,13 +261,13 @@
         "order_items",
         "customers"
       ],
-      "generated_sql": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nORDER BY average_order_value DESC \nLIMIT 1000",
+      "generated_sql": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 70.1,
-      "sql_generation_time_ms": 202.74,
-      "execution_time_ms": 36.17
+      "schema_linking_time_ms": 95.55,
+      "sql_generation_time_ms": 1438.01,
+      "execution_time_ms": 18.57
     },
     {
       "id": "medium_006",
@@ -279,13 +280,13 @@
       "retrieved_tables": [
         "reviews"
       ],
-      "generated_sql": "SELECT product_id, AVG(rating) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000",
+      "generated_sql": "SELECT product_id, AVG(rating) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 68.63,
-      "sql_generation_time_ms": 203.7,
-      "execution_time_ms": 25.0
+      "schema_linking_time_ms": 75.08,
+      "sql_generation_time_ms": 1698.64,
+      "execution_time_ms": 36.57
     },
     {
       "id": "medium_007",
@@ -299,13 +300,13 @@
         "payments",
         "orders"
       ],
-      "generated_sql": "SELECT payment_method, COUNT(DISTINCT order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nORDER BY order_count DESC \nLIMIT 1000",
+      "generated_sql": "SELECT payment_method, COUNT(DISTINCT o.order_id) AS order_count\nFROM payments p\nJOIN orders o ON p.order_id = o.order_id\nGROUP BY payment_method\nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 72.08,
-      "sql_generation_time_ms": 214.25,
-      "execution_time_ms": 30.05
+      "schema_linking_time_ms": 77.07,
+      "sql_generation_time_ms": 1557.4,
+      "execution_time_ms": 40.29
     },
     {
       "id": "medium_008",
@@ -320,13 +321,13 @@
         "products",
         "orders"
       ],
-      "generated_sql": "SELECT SUM(oi.quantity) AS total_quantity_sold\nFROM order_items oi\nJOIN products p ON oi.quantity::INTEGER > 0\nGROUP BY p.price, p.stock_quantity\nORDER BY total_quantity_sold DESC\nLIMIT 1000",
-      "execution_success": true,
-      "error_type": null,
-      "error_message": null,
-      "schema_linking_time_ms": 72.72,
-      "sql_generation_time_ms": 320.76,
-      "execution_time_ms": 40.12
+      "generated_sql": "SELECT oi.quantity, p.price \nFROM order_items oi \nJOIN products p ON oi.product_id = p.id \nGROUP BY p.id, oi.quantity \nORDER BY p.id \nLIMIT 1000;",
+      "execution_success": false,
+      "error_type": "column_not_found",
+      "error_message": "column p.id does not exist\nLINE 3: JOIN products p ON oi.product_id = p.id \n                                           ^\n",
+      "schema_linking_time_ms": 77.95,
+      "sql_generation_time_ms": 1227.25,
+      "execution_time_ms": 35.17
     },
     {
       "id": "hard_001",
@@ -342,13 +343,13 @@
         "customers",
         "payments"
       ],
-      "generated_sql": "SELECT c.name \nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.name\nHAVING COUNT(o.customer_id) > (SELECT AVG(order_count) \n                                FROM (SELECT customer_id, COUNT(customer_id) AS order_count \n                                      FROM orders \n                                      GROUP BY customer_id) AS subquery)\nLIMIT 1000",
+      "generated_sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(*) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM order_counts\n)\nSELECT c.name, oc.order_count\nFROM order_counts oc\nJOIN customers c ON oc.customer_id = c.customer_id\nWHERE oc.order_count > (SELECT avg_order_count FROM average_order_count)\nORDER BY oc.order_count DESC\nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 67.96,
-      "sql_generation_time_ms": 431.87,
-      "execution_time_ms": 32.87
+      "schema_linking_time_ms": 101.15,
+      "sql_generation_time_ms": 2910.19,
+      "execution_time_ms": 28.19
     },
     {
       "id": "hard_002",
@@ -364,13 +365,13 @@
         "payments",
         "order_items"
       ],
-      "generated_sql": "SELECT \n    DATE_TRUNC('month', payment_date) AS month,\n    SUM(amount) AS revenue\nFROM \n    payments\nWHERE \n    payment_date >= CURRENT_DATE - INTERVAL '6 month'\nGROUP BY \n    DATE_TRUNC('month', payment_date)\nORDER BY \n    month\nLIMIT 1000",
+      "generated_sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', payment_date) AS month,\n        SUM(amount) AS total_revenue\n    FROM payments\n    WHERE payment_date >= CURRENT_DATE - INTERVAL '6 months'\n    GROUP BY month\n)\nSELECT \n    month,\n    total_revenue\nFROM monthly_revenue\nORDER BY month\nLIMIT 1000;",
       "execution_success": true,
       "error_type": null,
       "error_message": null,
-      "schema_linking_time_ms": 73.56,
-      "sql_generation_time_ms": 262.81,
-      "execution_time_ms": 38.86
+      "schema_linking_time_ms": 74.48,
+      "sql_generation_time_ms": 2748.79,
+      "execution_time_ms": 41.28
     },
     {
       "id": "hard_003",
@@ -386,13 +387,13 @@
         "order_items",
         "reviews"
       ],
-      "generated_sql": "SELECT category_id, product_id, SUM(price * stock_quantity) AS revenue\nFROM products\nJOIN order_items ON products.id = order_items.product_id\nGROUP BY category_id, product_id\nORDER BY category_id, revenue DESC\nLIMIT 1000;",
-      "execution_success": false,
-      "error_type": "column_not_found",
-      "error_message": "column products.id does not exist\nLINE 3: JOIN order_items ON products.id = order_items.product_id\n                            ^\n",
-      "schema_linking_time_ms": 66.53,
-      "sql_generation_time_ms": 235.68,
-      "execution_time_ms": 34.59
+      "generated_sql": "SELECT category_id, SUM(price * stock_quantity) AS revenue\nFROM products\nGROUP BY category_id\nORDER BY revenue DESC\nLIMIT 1000;",
+      "execution_success": true,
+      "error_type": null,
+      "error_message": null,
+      "schema_linking_time_ms": 80.76,
+      "sql_generation_time_ms": 1043.26,
+      "execution_time_ms": 40.79
     },
     {
       "id": "hard_004",
@@ -406,13 +407,13 @@
         "orders",
         "customers"
       ],
-      "generated_sql": "SELECT c.customer_id, c.name \nFROM customers c \nLEFT JOIN orders o ON c.customer_id = o.customer_id \nWHERE o.customer_id IS NULL OR o.customer_id NOT IN (\n  SELECT customer_id \n  FROM orders \n  WHERE created_at > (CURRENT_DATE - INTERVAL '90 day')\n)\nLIMIT 1000",
-      "execution_success": true,
-      "error_type": null,
-      "error_message": null,
-      "schema_linking_time_ms": 77.81,
-      "sql_generation_time_ms": 292.82,
-      "execution_time_ms": 36.6
+      "generated_sql": "WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name, c.lifetime_value, c.created_at\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000;",
+      "execution_success": false,
+      "error_type": "column_not_found",
+      "error_message": "column \"created_at\" does not exist\nLINE 4:     WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n                  ^\n",
+      "schema_linking_time_ms": 72.27,
+      "sql_generation_time_ms": 2647.54,
+      "execution_time_ms": 35.28
     }
   ]
 }

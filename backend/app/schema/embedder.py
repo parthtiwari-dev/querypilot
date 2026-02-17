@@ -100,10 +100,8 @@ class SchemaEmbedder:
         # Add foreign key info if exists
         if table_info['foreign_keys']:
             fk_info = []
-            for fk in table_info['foreign_keys']:
-                fk_info.append(
-                    f"{fk['constrained_columns'][0]} references {fk['referred_table']}"
-                )
+            for col, ref in table_info['foreign_keys'].items():
+                fk_info.append(f"{col} references {ref}")
             doc += f". Relationships: {', '.join(fk_info)}"
         
         return doc

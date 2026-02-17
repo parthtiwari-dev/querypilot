@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-18T01:55:03.842203",
+  "timestamp": "2026-02-18T03:25:49.164112",
   "dataset": "backend/app/evaluation/datasets/core_eval.json",
   "total_tests": 20,
   "summary": {
@@ -37,18 +37,18 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT COUNT(*) AS product_count FROM products LIMIT 1000;",
+      "final_sql": "SELECT COUNT(product_id) AS total_products FROM products LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "product_count": 3
+            "total_products": 3
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 50.96,
+        "execution_time_ms": 41.09,
         "row_count": 1
       },
       "validation_issues": []
@@ -80,7 +80,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 8.53,
+        "execution_time_ms": 5.56,
         "row_count": 3
       },
       "validation_issues": []
@@ -95,21 +95,21 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT name, price, product_id, stock_quantity FROM products WHERE price > 100 LIMIT 1000;",
+      "final_sql": "SELECT name, stock_quantity, product_id, price FROM products WHERE price > 100 LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
             "name": "Laptop",
-            "price": "999.99",
+            "stock_quantity": 50,
             "product_id": 1,
-            "stock_quantity": 50
+            "price": "999.99"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.02,
+        "execution_time_ms": 5.64,
         "row_count": 1
       },
       "validation_issues": []
@@ -124,27 +124,30 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT name, price FROM products ORDER BY price DESC LIMIT 5;",
+      "final_sql": "SELECT name, product_id, price FROM products ORDER BY price DESC LIMIT 5;",
       "execution_result": {
         "success": true,
         "data": [
           {
             "name": "Laptop",
+            "product_id": 1,
             "price": "999.99"
           },
           {
             "name": "Python Programming Book",
+            "product_id": 3,
             "price": "39.99"
           },
           {
             "name": "T-Shirt",
+            "product_id": 2,
             "price": "29.99"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.29,
+        "execution_time_ms": 4.72,
         "row_count": 3
       },
       "validation_issues": []
@@ -170,7 +173,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 9.18,
+        "execution_time_ms": 6.6,
         "row_count": 1
       },
       "validation_issues": []
@@ -205,7 +208,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.96,
+        "execution_time_ms": 3.61,
         "row_count": 3
       },
       "validation_issues": []
@@ -227,7 +230,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.25,
+        "execution_time_ms": 6.51,
         "row_count": 0
       },
       "validation_issues": []
@@ -242,21 +245,21 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT name, customer_id, email, country FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
+      "final_sql": "SELECT name, country, email, customer_id FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
             "name": "Alice Johnson",
-            "customer_id": 1,
+            "country": "USA",
             "email": "alice@example.com",
-            "country": "USA"
+            "customer_id": 1
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.71,
+        "execution_time_ms": 5.79,
         "row_count": 1
       },
       "validation_issues": []
@@ -291,7 +294,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.74,
+        "execution_time_ms": 7.48,
         "row_count": 3
       },
       "validation_issues": []
@@ -326,7 +329,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.14,
+        "execution_time_ms": 4.21,
         "row_count": 3
       },
       "validation_issues": []
@@ -338,31 +341,18 @@
       "expected_error": "N/A",
       "should_succeed": true,
       "actual_success": true,
-      "attempts": 3,
-      "was_corrected": true,
+      "attempts": 1,
+      "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT products.category_id, SUM(order_items.subtotal) AS total_revenue\nFROM order_items\nJOIN orders ON orders.total_amount IS NOT NULL -- Assuming a relationship exists\nJOIN products ON products.price IS NOT NULL -- Assuming a relationship exists\nGROUP BY products.category_id\nORDER BY total_revenue DESC\nLIMIT 1000;",
+      "final_sql": "SELECT p.category_id, SUM(oi.subtotal) AS total_revenue\nFROM products p\nJOIN order_items oi ON p.category_id = oi.subtotal::INTEGER -- TODO: Missing foreign key relationship\nGROUP BY p.category_id\nLIMIT 1000;",
       "execution_result": {
         "success": true,
-        "data": [
-          {
-            "category_id": 3,
-            "total_revenue": "3209.91"
-          },
-          {
-            "category_id": 2,
-            "total_revenue": "3209.91"
-          },
-          {
-            "category_id": 1,
-            "total_revenue": "3209.91"
-          }
-        ],
+        "data": [],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 558.62,
-        "row_count": 3
+        "execution_time_ms": 4.37,
+        "row_count": 0
       },
       "validation_issues": []
     },
@@ -383,7 +373,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.14,
+        "execution_time_ms": 5.97,
         "row_count": 0
       },
       "validation_issues": []
@@ -418,7 +408,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.83,
+        "execution_time_ms": 3.81,
         "row_count": 3
       },
       "validation_issues": []
@@ -440,7 +430,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.78,
+        "execution_time_ms": 4.62,
         "row_count": 0
       },
       "validation_issues": []
@@ -452,10 +442,10 @@
       "expected_error": "N/A",
       "should_succeed": true,
       "actual_success": true,
-      "attempts": 1,
-      "was_corrected": false,
+      "attempts": 3,
+      "was_corrected": true,
       "used_fallback": false,
-      "final_sql": "SELECT payment_method, COUNT(order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nLIMIT 1000;",
+      "final_sql": "SELECT payment_method, COUNT(DISTINCT p.order_id) AS order_count\nFROM payments p\nGROUP BY payment_method\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
@@ -471,7 +461,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 9.35,
+        "execution_time_ms": 3.74,
         "row_count": 2
       },
       "validation_issues": []
@@ -482,34 +472,16 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": true,
+      "actual_success": false,
       "attempts": 3,
-      "was_corrected": true,
+      "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT SUM(oi.quantity) AS total_quantity_sold, p.price \nFROM order_items oi \nJOIN products p ON oi.subtotal / p.price = oi.quantity \nGROUP BY p.price \nORDER BY p.price \nLIMIT 1000;",
-      "execution_result": {
-        "success": true,
-        "data": [
-          {
-            "total_quantity_sold": 1,
-            "price": "29.99"
-          },
-          {
-            "total_quantity_sold": 1,
-            "price": "39.99"
-          },
-          {
-            "total_quantity_sold": 1,
-            "price": "999.99"
-          }
-        ],
-        "error_type": null,
-        "error_message": null,
-        "error_feedback": null,
-        "execution_time_ms": 7.29,
-        "row_count": 3
-      },
-      "validation_issues": []
+      "final_sql": "SELECT SUM(oi.quantity) AS total_quantity_sold, p.stock_quantity \nFROM order_items oi\nJOIN products p ON oi.product_id = p.id \nGROUP BY p.stock_quantity\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Column 'product_id' not in table 'order_items' (available: subtotal, quantity...)",
+        "Column 'id' not in table 'products' (available: stock_quantity, price...)"
+      ]
     },
     {
       "test_id": "hard_001",
@@ -521,11 +493,11 @@
       "attempts": 3,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(*) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM order_counts\n)\nSELECT oc.customer_id, oc.order_count\nFROM order_counts oc\nWHERE oc.order_count > (SELECT avg_order_count FROM average_order_count)\nLIMIT 1000;",
+      "final_sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(*) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM order_counts\n)\nSELECT c.name, oc.order_count\nFROM order_counts oc\nJOIN customers c ON oc.customer_id = c.customer_id\nWHERE oc.order_count > (SELECT avg_order_count FROM average_order_count)\nORDER BY oc.order_count DESC\nLIMIT 1000;",
       "execution_result": {},
       "validation_issues": [
-        "Table 'average_order_count' not in schema (available: customers, order_items, payments, orders)",
-        "Multiple tables detected but no JOIN found (possible cartesian product)"
+        "Table 'average_order_count' not in schema (available: customers, orders, payments, order_items)",
+        "Column 'customer_id' not in table 'customers' (available: name, lifetime_value...)"
       ]
     },
     {
@@ -550,7 +522,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 11.56,
+        "execution_time_ms": 8.42,
         "row_count": 1
       },
       "validation_issues": []
@@ -561,16 +533,34 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": false,
+      "actual_success": true,
       "attempts": 3,
-      "was_corrected": false,
+      "was_corrected": true,
       "used_fallback": false,
-      "final_sql": "WITH revenue_per_product AS (\n    SELECT \n        p.category_id,\n        SUM(p.price * oi.quantity) AS total_revenue\n    FROM \n        products p\n    JOIN \n        order_items oi ON p.category_id = oi.category_id -- Assuming a relationship based on category_id\n    GROUP BY \n        p.category_id\n)\nSELECT \n    category_id,\n    total_revenue\nFROM \n    revenue_per_product\nORDER BY \n    category_id, total_revenue DESC\nLIMIT 1000;",
-      "execution_result": {},
-      "validation_issues": [
-        "Column 'quantity' not in table 'order_items' (available: ...)",
-        "Column 'category_id' not in table 'order_items' (available: ...)"
-      ]
+      "final_sql": "WITH revenue_per_product AS (\n    SELECT \n        p.category_id,\n        SUM(p.stock_quantity * p.price) AS total_revenue\n    FROM \n        products p\n    GROUP BY \n        p.category_id\n)\nSELECT \n    category_id,\n    total_revenue\nFROM \n    revenue_per_product\nORDER BY \n    category_id, total_revenue DESC\nLIMIT 1000;",
+      "execution_result": {
+        "success": true,
+        "data": [
+          {
+            "category_id": 1,
+            "total_revenue": "49999.50"
+          },
+          {
+            "category_id": 2,
+            "total_revenue": "5998.00"
+          },
+          {
+            "category_id": 3,
+            "total_revenue": "3999.00"
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 5.76,
+        "row_count": 3
+      },
+      "validation_issues": []
     },
     {
       "test_id": "hard_004",
@@ -582,14 +572,14 @@
       "attempts": 2,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name, c.lifetime_value\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000;",
+      "final_sql": "WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000;",
       "execution_result": {
         "success": false,
         "data": null,
         "error_type": "column_not_found",
-        "error_message": "(psycopg2.errors.UndefinedColumn) column \"created_at\" does not exist\nLINE 4:     WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n                  ^\n\n[SQL: WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name, c.lifetime_value\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+        "error_message": "(psycopg2.errors.UndefinedColumn) column \"created_at\" does not exist\nLINE 4:     WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n                  ^\n\n[SQL: WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
         "error_feedback": "Column 'created_at' does not exist in table 'orders'. Available columns in orders: customer_id.",
-        "execution_time_ms": 5.05,
+        "execution_time_ms": 6.08,
         "row_count": 0
       },
       "validation_issues": []

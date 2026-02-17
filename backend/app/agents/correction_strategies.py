@@ -388,16 +388,19 @@ def build_critic_correction_prompt(
     for issue in critic_issues:
         issue_lower = issue.lower()
         
-        # Skip if issue mentions a CTE name as "not in schema"
-        is_cte_false_positive = False
-        for cte_name in cte_names:
-            if cte_name in issue_lower and "not in schema" in issue_lower:
-                is_cte_false_positive = True
-                logger.info(f"[CriticCorrection] Filtered CTE false positive: {issue}")
-                break
+        # ✅ FIX: More efficient CTE detection
+        # Skip if this is a "table not in schema" error for a CTE
+        if "not in schema" in issue_lower or "table" in issue_lower:
+            # Extract table name from error message
+            # Pattern: "Table 'order_counts' not in schema"
+            match = re.search(r"table\s+['\"]?(\w+)['\"]?\s+not in schema", issue_lower)
+            if match:
+                table_name = match.group(1)
+                if table_name in cte_names:
+                    logger.info(f"[CriticCorrection] Filtered CTE false positive: {issue}")
+                    continue  # Skip this issue
         
-        if not is_cte_false_positive:
-            real_issues.append(issue)
+        real_issues.append(issue)
     
     # Use filtered issues, or keep originals if filtering removes everything
     issues_to_use = real_issues if real_issues else critic_issues
