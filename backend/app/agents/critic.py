@@ -292,15 +292,19 @@ class CriticAgent:
         """
         Extract table names from SQL query.
         Handles: FROM table, JOIN table, table AS alias
-        
+        Excludes: CTE names (WITH clauses define temp tables, not schema tables)
         Returns:
             Set of table names
         """
         tables = set()
         sql_upper = sql.upper()
         
+        # Extract CTE names first (to exclude them from validation)
+        cte_names = set()
+        cte_matches = re.findall(r'WITH\s+(\w+)\s+AS', sql_upper)
+        cte_names.update(match.lower() for match in cte_matches)
+        
         # Pattern: FROM/JOIN table_name [AS alias]
-        # Simple regex approach
         patterns = [
             r'FROM\s+(\w+)',
             r'JOIN\s+(\w+)',
@@ -309,68 +313,63 @@ class CriticAgent:
         for pattern in patterns:
             matches = re.findall(pattern, sql_upper)
             tables.update(match.lower() for match in matches)
-
-        # NEW: extract CTE names
-        cte_matches = re.findall(r'WITH\s+(\w+)\s+AS', sql_upper)
-        tables.update(match.lower() for match in cte_matches)
-
+        
+        # Remove CTE names - they are NOT schema tables
+        tables -= cte_names
+        
         return tables
 
 
+
     def _extract_column_references(self, sql: str) -> Dict[str, Set[str]]:
-        """
-        Extract column references grouped by table.
-        Handles: table.column, alias.column
-        For bare columns (no table prefix), only check if single table query.
+        """Extract column references grouped by table.
         
-        Returns:
-            Dict mapping table/alias to set of columns
+        Handles: table.column, alias.column
+        Ignores: SQL functions like DATE_TRUNC('month', column)
+        
+        Fix #7: Extract columns INSIDE functions before removing function wrappers
         """
         references = {}
         
-        # Pattern 1: table.column or alias.column (most reliable)
+        # ✅ STEP 1: Extract columns from INSIDE functions FIRST
+        # Pattern: FUNCTION_NAME(arg1, table.column, arg3)
+        # Captures qualified columns like: SUM(oi.quantity), DATE_TRUNC('month', p.created_at)
+        function_arg_pattern = r'\b[A-Z_]+\s*\([^)]*\)'
+        
+        for match in re.finditer(function_arg_pattern, sql, re.IGNORECASE):
+            func_content = match.group(0)
+            
+            # Extract table.column patterns from function arguments
+            qualified_cols = re.findall(r'(\w+)\.(\w+)', func_content)
+            
+            for table_or_alias, column in qualified_cols:
+                table_key = table_or_alias.lower()
+                if table_key not in references:
+                    references[table_key] = set()
+                references[table_key].add(column.lower())
+        
+        # ✅ STEP 2: Remove function wrappers (NOW it's safe)
+        sql_no_funcs = re.sub(
+            r'\b[A-Z_]+\s*\([^)]*\)',
+            '',
+            sql,
+            flags=re.IGNORECASE
+        )
+        
+        # ✅ STEP 3: Extract table.column patterns from cleaned SQL
         pattern = r'(\w+)\.(\w+)'
-        matches = re.findall(pattern, sql)
+        matches = re.findall(pattern, sql_no_funcs)
         
         for table_or_alias, column in matches:
             table_key = table_or_alias.lower()
             if table_key not in references:
                 references[table_key] = set()
             references[table_key].add(column.lower())
-
-        # Also capture columns used as function arguments, e.g. DATE_TRUNC('month', order_date)
-        # and MAX(order_date) — include qualified names like alias.column as well.
-        try:
-            from_tables = self._extract_table_names(sql)
-        except Exception:
-            from_tables = set()
-
-        func_pattern = re.compile(r"\b\w+\s*\([^)]*?,\s*([A-Za-z_][\w\.]*)\)", re.IGNORECASE)
-        func_matches = func_pattern.findall(sql)
-        for col in func_matches:
-            col_clean = col.strip().strip(') ,')
-            col_clean = col_clean.strip('"\'')
-            # If qualified (table.column), split and add
-            if '.' in col_clean:
-                table_part, col_part = col_clean.split('.', 1)
-                table_key = table_part.lower()
-                if table_key not in references:
-                    references[table_key] = set()
-                references[table_key].add(col_part.lower())
-            else:
-                # If single-table query, attribute bare function arg to that table
-                if len(from_tables) == 1:
-                    table = list(from_tables)[0]
-                    if table not in references:
-                        references[table] = set()
-                    references[table].add(col_clean.lower())
-
-        # Pattern 2: Bare column names (only for single-table queries)
-        # Multi-table queries with bare columns are too ambiguous to validate reliably
+        
+        # ✅ STEP 4: Handle bare columns (single-table queries only)
         from_tables = self._extract_table_names(sql)
         
         if len(from_tables) == 1:
-            # Single table - safe to check bare columns
             table = list(from_tables)[0]
             
             try:
@@ -378,39 +377,44 @@ class CriticAgent:
                 if select_match:
                     select_clause = select_match.group(1)
                     
-                    # Extract column names
-                    columns = [col.strip() for col in select_clause.split(',')]
+                    # Remove functions to get bare columns
+                    select_no_funcs = re.sub(
+                        r'\b[A-Z_]+\s*\([^)]*\)',
+                        '',
+                        select_clause,
+                        flags=re.IGNORECASE
+                    )
+                    
+                    columns = [col.strip() for col in select_no_funcs.split(',')]
                     
                     if table not in references:
                         references[table] = set()
                     
                     for col in columns:
-                        # Skip if has table prefix (already caught by pattern 1)
-                        if '.' in col:
+                        # Skip if empty or has table prefix
+                        if not col or '.' in col:
                             continue
                         
-                        # Skip SQL keywords, functions, and wildcards
+                        # Skip SQL keywords
                         col_upper = col.upper()
-                        skip_keywords = ['AS', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN', 'DISTINCT', '*']
+                        skip_keywords = ['AS', 'DISTINCT', '*', 'FROM', 'WHERE', 'AND', 'OR']
                         if any(kw in col_upper for kw in skip_keywords):
                             continue
                         
-                        # Extract just the column name (remove AS aliases, etc)
-                        col_name = col.split()[0].strip('(),')
+                        # Extract column name (remove AS aliases)
+                        col_name = col.split()[0].strip('(),\'\"')
                         
-                        if col_name and not col_name.upper() in skip_keywords:
+                        if col_name and col_name.upper() not in skip_keywords:
                             references[table].add(col_name.lower())
             except:
-                pass  # If parsing fails, rely on pattern 1 only
+                pass  # If parsing fails, rely on qualified columns only
         
-        # Resolve aliases to actual table names
-        # Pattern: FROM table AS alias
+        # ✅ STEP 5: Resolve aliases to actual table names
         alias_pattern = r'(?:FROM|JOIN)\s+(\w+)\s+(?:AS\s+)?(\w+)'
         aliases = re.findall(alias_pattern, sql, re.IGNORECASE)
         
         alias_map = {}
         for table, alias in aliases:
-            # Only treat as alias if different from table name
             if table.lower() != alias.lower():
                 alias_map[alias.lower()] = table.lower()
         

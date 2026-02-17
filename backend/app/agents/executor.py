@@ -262,14 +262,13 @@ class ErrorClassifier:
     def extract_details(self, error: Exception, category: ErrorCategory) -> dict:
         """Extract specific details based on error category"""
         error_msg = str(error)
-        details = {}
+        details = {'full_error': error_msg}  # ✅ Add full error for context
         
         if category == ErrorCategory.COLUMN_NOT_FOUND:
-            # Extract column name: 'column "id" does not exist'
             match = re.search(r'column "?(\w+)"? does not exist', error_msg, re.IGNORECASE)
             if match:
                 details['missing_column'] = match.group(1)
-        
+                
         elif category == ErrorCategory.TABLE_NOT_FOUND:
             # Extract table name: 'relation "invoices" does not exist'
             match = re.search(r'relation "?(\w+)"? does not exist', error_msg, re.IGNORECASE)
@@ -294,31 +293,81 @@ class ErrorClassifier:
         Generate helpful feedback for error recovery
         
         Schema-aware feedback when available (for column/table suggestions)
+        
+        Fix #9: Table-aware error feedback to prevent contradictory messages
         """
         
         if category == ErrorCategory.COLUMN_NOT_FOUND:
             missing_col = details.get('missing_column', 'unknown')
             
             if schema:
-                # Get all available columns from schema
-                available_cols = []
-                for table, table_info in schema.items():
-                    available_cols.extend(table_info['columns'].keys())
+                # ✅ FIX #9: Extract table context from error message
+                full_error = details.get('full_error', '').lower()
                 
-                # Find similar column names
-                suggestions = get_close_matches(missing_col, available_cols, n=3, cutoff=0.6)
+                # Try to identify which table the error refers to
+                # Method 1: Look for explicit table references in error
+                target_table = None
+                for table in schema.keys():
+                    # Check if table name appears in the error context
+                    if table.lower() in full_error:
+                        target_table = table
+                        break
                 
-                if suggestions:
-                    return (
-                        f"Column '{missing_col}' does not exist. "
-                        f"Available columns: {', '.join(available_cols[:5])}. "
-                        f"Did you mean: {', '.join(suggestions)}?"
-                    )
+                # Method 2: If single table in schema, it must be that one
+                if not target_table and len(schema) == 1:
+                    target_table = list(schema.keys())[0]
+                
+                if target_table:
+                    # Show columns from the specific table that caused the error
+                    table_cols = list(schema[target_table]['columns'].keys())
+                    suggestions = get_close_matches(missing_col, table_cols, n=3, cutoff=0.6)
+                    
+                    if suggestions:
+                        return (
+                            f"Column '{missing_col}' does not exist in table '{target_table}'. "
+                            f"Available columns in {target_table}: {', '.join(table_cols)}. "
+                            f"Did you mean: {', '.join(suggestions)}?"
+                        )
+                    else:
+                        return (
+                            f"Column '{missing_col}' does not exist in table '{target_table}'. "
+                            f"Available columns in {target_table}: {', '.join(table_cols)}."
+                        )
                 else:
-                    return (
-                        f"Column '{missing_col}' does not exist. "
-                        f"Available columns: {', '.join(available_cols[:5])}."
-                    )
+                    # Fallback: Can't determine specific table, search across all tables
+                    all_columns_by_table = {}
+                    for table, table_info in schema.items():
+                        for col in table_info['columns'].keys():
+                            if col.lower() not in all_columns_by_table:
+                                all_columns_by_table[col.lower()] = []
+                            all_columns_by_table[col.lower()].append(table)
+                    
+                    # Find similar column names across all tables
+                    all_col_names = list(all_columns_by_table.keys())
+                    suggestions = get_close_matches(missing_col.lower(), all_col_names, n=3, cutoff=0.6)
+                    
+                    if suggestions:
+                        # Show which table(s) contain the suggestion
+                        suggestion_details = []
+                        for sug in suggestions:
+                            tables_with_col = all_columns_by_table[sug]
+                            suggestion_details.append(f"{sug} (in {', '.join(tables_with_col)})")
+                        
+                        return (
+                            f"Column '{missing_col}' does not exist. "
+                            f"Did you mean: {', '.join(suggestion_details)}?"
+                        )
+                    else:
+                        # List available tables and sample columns
+                        table_summaries = []
+                        for table in list(schema.keys())[:3]:  # Show first 3 tables
+                            cols = list(schema[table]['columns'].keys())[:3]
+                            table_summaries.append(f"{table} ({', '.join(cols)}...)")
+                        
+                        return (
+                            f"Column '{missing_col}' does not exist. "
+                            f"Available tables: {', '.join(table_summaries)}"
+                        )
             else:
                 return f"Column '{missing_col}' does not exist. Check schema for valid column names."
         

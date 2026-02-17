@@ -134,42 +134,43 @@ class SchemaLinker:
         
         Args:
             search_results: Results from Chroma DB search
-        
+            
         Returns:
             Dictionary mapping table names to their full metadata
-            {
-                "products": {
-                    "columns": {"product_id": "INTEGER", ...},
-                    "primary_keys": ["product_id"],
-                    "foreign_keys": {"category_id": "categories.category_id"},
-                    "data_types": {...}
-                }
-            }
         """
         table_schema = {}
         metadatas = search_results['metadatas'][0]
         
+        # Collect all mentioned tables from search results
         for metadata in metadatas:
             table_name = metadata['table_name']
-            
             if table_name not in table_schema:
                 table_schema[table_name] = {
                     'columns': set(),
                     'score': 0
                 }
             
-            # Add column if it's a column-level result
+            # Track which columns were matched (for logging only)
             if metadata['type'] == 'column':
                 table_schema[table_name]['columns'].add(metadata['column_name'])
         
         # Build full metadata structure for each table
+        # CRITICAL: Return ALL columns from cache, not just matched ones
         result = {}
         for table_name in table_schema.keys():
             if self._schema_cache and table_name in self._schema_cache:
                 # Get full metadata from cache
                 cached_table = self._schema_cache[table_name]
+                
+                # Use both "data_types" and "columns" keys for compatibility
+                all_columns = (
+                    cached_table.get("data_types") or 
+                    cached_table.get("columns") or 
+                    {}
+                )
+                
                 result[table_name] = {
-                    "columns": cached_table.get("data_types", {}),  # {col_name: col_type}
+                    "columns": all_columns,  # ALL columns, not just matched
                     "primary_keys": cached_table.get("primary_keys", []),
                     "foreign_keys": cached_table.get("foreign_keys", {})
                 }
@@ -182,6 +183,7 @@ class SchemaLinker:
                 }
         
         return result
+
 
     
     def get_schema_summary(self) -> str:

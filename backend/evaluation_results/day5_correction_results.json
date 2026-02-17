@@ -1,29 +1,29 @@
 {
-  "timestamp": "2026-02-17T20:47:22.727888",
+  "timestamp": "2026-02-18T01:55:03.842203",
   "dataset": "backend/app/evaluation/datasets/core_eval.json",
   "total_tests": 20,
   "summary": {
-    "first_attempt_success": 14,
-    "first_attempt_rate": 0.7,
-    "corrected_success": 6,
-    "correction_effectiveness": 1.0,
-    "final_failures": 0,
-    "overall_success_rate": 1.0,
-    "avg_attempts": 1.6,
-    "total_attempts": 32
+    "first_attempt_success": 15,
+    "first_attempt_rate": 0.75,
+    "corrected_success": 2,
+    "correction_effectiveness": 0.4,
+    "final_failures": 3,
+    "overall_success_rate": 0.85,
+    "avg_attempts": 1.45,
+    "total_attempts": 29
   },
   "criteria": {
     "first_attempt_above_30": true,
-    "correction_above_60": true,
-    "overall_above_85": true,
-    "all_passed": true
+    "correction_above_60": false,
+    "overall_above_85": false,
+    "all_passed": false
   },
   "category_breakdown": {
     "core_eval": {
       "total": 20,
-      "first_success": 14,
-      "corrected": 6,
-      "failed": 0
+      "first_success": 15,
+      "corrected": 2,
+      "failed": 3
     }
   },
   "detailed_results": [
@@ -36,19 +36,19 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
-      "final_sql": "SELECT COUNT(product_id) AS total_products FROM products LIMIT 1000;",
+      "used_fallback": false,
+      "final_sql": "SELECT COUNT(*) AS product_count FROM products LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "total_products": 3
+            "product_count": 3
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 40.93,
+        "execution_time_ms": 50.96,
         "row_count": 1
       },
       "validation_issues": []
@@ -62,7 +62,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT name FROM customers LIMIT 1000;",
       "execution_result": {
         "success": true,
@@ -80,7 +80,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.88,
+        "execution_time_ms": 8.53,
         "row_count": 3
       },
       "validation_issues": []
@@ -94,22 +94,22 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
-      "final_sql": "SELECT product_id, name, price, stock_quantity FROM products WHERE price > 100 LIMIT 1000;",
+      "used_fallback": false,
+      "final_sql": "SELECT name, price, product_id, stock_quantity FROM products WHERE price > 100 LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "product_id": 1,
             "name": "Laptop",
             "price": "999.99",
+            "product_id": 1,
             "stock_quantity": 50
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 8.21,
+        "execution_time_ms": 5.02,
         "row_count": 1
       },
       "validation_issues": []
@@ -123,7 +123,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT name, price FROM products ORDER BY price DESC LIMIT 5;",
       "execution_result": {
         "success": true,
@@ -144,7 +144,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 3.96,
+        "execution_time_ms": 6.29,
         "row_count": 3
       },
       "validation_issues": []
@@ -158,7 +158,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT COUNT(order_id) AS completed_orders_count \nFROM orders \nWHERE status ILIKE 'completed' \nLIMIT 1000;",
       "execution_result": {
         "success": true,
@@ -170,7 +170,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.53,
+        "execution_time_ms": 9.18,
         "row_count": 1
       },
       "validation_issues": []
@@ -184,23 +184,20 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
-      "final_sql": "SELECT category_id, name, description FROM categories LIMIT 1000;",
+      "used_fallback": false,
+      "final_sql": "SELECT name, description FROM categories LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "category_id": 1,
             "name": "Electronics",
             "description": "Electronic devices and accessories"
           },
           {
-            "category_id": 2,
             "name": "Clothing",
             "description": "Apparel and fashion items"
           },
           {
-            "category_id": 3,
             "name": "Books",
             "description": "Physical and digital books"
           }
@@ -208,7 +205,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.84,
+        "execution_time_ms": 7.96,
         "row_count": 3
       },
       "validation_issues": []
@@ -222,7 +219,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT product_id, stock_quantity FROM products WHERE stock_quantity < 10 LIMIT 1000;",
       "execution_result": {
         "success": true,
@@ -230,7 +227,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 3.48,
+        "execution_time_ms": 5.25,
         "row_count": 0
       },
       "validation_issues": []
@@ -244,21 +241,22 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
-      "final_sql": "SELECT customer_id, name, email FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
+      "used_fallback": false,
+      "final_sql": "SELECT name, customer_id, email, country FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "customer_id": 1,
             "name": "Alice Johnson",
-            "email": "alice@example.com"
+            "customer_id": 1,
+            "email": "alice@example.com",
+            "country": "USA"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.02,
+        "execution_time_ms": 4.71,
         "row_count": 1
       },
       "validation_issues": []
@@ -272,7 +270,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT oi.product_id, SUM(oi.subtotal) AS total_revenue\nFROM order_items oi\nGROUP BY oi.product_id\nORDER BY total_revenue DESC\nLIMIT 10;",
       "execution_result": {
         "success": true,
@@ -293,7 +291,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 9.09,
+        "execution_time_ms": 6.74,
         "row_count": 3
       },
       "validation_issues": []
@@ -307,7 +305,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT customer_id, COUNT(*) AS total_order_count \nFROM orders \nGROUP BY customer_id \nORDER BY total_order_count DESC \nLIMIT 1000;",
       "execution_result": {
         "success": true,
@@ -328,7 +326,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.8,
+        "execution_time_ms": 4.14,
         "row_count": 3
       },
       "validation_issues": []
@@ -342,40 +340,28 @@
       "actual_success": true,
       "attempts": 3,
       "was_corrected": true,
-      "used_fallback": true,
-      "final_sql": "SELECT * FROM products LIMIT 100",
+      "used_fallback": false,
+      "final_sql": "SELECT products.category_id, SUM(order_items.subtotal) AS total_revenue\nFROM order_items\nJOIN orders ON orders.total_amount IS NOT NULL -- Assuming a relationship exists\nJOIN products ON products.price IS NOT NULL -- Assuming a relationship exists\nGROUP BY products.category_id\nORDER BY total_revenue DESC\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "product_id": 1,
-            "name": "Laptop",
-            "category_id": 1,
-            "price": "999.99",
-            "stock_quantity": 50,
-            "created_at": "2026-02-04 21:11:16.503663"
-          },
-          {
-            "product_id": 2,
-            "name": "T-Shirt",
-            "category_id": 2,
-            "price": "29.99",
-            "stock_quantity": 200,
-            "created_at": "2026-02-04 21:11:16.503663"
-          },
-          {
-            "product_id": 3,
-            "name": "Python Programming Book",
             "category_id": 3,
-            "price": "39.99",
-            "stock_quantity": 100,
-            "created_at": "2026-02-04 21:11:16.503663"
+            "total_revenue": "3209.91"
+          },
+          {
+            "category_id": 2,
+            "total_revenue": "3209.91"
+          },
+          {
+            "category_id": 1,
+            "total_revenue": "3209.91"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.17,
+        "execution_time_ms": 558.62,
         "row_count": 3
       },
       "validation_issues": []
@@ -389,7 +375,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT p.product_id \nFROM products p \nLEFT JOIN order_items oi ON p.product_id = oi.product_id \nWHERE oi.product_id IS NULL \nLIMIT 1000;",
       "execution_result": {
         "success": true,
@@ -397,7 +383,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 3.74,
+        "execution_time_ms": 5.14,
         "row_count": 0
       },
       "validation_issues": []
@@ -411,7 +397,7 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
+      "used_fallback": false,
       "final_sql": "SELECT customer_id, AVG(total_amount) AS average_order_value \nFROM orders \nGROUP BY customer_id \nLIMIT 1000;",
       "execution_result": {
         "success": true,
@@ -432,7 +418,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.58,
+        "execution_time_ms": 6.83,
         "row_count": 3
       },
       "validation_issues": []
@@ -446,15 +432,15 @@
       "actual_success": true,
       "attempts": 1,
       "was_corrected": false,
-      "used_fallback": true,
-      "final_sql": "SELECT product_id, AVG(rating) AS average_rating\nFROM reviews\nGROUP BY product_id\nORDER BY product_id\nLIMIT 1000;",
+      "used_fallback": false,
+      "final_sql": "SELECT product_id, AVG(rating) AS average_rating \nFROM reviews \nGROUP BY product_id \nORDER BY average_rating DESC \nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.34,
+        "execution_time_ms": 6.78,
         "row_count": 0
       },
       "validation_issues": []
@@ -466,43 +452,27 @@
       "expected_error": "N/A",
       "should_succeed": true,
       "actual_success": true,
-      "attempts": 3,
-      "was_corrected": true,
-      "used_fallback": true,
-      "final_sql": "SELECT * FROM payments LIMIT 100",
+      "attempts": 1,
+      "was_corrected": false,
+      "used_fallback": false,
+      "final_sql": "SELECT payment_method, COUNT(order_id) AS order_count \nFROM payments \nGROUP BY payment_method \nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "payment_id": 1,
-            "order_id": 1,
             "payment_method": "credit_card",
-            "amount": "999.99",
-            "payment_date": "2026-02-04 21:11:16.517384",
-            "status": "completed"
+            "order_count": 2
           },
           {
-            "payment_id": 2,
-            "order_id": 2,
             "payment_method": "paypal",
-            "amount": "29.99",
-            "payment_date": "2026-02-04 21:11:16.517384",
-            "status": "pending"
-          },
-          {
-            "payment_id": 3,
-            "order_id": 3,
-            "payment_method": "credit_card",
-            "amount": "39.99",
-            "payment_date": "2026-02-04 21:11:16.517384",
-            "status": "completed"
+            "order_count": 1
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.62,
-        "row_count": 3
+        "execution_time_ms": 9.35,
+        "row_count": 2
       },
       "validation_issues": []
     },
@@ -515,40 +485,28 @@
       "actual_success": true,
       "attempts": 3,
       "was_corrected": true,
-      "used_fallback": true,
-      "final_sql": "SELECT * FROM order_items LIMIT 100",
+      "used_fallback": false,
+      "final_sql": "SELECT SUM(oi.quantity) AS total_quantity_sold, p.price \nFROM order_items oi \nJOIN products p ON oi.subtotal / p.price = oi.quantity \nGROUP BY p.price \nORDER BY p.price \nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "order_item_id": 1,
-            "order_id": 1,
-            "product_id": 1,
-            "quantity": 1,
-            "unit_price": "999.99",
-            "subtotal": "999.99"
+            "total_quantity_sold": 1,
+            "price": "29.99"
           },
           {
-            "order_item_id": 2,
-            "order_id": 2,
-            "product_id": 2,
-            "quantity": 1,
-            "unit_price": "29.99",
-            "subtotal": "29.99"
+            "total_quantity_sold": 1,
+            "price": "39.99"
           },
           {
-            "order_item_id": 3,
-            "order_id": 3,
-            "product_id": 3,
-            "quantity": 1,
-            "unit_price": "39.99",
-            "subtotal": "39.99"
+            "total_quantity_sold": 1,
+            "price": "999.99"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.3,
+        "execution_time_ms": 7.29,
         "row_count": 3
       },
       "validation_issues": []
@@ -559,43 +517,16 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": true,
+      "actual_success": false,
       "attempts": 3,
-      "was_corrected": true,
-      "used_fallback": true,
-      "final_sql": "SELECT * FROM orders LIMIT 100",
-      "execution_result": {
-        "success": true,
-        "data": [
-          {
-            "order_id": 1,
-            "customer_id": 1,
-            "order_date": "2026-02-04 21:11:16.507976",
-            "status": "completed",
-            "total_amount": "999.99"
-          },
-          {
-            "order_id": 2,
-            "customer_id": 2,
-            "order_date": "2026-02-04 21:11:16.507976",
-            "status": "pending",
-            "total_amount": "29.99"
-          },
-          {
-            "order_id": 3,
-            "customer_id": 3,
-            "order_date": "2026-02-04 21:11:16.507976",
-            "status": "completed",
-            "total_amount": "39.99"
-          }
-        ],
-        "error_type": null,
-        "error_message": null,
-        "error_feedback": null,
-        "execution_time_ms": 6.98,
-        "row_count": 3
-      },
-      "validation_issues": []
+      "was_corrected": false,
+      "used_fallback": false,
+      "final_sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(*) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM order_counts\n)\nSELECT oc.customer_id, oc.order_count\nFROM order_counts oc\nWHERE oc.order_count > (SELECT avg_order_count FROM average_order_count)\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Table 'average_order_count' not in schema (available: customers, order_items, payments, orders)",
+        "Multiple tables detected but no JOIN found (possible cartesian product)"
+      ]
     },
     {
       "test_id": "hard_002",
@@ -604,43 +535,23 @@
       "expected_error": "N/A",
       "should_succeed": true,
       "actual_success": true,
-      "attempts": 3,
-      "was_corrected": true,
-      "used_fallback": true,
-      "final_sql": "SELECT * FROM customers LIMIT 100",
+      "attempts": 1,
+      "was_corrected": false,
+      "used_fallback": false,
+      "final_sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', payment_date) AS month,\n        SUM(amount) AS total_revenue\n    FROM payments\n    WHERE payment_date >= CURRENT_DATE - INTERVAL '6 months'\n    GROUP BY month\n)\nSELECT month, total_revenue\nFROM monthly_revenue\nORDER BY month\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "customer_id": 1,
-            "name": "Alice Johnson",
-            "email": "alice@example.com",
-            "created_at": "2026-02-04 21:11:16.495462",
-            "country": "USA",
-            "lifetime_value": "1250.00"
-          },
-          {
-            "customer_id": 2,
-            "name": "Bob Smith",
-            "email": "bob@example.com",
-            "created_at": "2026-02-04 21:11:16.495462",
-            "country": "UK",
-            "lifetime_value": "890.50"
-          },
-          {
-            "customer_id": 3,
-            "name": "Charlie Brown",
-            "email": "charlie@example.com",
-            "created_at": "2026-02-04 21:11:16.495462",
-            "country": "Canada",
-            "lifetime_value": "2100.00"
+            "month": "2026-02-01 00:00:00",
+            "total_revenue": "1069.97"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.89,
-        "row_count": 3
+        "execution_time_ms": 11.56,
+        "row_count": 1
       },
       "validation_issues": []
     },
@@ -650,34 +561,16 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": true,
-      "attempts": 1,
+      "actual_success": false,
+      "attempts": 3,
       "was_corrected": false,
-      "used_fallback": true,
-      "final_sql": "SELECT category_id, SUM(price * stock_quantity) AS revenue\nFROM products\nGROUP BY category_id\nORDER BY revenue DESC\nLIMIT 1000;",
-      "execution_result": {
-        "success": true,
-        "data": [
-          {
-            "category_id": 1,
-            "revenue": "49999.50"
-          },
-          {
-            "category_id": 2,
-            "revenue": "5998.00"
-          },
-          {
-            "category_id": 3,
-            "revenue": "3999.00"
-          }
-        ],
-        "error_type": null,
-        "error_message": null,
-        "error_feedback": null,
-        "execution_time_ms": 6.55,
-        "row_count": 3
-      },
-      "validation_issues": []
+      "used_fallback": false,
+      "final_sql": "WITH revenue_per_product AS (\n    SELECT \n        p.category_id,\n        SUM(p.price * oi.quantity) AS total_revenue\n    FROM \n        products p\n    JOIN \n        order_items oi ON p.category_id = oi.category_id -- Assuming a relationship based on category_id\n    GROUP BY \n        p.category_id\n)\nSELECT \n    category_id,\n    total_revenue\nFROM \n    revenue_per_product\nORDER BY \n    category_id, total_revenue DESC\nLIMIT 1000;",
+      "execution_result": {},
+      "validation_issues": [
+        "Column 'quantity' not in table 'order_items' (available: ...)",
+        "Column 'category_id' not in table 'order_items' (available: ...)"
+      ]
     },
     {
       "test_id": "hard_004",
@@ -685,41 +578,19 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": true,
-      "attempts": 3,
-      "was_corrected": true,
-      "used_fallback": true,
-      "final_sql": "SELECT * FROM orders LIMIT 100",
+      "actual_success": false,
+      "attempts": 2,
+      "was_corrected": false,
+      "used_fallback": false,
+      "final_sql": "WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name, c.lifetime_value\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000;",
       "execution_result": {
-        "success": true,
-        "data": [
-          {
-            "order_id": 1,
-            "customer_id": 1,
-            "order_date": "2026-02-04 21:11:16.507976",
-            "status": "completed",
-            "total_amount": "999.99"
-          },
-          {
-            "order_id": 2,
-            "customer_id": 2,
-            "order_date": "2026-02-04 21:11:16.507976",
-            "status": "pending",
-            "total_amount": "29.99"
-          },
-          {
-            "order_id": 3,
-            "customer_id": 3,
-            "order_date": "2026-02-04 21:11:16.507976",
-            "status": "completed",
-            "total_amount": "39.99"
-          }
-        ],
-        "error_type": null,
-        "error_message": null,
-        "error_feedback": null,
-        "execution_time_ms": 8.86,
-        "row_count": 3
+        "success": false,
+        "data": null,
+        "error_type": "column_not_found",
+        "error_message": "(psycopg2.errors.UndefinedColumn) column \"created_at\" does not exist\nLINE 4:     WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n                  ^\n\n[SQL: WITH recent_orders AS (\n    SELECT DISTINCT customer_id\n    FROM orders\n    WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'\n)\nSELECT c.customer_id, c.name, c.lifetime_value\nFROM customers c\nLEFT JOIN recent_orders ro ON c.customer_id = ro.customer_id\nWHERE ro.customer_id IS NULL\nLIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+        "error_feedback": "Column 'created_at' does not exist in table 'orders'. Available columns in orders: customer_id.",
+        "execution_time_ms": 5.05,
+        "row_count": 0
       },
       "validation_issues": []
     }

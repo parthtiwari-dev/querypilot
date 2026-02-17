@@ -370,34 +370,60 @@ def build_critic_correction_prompt(
     question: str
 ) -> str:
     """Build correction prompt from Critic validation issues
-
-    🔧 Improvement 1: Handles case where Critic blocks SQL before execution.
-    In this case, execution_result doesn't exist, so we use validation issues.
-
-    Args:
-        failed_sql: SQL that Critic rejected
-        critic_issues: List of validation issues from Critic
-        question: Original question
-
-    Returns:
-        Minimal correction prompt with Critic feedback
+    
+    🔧 Fix #5: Filter out CTE false positives from Critic issues.
+    After Fix #3, the Critic won't generate these, but old issues
+    from attempt 2 may still reference CTEs incorrectly.
     """
     logger.info(f"[CriticCorrection] Building prompt for {len(critic_issues)} issues")
-
+    
+    # Extract CTE names from SQL to filter false positives
+    sql_upper = failed_sql.upper()
+    cte_names = set()
+    cte_matches = re.findall(r'WITH\s+(\w+)\s+AS', sql_upper)
+    cte_names.update(match.lower() for match in cte_matches)
+    
+    # Filter out CTE-related false positives
+    real_issues = []
+    for issue in critic_issues:
+        issue_lower = issue.lower()
+        
+        # Skip if issue mentions a CTE name as "not in schema"
+        is_cte_false_positive = False
+        for cte_name in cte_names:
+            if cte_name in issue_lower and "not in schema" in issue_lower:
+                is_cte_false_positive = True
+                logger.info(f"[CriticCorrection] Filtered CTE false positive: {issue}")
+                break
+        
+        if not is_cte_false_positive:
+            real_issues.append(issue)
+    
+    # Use filtered issues, or keep originals if filtering removes everything
+    issues_to_use = real_issues if real_issues else critic_issues
+    
+    logger.info(f"[CriticCorrection] Using {len(issues_to_use)}/{len(critic_issues)} issues after filtering")
+    
     # Format issues as bullet points
-    issues_text = "\n".join(f"- {issue}" for issue in critic_issues)
-
+    issues_text = "\n".join(f"- {issue}" for issue in issues_to_use)
+    
+    # Add note about CTEs being valid
+    cte_note = ""
+    if cte_names:
+        cte_note = "\nNote: WITH clauses (CTEs) define temporary tables and are valid SQL.\n"
+    
     # Minimal prompt
     prompt = f"""Failed SQL:
 {failed_sql}
 
 Critic Issues:
 {issues_text}
-
+{cte_note}
 Fix and regenerate for: {question}
 """.strip()
-
+    
     return prompt
+
 
 
 # ============================================================================
