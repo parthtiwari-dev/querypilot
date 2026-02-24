@@ -1,29 +1,29 @@
 {
-  "timestamp": "2026-02-18T03:35:34.638119",
+  "timestamp": "2026-02-18T14:04:17.580111",
   "dataset": "backend/app/evaluation/datasets/core_eval.json",
   "total_tests": 20,
   "summary": {
     "first_attempt_success": 19,
     "first_attempt_rate": 0.95,
-    "corrected_success": 0,
-    "correction_effectiveness": 0.0,
-    "final_failures": 1,
-    "overall_success_rate": 0.95,
-    "avg_attempts": 1.05,
-    "total_attempts": 21
+    "corrected_success": 1,
+    "correction_effectiveness": 1.0,
+    "final_failures": 0,
+    "overall_success_rate": 1.0,
+    "avg_attempts": 1.1,
+    "total_attempts": 22
   },
   "criteria": {
     "first_attempt_above_30": true,
-    "correction_above_60": false,
+    "correction_above_60": true,
     "overall_above_85": true,
-    "all_passed": false
+    "all_passed": true
   },
   "category_breakdown": {
     "core_eval": {
       "total": 20,
       "first_success": 19,
-      "corrected": 0,
-      "failed": 1
+      "corrected": 1,
+      "failed": 0
     }
   },
   "detailed_results": [
@@ -48,7 +48,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 54.58,
+        "execution_time_ms": 94.96,
         "row_count": 1
       },
       "validation_issues": []
@@ -80,7 +80,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 8.5,
+        "execution_time_ms": 11.6,
         "row_count": 3
       },
       "validation_issues": []
@@ -108,7 +108,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 3.44,
+        "execution_time_ms": 11.03,
         "row_count": 1
       },
       "validation_issues": []
@@ -146,7 +146,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.05,
+        "execution_time_ms": 7.12,
         "row_count": 3
       },
       "validation_issues": []
@@ -172,7 +172,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 12.73,
+        "execution_time_ms": 14.07,
         "row_count": 1
       },
       "validation_issues": []
@@ -187,7 +187,7 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT category_id, name, description FROM categories LIMIT 1000;",
+      "final_sql": "SELECT category_id, name, description FROM categories ORDER BY category_id LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
@@ -210,7 +210,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.5,
+        "execution_time_ms": 7.14,
         "row_count": 3
       },
       "validation_issues": []
@@ -225,14 +225,14 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT product_id, name, stock_quantity \nFROM products \nWHERE stock_quantity < 10 \nORDER BY stock_quantity \nLIMIT 1000;",
+      "final_sql": "SELECT product_id, name, stock_quantity \nFROM products \nWHERE stock_quantity < 10 \nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.98,
+        "execution_time_ms": 5.05,
         "row_count": 0
       },
       "validation_issues": []
@@ -263,7 +263,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 8.45,
+        "execution_time_ms": 7.75,
         "row_count": 1
       },
       "validation_issues": []
@@ -301,7 +301,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.87,
+        "execution_time_ms": 14.37,
         "row_count": 3
       },
       "validation_issues": []
@@ -339,7 +339,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.2,
+        "execution_time_ms": 5.35,
         "row_count": 3
       },
       "validation_issues": []
@@ -374,7 +374,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.29,
+        "execution_time_ms": 5.41,
         "row_count": 3
       },
       "validation_issues": []
@@ -396,7 +396,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.67,
+        "execution_time_ms": 7.74,
         "row_count": 0
       },
       "validation_issues": []
@@ -411,10 +411,15 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT c.customer_id, c.name, AVG(o.total_amount) AS average_order_value\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name\nLIMIT 1000;",
+      "final_sql": "SELECT c.customer_id, c.name, AVG(o.total_amount) AS average_order_value\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name\nORDER BY average_order_value DESC\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
+          {
+            "customer_id": 1,
+            "name": "Alice Johnson",
+            "average_order_value": "999.9900000000000000"
+          },
           {
             "customer_id": 3,
             "name": "Charlie Brown",
@@ -424,17 +429,12 @@
             "customer_id": 2,
             "name": "Bob Smith",
             "average_order_value": "29.9900000000000000"
-          },
-          {
-            "customer_id": 1,
-            "name": "Alice Johnson",
-            "average_order_value": "999.9900000000000000"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.02,
+        "execution_time_ms": 7.06,
         "row_count": 3
       },
       "validation_issues": []
@@ -472,7 +472,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.04,
+        "execution_time_ms": 8.27,
         "row_count": 3
       },
       "validation_issues": []
@@ -483,19 +483,28 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": false,
-      "attempts": 2,
+      "actual_success": true,
+      "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT payment_method, COUNT(order_id) AS order_count\nFROM payments\nJOIN orders ON payments.order_id = orders.order_id\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000;",
+      "final_sql": "SELECT payment_method, COUNT(order_id) AS order_count\nFROM payments\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000;",
       "execution_result": {
-        "success": false,
-        "data": null,
-        "error_type": "join_error",
-        "error_message": "(psycopg2.errors.AmbiguousColumn) column reference \"order_id\" is ambiguous\nLINE 1: SELECT payment_method, COUNT(order_id) AS order_count\n                                     ^\n\n[SQL: SELECT payment_method, COUNT(order_id) AS order_count\nFROM payments\nJOIN orders ON payments.order_id = orders.order_id\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
-        "error_feedback": "JOIN error - column reference is ambiguous. Use table aliases (e.g., p.product_id, o.order_id) to clarify which table's column.",
-        "execution_time_ms": 4.36,
-        "row_count": 0
+        "success": true,
+        "data": [
+          {
+            "payment_method": "credit_card",
+            "order_count": 2
+          },
+          {
+            "payment_method": "paypal",
+            "order_count": 1
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.67,
+        "row_count": 2
       },
       "validation_issues": []
     },
@@ -529,7 +538,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.81,
+        "execution_time_ms": 5.51,
         "row_count": 3
       },
       "validation_issues": []
@@ -541,17 +550,17 @@
       "expected_error": "N/A",
       "should_succeed": true,
       "actual_success": true,
-      "attempts": 1,
-      "was_corrected": false,
+      "attempts": 3,
+      "was_corrected": true,
       "used_fallback": false,
-      "final_sql": "WITH average_order_count AS (\n    SELECT AVG(order_count) AS avg_count\n    FROM (\n        SELECT customer_id, COUNT(order_id) AS order_count\n        FROM orders\n        GROUP BY customer_id\n    ) AS customer_orders\n)\nSELECT c.customer_id, c.name, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name\nHAVING COUNT(o.order_id) > (SELECT avg_count FROM average_order_count)\nORDER BY order_count DESC\nLIMIT 1000;",
+      "final_sql": "WITH order_counts AS (\n    SELECT customer_id, COUNT(order_id) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_orders AS (\n    SELECT AVG(order_count) AS avg_order_count\n    FROM order_counts\n)\nSELECT c.customer_id, c.name, oc.order_count\nFROM customers c\nJOIN order_counts oc ON c.customer_id = oc.customer_id\nWHERE oc.order_count > (SELECT AVG(order_count) FROM order_counts)\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.36,
+        "execution_time_ms": 5.96,
         "row_count": 0
       },
       "validation_issues": []
@@ -566,7 +575,7 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', o.order_date) AS month,\n        SUM(o.total_amount) AS total_revenue\n    FROM \n        orders o\n    WHERE \n        o.order_date >= CURRENT_DATE - INTERVAL '6 months'\n    GROUP BY \n        month\n)\nSELECT \n    month, \n    total_revenue\nFROM \n    monthly_revenue\nORDER BY \n    month\nLIMIT 1000;",
+      "final_sql": "SELECT DATE_TRUNC('month', o.order_date) AS month, SUM(o.total_amount) AS total_revenue\nFROM orders o\nWHERE o.order_date >= CURRENT_DATE - INTERVAL '6 months'\nGROUP BY month\nORDER BY month\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
@@ -578,7 +587,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.97,
+        "execution_time_ms": 7.42,
         "row_count": 1
       },
       "validation_issues": []
@@ -593,30 +602,33 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "WITH category_revenue AS (\n    SELECT \n        p.category_id,\n        p.product_id,\n        SUM(oi.subtotal) AS total_revenue\n    FROM \n        products p\n    JOIN \n        order_items oi ON p.product_id = oi.product_id\n    GROUP BY \n        p.category_id, p.product_id\n)\nSELECT \n    cr.category_id,\n    p.name,\n    cr.total_revenue\nFROM \n    category_revenue cr\nJOIN \n    products p ON cr.product_id = p.product_id\nORDER BY \n    cr.category_id, cr.total_revenue DESC\nLIMIT 1000;",
+      "final_sql": "WITH category_revenue AS (\n    SELECT \n        p.category_id,\n        p.product_id,\n        SUM(oi.subtotal) AS total_revenue\n    FROM \n        products p\n    JOIN \n        order_items oi ON p.product_id = oi.product_id\n    GROUP BY \n        p.category_id, p.product_id\n)\nSELECT \n    c.name AS category_name,\n    p.product_id,\n    p.name AS product_name,\n    cr.total_revenue\nFROM \n    category_revenue cr\nJOIN \n    products p ON cr.product_id = p.product_id\nJOIN \n    categories c ON cr.category_id = c.category_id\nORDER BY \n    c.category_id, cr.total_revenue DESC\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "category_id": 1,
-            "name": "Laptop",
+            "category_name": "Electronics",
+            "product_id": 1,
+            "product_name": "Laptop",
             "total_revenue": "999.99"
           },
           {
-            "category_id": 2,
-            "name": "T-Shirt",
+            "category_name": "Clothing",
+            "product_id": 2,
+            "product_name": "T-Shirt",
             "total_revenue": "29.99"
           },
           {
-            "category_id": 3,
-            "name": "Python Programming Book",
+            "category_name": "Books",
+            "product_id": 3,
+            "product_name": "Python Programming Book",
             "total_revenue": "39.99"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.98,
+        "execution_time_ms": 7.09,
         "row_count": 3
       },
       "validation_issues": []
@@ -638,7 +650,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.47,
+        "execution_time_ms": 7.55,
         "row_count": 0
       },
       "validation_issues": []
