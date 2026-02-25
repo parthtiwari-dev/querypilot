@@ -74,6 +74,7 @@ SCHEMA_PROFILES = {
         "collection_name": "library_schema",
     },
 }
+DEFAULT_SCHEMA = "ecommerce"
 
 
 def get_llm():
