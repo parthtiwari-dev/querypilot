@@ -22,13 +22,20 @@ class ChromaManager:
         Args:
             chroma_url: URL of Chroma DB server
         """
-        self.client = chromadb.HttpClient(
-            host=chroma_url.replace("http://", "").split(":")[0],
-            port=int(chroma_url.split(":")[-1])
-        )
+        import os
+        persist_dir = os.getenv("CHROMA_PERSIST_DIR", "")
+        if persist_dir:
+            self.client = chromadb.PersistentClient(path=persist_dir)
+            logger.info(f"Chroma mode: file-based @ {persist_dir}")
+        else:
+            self.client = chromadb.HttpClient(
+                host=chroma_url.replace("http://", "").split(":")[0],
+                port=int(chroma_url.split(":")[-1])
+            )
+            logger.info(f"Chroma mode: http @ {chroma_url}")
         self.collection_name = collection_name
         self.collection = None
-        logger.info(f"Connected to Chroma DB at {chroma_url}")
+
     
     def initialize_collection(self, reset: bool = False):
         """
