@@ -78,7 +78,7 @@ class SchemaLinker:
         self,
         question: str,
         top_k: int = 7
-    ) -> Dict[str, Dict]:
+    ) -> Dict[str, Any]:
         
         """
         Find relevant tables and columns for a question
@@ -127,8 +127,11 @@ class SchemaLinker:
             f"Expanded to {len(expanded_schema)} tables after FK expansion"
         )
 
-        return expanded_schema
-    
+        return {
+            "schema_dict": expanded_schema,
+            "tables": list(expanded_schema.keys())
+        }
+        
 
     def _group_by_table(self, search_results: Dict) -> Dict[str, Dict]:
         """

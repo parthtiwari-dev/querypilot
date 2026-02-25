@@ -68,6 +68,7 @@ class SQLCorrectionState(TypedDict):
     # Output
     final_success: bool
     fallback_used: bool 
+    schema_tables_used: List[str]
 
 
 # ============================================================================
@@ -238,10 +239,10 @@ def schema_link_node(state: SQLCorrectionState) -> SQLCorrectionState:
 
     # Ensure global linker is set
     assert _schema_linker is not None, "SchemaLinker not initialized"
-    filtered_schema = _schema_linker.link_schema(state["question"])
-    state["filtered_schema"] = filtered_schema
-
-    logger.info(f"[Schema Link] ✓ Cached {len(filtered_schema)} tables for all attempts")
+    schema_info = _schema_linker.link_schema(state["question"])
+    state["filtered_schema"] = schema_info["schema_dict"]
+    state["schema_tables_used"] = schema_info["tables"]
+    logger.info(f"[Schema Link] ✓ Cached {len(schema_info['schema_dict'])} tables for all attempts")
     logger.info("=" * 80)
 
     return state
@@ -733,7 +734,9 @@ class CorrectionResult:
     execution_result: Dict[str, Any]
     validation_issues: Optional[List[str]] = None
     used_fallback: bool = False
-    
+    schema_tables_used: Optional[List[str]] = None
+
+
     @property
     def was_corrected(self) -> bool:
         """Fixed by retry"""
@@ -839,7 +842,8 @@ class CorrectionAgent:
             "max_attempts": self.max_attempts,
             "previous_sqls": [],
             "final_success": False,
-            "fallback_used": False
+            "fallback_used": False,
+            "schema_tables_used": [],
         }
 
         # Run LangGraph workflow
@@ -857,7 +861,8 @@ class CorrectionAgent:
             attempts=final_state["attempt_number"],
             execution_result=final_state["execution_result"],
             validation_issues=final_state["validation_result"].get("issues", []),
-            used_fallback=final_state.get("fallback_used", False)
+            used_fallback=final_state.get("fallback_used", False),
+            schema_tables_used=final_state.get("schema_tables_used", [])
         )
 
         # Update metrics
