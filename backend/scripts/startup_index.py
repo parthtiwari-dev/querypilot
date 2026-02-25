@@ -66,6 +66,9 @@ def index_if_needed(schema_name: str, profile: dict) -> None:
 
 
 if __name__ == "__main__":
+    import os
+    print(f"DATABASE_URL present: {bool(os.getenv('DATABASE_URL'))}")
+    print(f"DATABASE_URL prefix: {os.getenv('DATABASE_URL', '')[:30]}")
     print("=" * 50)
     print("  QueryPilot Startup Indexer")
     print("=" * 50)
