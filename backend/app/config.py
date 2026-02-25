@@ -29,11 +29,11 @@ class Settings(BaseSettings):
     LLM_PROVIDER: Literal["groq", "openai"] = "openai"  # Default to Groq
 
     # Groq Configuration (FREE - PRIMARY)
-    GROQ_API_KEY: str
+    GROQ_API_KEY: str = ""
     GROQ_MODEL_NAME: str = "llama-3.1-70b-versatile"
 
     # OpenAI Configuration (BACKUP)
-    OPENAI_API_KEY: str
+    OPENAI_API_KEY: str = ""
     OPENAI_MODEL_NAME: str = "gpt-4o-mini"
 
     # Database
