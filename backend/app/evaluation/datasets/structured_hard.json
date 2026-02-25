@@ -1,0 +1,136 @@
+[
+  {
+    "id": "hard_001",
+    "question": "Find customers who have placed more orders than the average customer",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT c.name, COUNT(o.order_id) AS order_count FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.name HAVING COUNT(o.order_id) > (SELECT AVG(order_count) FROM (SELECT customer_id, COUNT(order_id) AS order_count FROM orders GROUP BY customer_id) sub);",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Nested subquery inside HAVING; result may be empty on small seed data \u2014 empty set is valid"
+  },
+  {
+    "id": "hard_002",
+    "question": "Show monthly revenue for the last 6 months",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT DATE_TRUNC('month', o.order_date) AS month, SUM(oi.subtotal) AS monthly_revenue FROM orders o JOIN order_items oi ON o.order_id = oi.order_id WHERE o.order_date >= CURRENT_DATE - INTERVAL '6 months' GROUP BY DATE_TRUNC('month', o.order_date) ORDER BY month;",
+    "ground_truth_tables": [
+      "orders",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "DATE_TRUNC + INTERVAL; may return 0 rows if seed data is old \u2014 empty set is valid"
+  },
+  {
+    "id": "hard_003",
+    "question": "Rank products by total revenue within each category",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT c.name AS category, p.name AS product, SUM(oi.subtotal) AS revenue, RANK() OVER (PARTITION BY c.category_id ORDER BY SUM(oi.subtotal) DESC) AS rank FROM categories c JOIN products p ON c.category_id = p.category_id JOIN order_items oi ON p.product_id = oi.product_id GROUP BY c.category_id, c.name, p.product_id, p.name;",
+    "ground_truth_tables": [
+      "categories",
+      "products",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "3-table join + RANK window function over GROUP BY result"
+  },
+  {
+    "id": "hard_004",
+    "question": "Find the top-selling product in each category",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT category, product, total_revenue FROM (SELECT c.name AS category, p.name AS product, SUM(oi.subtotal) AS total_revenue, ROW_NUMBER() OVER (PARTITION BY c.category_id ORDER BY SUM(oi.subtotal) DESC) AS rn FROM categories c JOIN products p ON c.category_id = p.category_id JOIN order_items oi ON p.product_id = oi.product_id GROUP BY c.category_id, c.name, p.product_id, p.name) ranked WHERE rn = 1;",
+    "ground_truth_tables": [
+      "categories",
+      "products",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "ROW_NUMBER window function with subquery filter"
+  },
+  {
+    "id": "hard_005",
+    "question": "Show each product's revenue as a percentage of total revenue",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT p.name, SUM(oi.subtotal) AS product_revenue, ROUND(100.0 * SUM(oi.subtotal) / SUM(SUM(oi.subtotal)) OVER (), 2) AS revenue_pct FROM products p JOIN order_items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.name ORDER BY product_revenue DESC;",
+    "ground_truth_tables": [
+      "products",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Window function SUM OVER () for grand total in percentage calculation"
+  },
+  {
+    "id": "hard_006",
+    "question": "Find customers who have reviewed products they ordered",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT DISTINCT c.name, c.email FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id JOIN reviews r ON r.product_id = oi.product_id AND r.customer_id = c.customer_id;",
+    "ground_truth_tables": [
+      "customers",
+      "orders",
+      "order_items",
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "4-table join with multi-condition join on reviews"
+  },
+  {
+    "id": "hard_007",
+    "question": "Show products with above-average rating compared to their category average",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT p.name, c.name AS category, AVG(r.rating) AS product_avg_rating FROM products p JOIN categories c ON p.category_id = c.category_id JOIN reviews r ON p.product_id = r.product_id GROUP BY p.product_id, p.name, c.category_id, c.name HAVING AVG(r.rating) > (SELECT AVG(r2.rating) FROM reviews r2 JOIN products p2 ON r2.product_id = p2.product_id WHERE p2.category_id = p.category_id);",
+    "ground_truth_tables": [
+      "products",
+      "categories",
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Correlated subquery in HAVING; empty result is valid on small seed data"
+  },
+  {
+    "id": "hard_008",
+    "question": "Show running total of revenue ordered by order date",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT DATE(o.order_date) AS order_date, SUM(o.total_amount) AS daily_revenue, SUM(SUM(o.total_amount)) OVER (ORDER BY DATE(o.order_date)) AS running_total FROM orders WHERE status = 'completed' GROUP BY DATE(o.order_date) ORDER BY order_date;",
+    "ground_truth_tables": [
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Cumulative window function SUM OVER ORDER BY on aggregated result"
+  },
+  {
+    "id": "hard_009",
+    "question": "Find customers whose total spend exceeds the average customer total spend",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT c.name, SUM(o.total_amount) AS total_spend FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.name HAVING SUM(o.total_amount) > (SELECT AVG(customer_total) FROM (SELECT customer_id, SUM(total_amount) AS customer_total FROM orders GROUP BY customer_id) sub);",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Nested subquery in HAVING for average comparison"
+  },
+  {
+    "id": "hard_010",
+    "question": "Show the most popular payment method for orders above 500 in total amount",
+    "complexity": "hard",
+    "category": "structured",
+    "ground_truth_sql": "SELECT p.payment_method, COUNT(*) AS usage_count FROM payments p JOIN orders o ON p.order_id = o.order_id WHERE o.total_amount > 500 AND p.status = 'completed' GROUP BY p.payment_method ORDER BY usage_count DESC LIMIT 1;",
+    "ground_truth_tables": [
+      "payments",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "JOIN with two WHERE conditions + GROUP BY + LIMIT 1"
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "easy_001",
+    "question": "How many products are in the database?",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT COUNT(*) AS total_products FROM products;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Single COUNT on products table"
+  },
+  {
+    "id": "easy_002",
+    "question": "List all customer names and their email addresses",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT name, email FROM customers;",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Two-column SELECT, no filter"
+  },
+  {
+    "id": "easy_003",
+    "question": "What are the names and prices of products with price greater than 100?",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT name, price FROM products WHERE price > 100;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Numeric filter"
+  },
+  {
+    "id": "easy_004",
+    "question": "Show the top 5 most expensive products",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT name, price FROM products ORDER BY price DESC LIMIT 5;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "ORDER BY + LIMIT"
+  },
+  {
+    "id": "easy_005",
+    "question": "Count how many orders have completed status",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT COUNT(*) AS completed_orders FROM orders WHERE status = 'completed';",
+    "ground_truth_tables": [
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "String filter + COUNT"
+  },
+  {
+    "id": "easy_006",
+    "question": "List all product category names",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT name FROM categories;",
+    "ground_truth_tables": [
+      "categories"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Simple SELECT from categories"
+  },
+  {
+    "id": "easy_007",
+    "question": "What is the average price of all products?",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT AVG(price) AS avg_price FROM products;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Scalar aggregate"
+  },
+  {
+    "id": "easy_008",
+    "question": "List all customers from the USA",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT name, email FROM customers WHERE country = 'USA';",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "String equality filter on country"
+  },
+  {
+    "id": "easy_009",
+    "question": "Show all pending orders with their total amount",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT order_id, order_date, total_amount FROM orders WHERE status = 'pending';",
+    "ground_truth_tables": [
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Filter on status column"
+  },
+  {
+    "id": "easy_010",
+    "question": "How many customers are in the database?",
+    "complexity": "easy",
+    "category": "structured",
+    "ground_truth_sql": "SELECT COUNT(*) AS total_customers FROM customers;",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "COUNT on customers"
+  }
+]

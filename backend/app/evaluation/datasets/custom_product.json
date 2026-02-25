@@ -1,0 +1,132 @@
+[
+  {
+    "id": "prod_001",
+    "question": "What are the top 10 best-selling products by total quantity sold?",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT p.name, SUM(oi.quantity) AS total_quantity FROM products p JOIN order_items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.name ORDER BY total_quantity DESC LIMIT 10;",
+    "ground_truth_tables": [
+      "products",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Inventory planning query"
+  },
+  {
+    "id": "prod_002",
+    "question": "Show products with low stock levels, less than 10 units remaining",
+    "complexity": "easy",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT name, stock_quantity FROM products WHERE stock_quantity < 10 ORDER BY stock_quantity ASC;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Reorder alert query; may return empty if seed data has stock > 10"
+  },
+  {
+    "id": "prod_003",
+    "question": "Calculate average customer rating for each product category",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT c.name AS category, AVG(r.rating) AS avg_rating, COUNT(r.review_id) AS review_count FROM categories c JOIN products p ON c.category_id = p.category_id JOIN reviews r ON p.product_id = r.product_id GROUP BY c.category_id, c.name ORDER BY avg_rating DESC;",
+    "ground_truth_tables": [
+      "categories",
+      "products",
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "3-table join for category-level rating"
+  },
+  {
+    "id": "prod_004",
+    "question": "Which are the 5 most reviewed products?",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT p.name, COUNT(r.review_id) AS review_count, AVG(r.rating) AS avg_rating FROM products p JOIN reviews r ON p.product_id = r.product_id GROUP BY p.product_id, p.name ORDER BY review_count DESC LIMIT 5;",
+    "ground_truth_tables": [
+      "products",
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "JOIN + COUNT + AVG + LIMIT"
+  },
+  {
+    "id": "prod_005",
+    "question": "Find products that have never received a review",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT p.name, p.price FROM products p LEFT JOIN reviews r ON p.product_id = r.product_id WHERE r.product_id IS NULL;",
+    "ground_truth_tables": [
+      "products",
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "LEFT JOIN anti-join pattern"
+  },
+  {
+    "id": "prod_006",
+    "question": "Show minimum, maximum, and average price of products in each category",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT c.name AS category, MIN(p.price) AS min_price, MAX(p.price) AS max_price, AVG(p.price) AS avg_price, COUNT(p.product_id) AS product_count FROM categories c JOIN products p ON c.category_id = p.category_id GROUP BY c.category_id, c.name ORDER BY avg_price DESC;",
+    "ground_truth_tables": [
+      "categories",
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Multi-aggregate per group"
+  },
+  {
+    "id": "prod_007",
+    "question": "Find products ordered by more than one distinct customer",
+    "complexity": "hard",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT p.name, COUNT(DISTINCT o.customer_id) AS customer_count FROM products p JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id GROUP BY p.product_id, p.name HAVING COUNT(DISTINCT o.customer_id) > 1 ORDER BY customer_count DESC;",
+    "ground_truth_tables": [
+      "products",
+      "order_items",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "HAVING with COUNT DISTINCT; 3-table join"
+  },
+  {
+    "id": "prod_008",
+    "question": "Which category has the most products?",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT c.name AS category, COUNT(p.product_id) AS product_count FROM categories c LEFT JOIN products p ON c.category_id = p.category_id GROUP BY c.category_id, c.name ORDER BY product_count DESC LIMIT 1;",
+    "ground_truth_tables": [
+      "categories",
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "GROUP BY + COUNT + LIMIT 1"
+  },
+  {
+    "id": "prod_009",
+    "question": "Show total revenue and total units sold for each product",
+    "complexity": "medium",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT p.name, SUM(oi.quantity) AS total_units, SUM(oi.subtotal) AS total_revenue FROM products p JOIN order_items oi ON p.product_id = oi.product_id GROUP BY p.product_id, p.name ORDER BY total_revenue DESC;",
+    "ground_truth_tables": [
+      "products",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Two aggregates in single GROUP BY"
+  },
+  {
+    "id": "prod_010",
+    "question": "List products that are out of stock",
+    "complexity": "easy",
+    "category": "product_analytics",
+    "ground_truth_sql": "SELECT product_id, name, price FROM products WHERE stock_quantity = 0;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Zero stock filter; may return empty on seed data \u2014 valid"
+  }
+]

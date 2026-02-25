@@ -1,0 +1,120 @@
+[
+  {
+    "id": "edge_001",
+    "question": "Show all tables in the database",
+    "complexity": "edge_case",
+    "category": "meta_query",
+    "ground_truth_sql": "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name;",
+    "ground_truth_tables": [],
+    "expected_behavior": "execution_success",
+    "notes": "Metadata query against information_schema; no schema tables used"
+  },
+  {
+    "id": "edge_002",
+    "question": "What columns does the products table have?",
+    "complexity": "edge_case",
+    "category": "schema_query",
+    "ground_truth_sql": "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'products' AND table_schema = 'public' ORDER BY ordinal_position;",
+    "ground_truth_tables": [],
+    "expected_behavior": "execution_success",
+    "notes": "Schema introspection query"
+  },
+  {
+    "id": "edge_003",
+    "question": "Find products where price is NULL",
+    "complexity": "edge_case",
+    "category": "null_handling",
+    "ground_truth_sql": "SELECT product_id, name FROM products WHERE price IS NULL;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "NULL check; products.price is NOT NULL in schema so result is always empty \u2014 empty set is valid execution"
+  },
+  {
+    "id": "edge_004",
+    "question": "Show all orders placed today",
+    "complexity": "edge_case",
+    "category": "date_relative",
+    "ground_truth_sql": "SELECT order_id, customer_id, order_date, total_amount FROM orders WHERE DATE(order_date) = CURRENT_DATE;",
+    "ground_truth_tables": [
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Relative date CURRENT_DATE; may return empty \u2014 empty set is valid"
+  },
+  {
+    "id": "edge_005",
+    "question": "Count the number of distinct customers who have written reviews",
+    "complexity": "edge_case",
+    "category": "distinct_count",
+    "ground_truth_sql": "SELECT COUNT(DISTINCT customer_id) AS distinct_reviewers FROM reviews;",
+    "ground_truth_tables": [
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "COUNT DISTINCT"
+  },
+  {
+    "id": "edge_006",
+    "question": "Find duplicate customer email addresses",
+    "complexity": "edge_case",
+    "category": "data_quality",
+    "ground_truth_sql": "SELECT email, COUNT(*) AS count FROM customers GROUP BY email HAVING COUNT(*) > 1;",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "HAVING COUNT > 1 for duplicates; email is UNIQUE in schema so always empty \u2014 empty set is valid"
+  },
+  {
+    "id": "edge_007",
+    "question": "Find orders that have no line items",
+    "complexity": "edge_case",
+    "category": "null_handling",
+    "ground_truth_sql": "SELECT o.order_id, o.order_date, o.total_amount FROM orders o LEFT JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.order_item_id IS NULL;",
+    "ground_truth_tables": [
+      "orders",
+      "order_items"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Anti-join for orphaned orders; may return empty"
+  },
+  {
+    "id": "edge_008",
+    "question": "Show all reviews with a rating of 5",
+    "complexity": "edge_case",
+    "category": "filter_boundary",
+    "ground_truth_sql": "SELECT r.review_id, p.name AS product, r.review_text, r.created_at FROM reviews r JOIN products p ON r.product_id = p.product_id WHERE r.rating = 5 ORDER BY r.created_at DESC;",
+    "ground_truth_tables": [
+      "reviews",
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Boundary value filter on rating (CHECK 1-5)"
+  },
+  {
+    "id": "edge_009",
+    "question": "List products with their stock quantity, including products with zero stock",
+    "complexity": "edge_case",
+    "category": "zero_value",
+    "ground_truth_sql": "SELECT name, stock_quantity FROM products WHERE stock_quantity >= 0 ORDER BY stock_quantity ASC;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Includes zero-stock products; tests >= 0 boundary handling"
+  },
+  {
+    "id": "edge_010",
+    "question": "Show all products ordered in descending order of creation date",
+    "complexity": "edge_case",
+    "category": "sort_order",
+    "ground_truth_sql": "SELECT product_id, name, price, created_at FROM products ORDER BY created_at DESC;",
+    "ground_truth_tables": [
+      "products"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "ORDER BY on TIMESTAMP column; tests correct column name usage"
+  }
+]

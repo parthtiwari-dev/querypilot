@@ -1,0 +1,129 @@
+[
+  {
+    "id": "cust_001",
+    "question": "Find customers who have not placed any order",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT c.name, c.email FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id WHERE o.order_id IS NULL;",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Anti-join pattern; may return empty on seed data"
+  },
+  {
+    "id": "cust_002",
+    "question": "Show customer lifetime value distribution by country",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT country, COUNT(*) AS customer_count, AVG(lifetime_value) AS avg_ltv, MIN(lifetime_value) AS min_ltv, MAX(lifetime_value) AS max_ltv FROM customers GROUP BY country ORDER BY avg_ltv DESC;",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Multi-aggregate GROUP BY on single table"
+  },
+  {
+    "id": "cust_003",
+    "question": "Identify VIP customers in the top 10 percent by lifetime value",
+    "complexity": "hard",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT name, email, lifetime_value FROM customers WHERE lifetime_value >= (SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY lifetime_value) FROM customers) ORDER BY lifetime_value DESC;",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "PERCENTILE_CONT subquery; valid even if all customers qualify on small dataset"
+  },
+  {
+    "id": "cust_004",
+    "question": "Show the top 5 customers by total amount spent",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT c.name, c.email, SUM(o.total_amount) AS total_spend FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.name, c.email ORDER BY total_spend DESC LIMIT 5;",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "JOIN + SUM + LIMIT"
+  },
+  {
+    "id": "cust_005",
+    "question": "Find customers who haven't placed an order in the last 90 days",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT c.name, c.email, MAX(o.order_date) AS last_order_date FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.name, c.email HAVING MAX(o.order_date) < CURRENT_DATE - INTERVAL '90 days' OR MAX(o.order_date) IS NULL;",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "INTERVAL date comparison in HAVING; may return all customers on fresh DB"
+  },
+  {
+    "id": "cust_006",
+    "question": "How many new customers joined each month?",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT DATE_TRUNC('month', created_at) AS month, COUNT(*) AS new_customers FROM customers GROUP BY DATE_TRUNC('month', created_at) ORDER BY month;",
+    "ground_truth_tables": [
+      "customers"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "DATE_TRUNC on created_at"
+  },
+  {
+    "id": "cust_007",
+    "question": "Show the average order value for each customer",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT c.name, COUNT(o.order_id) AS order_count, AVG(o.total_amount) AS avg_order_value FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.name ORDER BY avg_order_value DESC;",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "AVG + COUNT per customer"
+  },
+  {
+    "id": "cust_008",
+    "question": "Find customers who have both completed and pending orders",
+    "complexity": "hard",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT c.name, c.email FROM customers c WHERE c.customer_id IN (SELECT customer_id FROM orders WHERE status = 'completed') AND c.customer_id IN (SELECT customer_id FROM orders WHERE status = 'pending');",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "Two subqueries in WHERE with AND; valid even if empty result"
+  },
+  {
+    "id": "cust_009",
+    "question": "Which customer placed the highest value single order?",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT c.name, o.order_id, o.total_amount FROM customers c JOIN orders o ON c.customer_id = o.customer_id ORDER BY o.total_amount DESC LIMIT 1;",
+    "ground_truth_tables": [
+      "customers",
+      "orders"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "JOIN + ORDER BY + LIMIT 1"
+  },
+  {
+    "id": "cust_010",
+    "question": "Show customers who have left at least one review",
+    "complexity": "medium",
+    "category": "customer_analytics",
+    "ground_truth_sql": "SELECT DISTINCT c.name, c.email, COUNT(r.review_id) AS review_count FROM customers c JOIN reviews r ON c.customer_id = r.customer_id GROUP BY c.customer_id, c.name, c.email ORDER BY review_count DESC;",
+    "ground_truth_tables": [
+      "customers",
+      "reviews"
+    ],
+    "expected_behavior": "execution_success",
+    "notes": "JOIN + GROUP BY HAVING implied by JOIN existence"
+  }
+]
