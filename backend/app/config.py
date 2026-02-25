@@ -47,9 +47,9 @@ class Settings(BaseSettings):
     QUERY_TIMEOUT: int = 30
 
     class Config:
-        # Dynamically find .env file in project root
         env_file = str(find_project_root() / ".env")
         case_sensitive = True
+        extra = "ignore"
 
 
 # Global settings instance

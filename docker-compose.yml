@@ -10,7 +10,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/schemas/ecommerce.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/schemas/ecommerce.sql:/docker-entrypoint-initdb.d/01-ecommerce.sql
+      - ./database/schemas/library.sql:/docker-entrypoint-initdb.d/02-library.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-ecommerce}"]
       interval: 10s
@@ -18,19 +19,14 @@ services:
       retries: 5
 
   chromadb:
-    image: chromadb/chroma:1.4.1
-    container_name: querypilot-chroma
-    ports:
-      - "8001:8000"        # host:container — fixes conflict with backend
-    volumes:
-      - chroma_data:/chroma/chroma
-    environment:
-      - IS_PERSISTENT=TRUE
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v1/heartbeat || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      image: chromadb/chroma:1.4.1
+      container_name: querypilot-chroma
+      ports:
+        - "8001:8000"
+      volumes:
+        - chroma_data:/chroma/chroma
+      environment:
+        - IS_PERSISTENT=TRUE
 
   backend:
     build: ./backend
@@ -42,7 +38,7 @@ services:
       postgres:
         condition: service_healthy
       chromadb:
-        condition: service_healthy
+        condition: service_started
 
 volumes:
   postgres_data:

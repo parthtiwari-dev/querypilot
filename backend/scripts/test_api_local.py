@@ -6,7 +6,7 @@ from pathlib import Path
 import requests
 
 
-API_URL = "http://127.0.0.1:8001/query"
+API_URL = "http://127.0.0.1:8002/query"
 SCRIPT_DIR   = Path(__file__).parent          # backend/scripts/
 BACKEND_DIR  = SCRIPT_DIR.parent              # backend/
 RESULTS_FILE = BACKEND_DIR / "evaluation_results/day6_full_results.json"

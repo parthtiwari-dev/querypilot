@@ -1,6 +1,6 @@
 # QueryPilot API Reference
 
-Base URL (local): `http://127.0.0.1:8001`
+Base URL (local): `http://127.0.0.1:8002`
 
 ---
 
