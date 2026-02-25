@@ -64,12 +64,12 @@ settings = Settings()
 # ─────────────────────────────────────────────────────────────
 SCHEMA_PROFILES = {
     "ecommerce": {
-        "db_url":          settings.DATABASE_URL,
+        "db_url":          settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://"),
         "pg_schema":       "public",
         "collection_name": "querypilot_schema",
     },
     "library": {
-        "db_url":          settings.DATABASE_URL,
+        "db_url":          settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://"),
         "pg_schema":       "library",
         "collection_name": "library_schema",
     },
