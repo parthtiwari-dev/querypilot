@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-25T14:08:15.175955",
+  "timestamp": "2026-02-25T14:46:31.759509",
   "total_tests": 82,
   "results": [
     {
@@ -13,7 +13,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1518.28,
+      "latency_ms": 1826.72,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -37,7 +37,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1327.44,
+      "latency_ms": 1170.78,
       "schema_tables_used": [
         "customers",
         "orders",
@@ -59,7 +59,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1226.32,
+      "latency_ms": 1125.07,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -81,7 +81,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1367.25,
+      "latency_ms": 1253.54,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -99,11 +99,11 @@
       "category": "structured",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT COUNT(*) AS completed_orders_count FROM orders WHERE status = 'completed' LIMIT 1000;",
+      "sql": "SELECT COUNT(*) AS completed_orders_count \nFROM orders \nWHERE status = 'completed' \nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1179.55,
+      "latency_ms": 1239.45,
       "schema_tables_used": [
         "orders",
         "payments",
@@ -126,7 +126,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 887.33,
+      "latency_ms": 955.03,
       "schema_tables_used": [
         "products",
         "categories",
@@ -148,7 +148,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 818.96,
+      "latency_ms": 838.37,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -166,11 +166,11 @@
       "category": "structured",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT customer_id, name, email, created_at, country, lifetime_value FROM customers WHERE country ILIKE 'USA' LIMIT 1000;",
+      "sql": "SELECT customer_id, name, email, created_at, country, lifetime_value \nFROM customers \nWHERE country ILIKE 'USA' \nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1010.98,
+      "latency_ms": 1229.5,
       "schema_tables_used": [
         "customers",
         "orders",
@@ -192,7 +192,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1185.18,
+      "latency_ms": 1466.91,
       "schema_tables_used": [
         "orders",
         "payments",
@@ -215,7 +215,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 851.43,
+      "latency_ms": 955.7,
       "schema_tables_used": [
         "customers",
         "orders"
@@ -235,7 +235,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2953.78,
+      "latency_ms": 1447.99,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -258,7 +258,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1351.71,
+      "latency_ms": 1625.78,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -282,7 +282,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1558.21,
+      "latency_ms": 1342.72,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -305,7 +305,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1166.36,
+      "latency_ms": 1442.47,
       "schema_tables_used": [
         "categories",
         "products",
@@ -327,7 +327,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1021.64,
+      "latency_ms": 1583.17,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -349,7 +349,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2047.09,
+      "latency_ms": 1888.49,
       "schema_tables_used": [
         "orders",
         "customers",
@@ -370,7 +370,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2484.02,
+      "latency_ms": 1923.48,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -393,7 +393,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1191.49,
+      "latency_ms": 2214.72,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -414,7 +414,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1975.94,
+      "latency_ms": 1419.94,
       "schema_tables_used": [
         "orders",
         "payments",
@@ -437,7 +437,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1631.39,
+      "latency_ms": 1470.64,
       "schema_tables_used": [
         "reviews",
         "order_items",
@@ -457,11 +457,11 @@
       "category": "structured",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "WITH average_order_count AS (\n    SELECT AVG(order_count) AS avg_count\n    FROM (\n        SELECT customer_id, COUNT(order_id) AS order_count\n        FROM orders\n        GROUP BY customer_id\n    ) AS customer_orders\n)\nSELECT c.customer_id, c.name, c.email, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name, c.email\nHAVING COUNT(o.order_id) > (SELECT avg_count FROM average_order_count)\nLIMIT 1000;",
+      "sql": "WITH customer_order_counts AS (\n    SELECT customer_id, COUNT(order_id) AS order_count\n    FROM orders\n    GROUP BY customer_id\n),\naverage_order_count AS (\n    SELECT AVG(order_count) AS avg_count\n    FROM customer_order_counts\n)\nSELECT c.customer_id, c.name, c.email, coc.order_count\nFROM customers c\nJOIN customer_order_counts coc ON c.customer_id = coc.customer_id\nWHERE coc.order_count > (SELECT AVG(order_count) FROM customer_order_counts)\nLIMIT 1000;",
       "success": true,
-      "attempts": 1,
-      "first_attempt_success": true,
-      "latency_ms": 2865.74,
+      "attempts": 3,
+      "first_attempt_success": false,
+      "latency_ms": 6476.43,
       "schema_tables_used": [
         "orders",
         "customers",
@@ -470,7 +470,7 @@
       ],
       "error_type": null,
       "error_message": null,
-      "correction_applied": false
+      "correction_applied": true
     },
     {
       "id": "hard_002",
@@ -479,11 +479,11 @@
       "category": "structured",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT DATE_TRUNC('month', o.order_date) AS month, SUM(o.total_amount) AS monthly_revenue\nFROM orders o\nWHERE o.order_date >= CURRENT_DATE - INTERVAL '6 months'\nGROUP BY month\nORDER BY month\nLIMIT 1000;",
+      "sql": "SELECT DATE_TRUNC('month', o.order_date) AS month, SUM(o.total_amount) AS revenue\nFROM orders o\nWHERE o.order_date >= CURRENT_DATE - INTERVAL '6 months'\nGROUP BY month\nORDER BY month\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1459.83,
+      "latency_ms": 1568.14,
       "schema_tables_used": [
         "customers",
         "orders",
@@ -502,11 +502,11 @@
       "category": "structured",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "WITH category_revenue AS (\n    SELECT \n        p.category_id,\n        p.product_id,\n        SUM(oi.subtotal) AS total_revenue\n    FROM \n        products p\n    JOIN \n        order_items oi ON p.product_id = oi.product_id\n    GROUP BY \n        p.category_id, p.product_id\n)\nSELECT \n    c.name AS category_name,\n    p.product_id,\n    p.name AS product_name,\n    cr.total_revenue\nFROM \n    category_revenue cr\nJOIN \n    products p ON cr.product_id = p.product_id\nJOIN \n    categories c ON cr.category_id = c.category_id\nORDER BY \n    c.category_id, cr.total_revenue DESC\nLIMIT 1000;",
+      "sql": "WITH category_revenue AS (\n    SELECT \n        p.category_id,\n        SUM(oi.subtotal) AS total_revenue\n    FROM \n        products p\n    JOIN \n        order_items oi ON p.product_id = oi.product_id\n    GROUP BY \n        p.category_id\n)\nSELECT \n    c.category_id,\n    c.name,\n    cr.total_revenue\nFROM \n    categories c\nJOIN \n    category_revenue cr ON c.category_id = cr.category_id\nORDER BY \n    cr.total_revenue DESC\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2878.61,
+      "latency_ms": 2980.51,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -530,7 +530,7 @@
       "success": false,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 7418.84,
+      "latency_ms": 8480.87,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -554,7 +554,7 @@
       "success": true,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 4280.39,
+      "latency_ms": 5432.02,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -578,7 +578,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1872.04,
+      "latency_ms": 1964.62,
       "schema_tables_used": [
         "reviews",
         "orders",
@@ -601,7 +601,7 @@
       "success": false,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 6951.76,
+      "latency_ms": 7519.72,
       "schema_tables_used": [
         "reviews",
         "products",
@@ -625,7 +625,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1903.98,
+      "latency_ms": 1397.26,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -647,7 +647,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2417.6,
+      "latency_ms": 2030.5,
       "schema_tables_used": [
         "orders",
         "customers",
@@ -669,7 +669,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1586.08,
+      "latency_ms": 1489.43,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -692,7 +692,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1693.54,
+      "latency_ms": 1621.4,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -715,7 +715,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 959.72,
+      "latency_ms": 1295.36,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -733,11 +733,11 @@
       "category": "product_analytics",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT cat.category_id, cat.name AS category_name, AVG(r.rating) AS average_rating\nFROM reviews r\nJOIN products p ON r.product_id = p.product_id\nJOIN categories cat ON p.category_id = cat.category_id\nGROUP BY cat.category_id, cat.name\nORDER BY cat.category_id\nLIMIT 1000;",
+      "sql": "SELECT c.name AS category_name, AVG(r.rating) AS average_rating\nFROM categories c\nJOIN products p ON c.category_id = p.category_id\nJOIN reviews r ON p.product_id = r.product_id\nGROUP BY c.category_id, c.name\nORDER BY c.name\nLIMIT 1000;",
       "success": true,
-      "attempts": 3,
-      "first_attempt_success": false,
-      "latency_ms": 3352.98,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 2215.9,
       "schema_tables_used": [
         "reviews",
         "products",
@@ -746,7 +746,7 @@
       ],
       "error_type": null,
       "error_message": null,
-      "correction_applied": true
+      "correction_applied": false
     },
     {
       "id": "prod_004",
@@ -759,7 +759,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1324.03,
+      "latency_ms": 1442.27,
       "schema_tables_used": [
         "reviews",
         "order_items",
@@ -783,7 +783,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1370.58,
+      "latency_ms": 1681.53,
       "schema_tables_used": [
         "reviews",
         "order_items",
@@ -802,11 +802,11 @@
       "category": "product_analytics",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT c.category_id, c.name AS category_name, \n       MIN(p.price) AS min_price, \n       MAX(p.price) AS max_price, \n       AVG(p.price) AS avg_price\nFROM categories c\nJOIN products p ON c.category_id = p.category_id\nGROUP BY c.category_id, c.name\nORDER BY c.category_id\nLIMIT 1000;",
+      "sql": "SELECT c.category_id, c.name, \n       MIN(p.price) AS min_price, \n       MAX(p.price) AS max_price, \n       AVG(p.price) AS avg_price\nFROM categories c\nJOIN products p ON c.category_id = p.category_id\nGROUP BY c.category_id, c.name\nORDER BY c.category_id\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2110.55,
+      "latency_ms": 2386.71,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -824,11 +824,11 @@
       "category": "product_analytics",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT oi.product_id, COUNT(DISTINCT o.customer_id) AS customer_count\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nGROUP BY oi.product_id\nHAVING COUNT(DISTINCT o.customer_id) > 1\nLIMIT 1000;",
+      "sql": "SELECT p.product_id, p.name, COUNT(DISTINCT o.customer_id) AS customer_count\nFROM products p\nJOIN order_items oi ON p.product_id = oi.product_id\nJOIN orders o ON oi.order_id = o.order_id\nGROUP BY p.product_id, p.name\nHAVING COUNT(DISTINCT o.customer_id) > 1\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1963.48,
+      "latency_ms": 2341.81,
       "schema_tables_used": [
         "order_items",
         "orders",
@@ -851,7 +851,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1147.37,
+      "latency_ms": 1999.43,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -875,7 +875,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1894.14,
+      "latency_ms": 2050.58,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -898,7 +898,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1078.77,
+      "latency_ms": 1690.31,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -920,7 +920,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1326.42,
+      "latency_ms": 1494.94,
       "schema_tables_used": [
         "orders",
         "payments",
@@ -939,11 +939,11 @@
       "category": "customer_analytics",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT country, \n       MIN(lifetime_value) AS min_lifetime_value, \n       MAX(lifetime_value) AS max_lifetime_value, \n       AVG(lifetime_value) AS avg_lifetime_value, \n       COUNT(customer_id) AS customer_count \nFROM customers \nGROUP BY country \nORDER BY country \nLIMIT 1000;",
+      "sql": "SELECT country, \n       MIN(lifetime_value) AS min_lifetime_value, \n       MAX(lifetime_value) AS max_lifetime_value, \n       AVG(lifetime_value) AS avg_lifetime_value, \n       COUNT(customer_id) AS customer_count\nFROM customers\nGROUP BY country\nORDER BY country\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1713.27,
+      "latency_ms": 1768.83,
       "schema_tables_used": [
         "customers",
         "orders"
@@ -959,11 +959,11 @@
       "category": "customer_analytics",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "WITH ranked_customers AS (\n    SELECT customer_id, name, email, country, lifetime_value,\n           NTILE(10) OVER (ORDER BY lifetime_value DESC) AS value_rank\n    FROM customers\n)\nSELECT customer_id, name, email, country, lifetime_value\nFROM ranked_customers\nWHERE value_rank = 1\nLIMIT 1000;",
+      "sql": "WITH ranked_customers AS (\n    SELECT \n        customer_id, \n        name, \n        email, \n        lifetime_value, \n        NTILE(10) OVER (ORDER BY lifetime_value DESC) AS value_rank\n    FROM \n        customers\n)\nSELECT \n    customer_id, \n    name, \n    email, \n    lifetime_value\nFROM \n    ranked_customers\nWHERE \n    value_rank = 1\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1823.82,
+      "latency_ms": 2142.24,
       "schema_tables_used": [
         "customers",
         "orders"
@@ -983,7 +983,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1686.64,
+      "latency_ms": 1901.45,
       "schema_tables_used": [
         "orders",
         "customers",
@@ -1006,7 +1006,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1520.9,
+      "latency_ms": 2153.3,
       "schema_tables_used": [
         "orders",
         "customers",
@@ -1027,7 +1027,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1386.94,
+      "latency_ms": 1604.74,
       "schema_tables_used": [
         "orders",
         "customers"
@@ -1047,7 +1047,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1304.42,
+      "latency_ms": 1390.66,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -1069,7 +1069,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2083.84,
+      "latency_ms": 2099.8,
       "schema_tables_used": [
         "orders",
         "payments",
@@ -1089,11 +1089,11 @@
       "category": "customer_analytics",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT c.customer_id, c.name, c.email, o.order_id, o.total_amount\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nORDER BY o.total_amount DESC\nLIMIT 1;",
+      "sql": "SELECT c.customer_id, c.name, o.order_id, o.total_amount\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nORDER BY o.total_amount DESC\nLIMIT 1;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 3718.62,
+      "latency_ms": 1593.93,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -1116,7 +1116,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1315.83,
+      "latency_ms": 1530.65,
       "schema_tables_used": [
         "reviews",
         "orders",
@@ -1138,7 +1138,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1289.45,
+      "latency_ms": 1051.77,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -1161,7 +1161,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1406.21,
+      "latency_ms": 1381.31,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -1182,7 +1182,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1653.82,
+      "latency_ms": 1446.53,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -1205,7 +1205,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1410.54,
+      "latency_ms": 3064.47,
       "schema_tables_used": [
         "customers",
         "order_items",
@@ -1229,7 +1229,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1504.46,
+      "latency_ms": 1461.08,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -1248,11 +1248,11 @@
       "category": "revenue_operations",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT SUM(amount) AS total_pending_payments \nFROM payments \nWHERE status ILIKE 'pending' \nLIMIT 1000;",
+      "sql": "SELECT SUM(amount) AS total_pending_payments\nFROM payments\nWHERE status ILIKE 'pending'\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2470.64,
+      "latency_ms": 1136.37,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -1273,7 +1273,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1477.29,
+      "latency_ms": 1993.02,
       "schema_tables_used": [
         "products",
         "categories",
@@ -1296,7 +1296,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1346.8,
+      "latency_ms": 1282.82,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -1319,7 +1319,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1233.42,
+      "latency_ms": 1288.47,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -1338,11 +1338,11 @@
       "category": "revenue_operations",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', o.order_date) AS month,\n        SUM(o.total_amount) AS revenue\n    FROM \n        orders o\n    WHERE \n        o.order_date >= CURRENT_DATE - INTERVAL '12 months'\n    GROUP BY \n        month\n)\nSELECT \n    month, \n    revenue\nFROM \n    monthly_revenue\nORDER BY \n    month\nLIMIT 1000;",
+      "sql": "SELECT DATE_TRUNC('month', o.order_date) AS month, SUM(o.total_amount) AS monthly_revenue\nFROM orders o\nWHERE o.order_date >= CURRENT_DATE - INTERVAL '12 months'\nGROUP BY month\nORDER BY month\nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1993.61,
+      "latency_ms": 2627.88,
       "schema_tables_used": [
         "customers",
         "orders",
@@ -1365,7 +1365,7 @@
       "success": false,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 2164.49,
+      "latency_ms": 2336.45,
       "schema_tables_used": [
         "categories",
         "products",
@@ -1385,11 +1385,11 @@
       "category": "schema_query",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT column_name \nFROM products \nLIMIT 100;",
-      "success": false,
+      "sql": "SELECT column_name \nFROM (VALUES \n    ('product_id'), \n    ('name'), \n    ('category_id'), \n    ('price'), \n    ('stock_quantity'), \n    ('created_at')\n) AS columns(column_name)\nWHERE column_name IS NOT NULL;",
+      "success": true,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 1539.34,
+      "latency_ms": 3107.69,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -1411,7 +1411,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 998.7,
+      "latency_ms": 1248.54,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -1429,11 +1429,11 @@
       "category": "date_relative",
       "should_be_valid": true,
       "expected_issue": null,
-      "sql": "SELECT order_id, customer_id, order_date, status, total_amount \nFROM orders \nWHERE DATE(order_date) = CURRENT_DATE \nLIMIT 1000;",
+      "sql": "SELECT order_id, customer_id, order_date, status, total_amount \nFROM orders \nWHERE DATE_TRUNC('day', order_date) = CURRENT_DATE \nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1350.23,
+      "latency_ms": 1684.28,
       "schema_tables_used": [
         "orders",
         "payments",
@@ -1456,7 +1456,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1567.94,
+      "latency_ms": 1690.27,
       "schema_tables_used": [
         "reviews",
         "orders",
@@ -1478,7 +1478,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1082.5,
+      "latency_ms": 1464.14,
       "schema_tables_used": [
         "customers",
         "reviews",
@@ -1499,7 +1499,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1218.97,
+      "latency_ms": 2581.35,
       "schema_tables_used": [
         "order_items",
         "orders",
@@ -1522,7 +1522,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1312.74,
+      "latency_ms": 1105.5,
       "schema_tables_used": [
         "reviews",
         "customers",
@@ -1543,7 +1543,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 855.53,
+      "latency_ms": 1059.08,
       "schema_tables_used": [
         "products",
         "order_items",
@@ -1565,7 +1565,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1544.6,
+      "latency_ms": 1397.35,
       "schema_tables_used": [
         "products",
         "orders",
@@ -1589,7 +1589,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1346.13,
+      "latency_ms": 1077.62,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -1613,7 +1613,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 996.19,
+      "latency_ms": 1041.3,
       "schema_tables_used": [
         "customers",
         "reviews",
@@ -1635,7 +1635,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 835.57,
+      "latency_ms": 848.47,
       "schema_tables_used": [
         "orders",
         "order_items",
@@ -1653,20 +1653,20 @@
       "category": "unknown",
       "should_be_valid": false,
       "expected_issue": "unsafe_operation",
-      "sql": "SELECT * FROM products WHERE price > 100;",
-      "success": true,
-      "attempts": 3,
+      "sql": "",
+      "success": false,
+      "attempts": 1,
       "first_attempt_success": false,
-      "latency_ms": 1794.96,
+      "latency_ms": 0.16,
       "schema_tables_used": [
         "order_items",
         "products",
         "orders",
         "categories"
       ],
-      "error_type": null,
-      "error_message": null,
-      "correction_applied": true
+      "error_type": "unsafe_operation",
+      "error_message": "Query blocked: destructive intent detected before generation.",
+      "correction_applied": false
     },
     {
       "id": "adv_005",
@@ -1679,7 +1679,7 @@
       "success": true,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 2054.43,
+      "latency_ms": 1760.77,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -1698,20 +1698,20 @@
       "category": "unknown",
       "should_be_valid": false,
       "expected_issue": "unsafe_operation",
-      "sql": "SELECT 'Dropping products table is not allowed in a SELECT statement.' AS message;",
-      "success": true,
-      "attempts": 3,
+      "sql": "",
+      "success": false,
+      "attempts": 1,
       "first_attempt_success": false,
-      "latency_ms": 1586.77,
+      "latency_ms": 0.14,
       "schema_tables_used": [
         "products",
         "order_items",
         "categories",
         "orders"
       ],
-      "error_type": null,
-      "error_message": null,
-      "correction_applied": true
+      "error_type": "unsafe_operation",
+      "error_message": "Query blocked: destructive intent detected before generation.",
+      "correction_applied": false
     },
     {
       "id": "adv_007",
@@ -1724,7 +1724,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1793.34,
+      "latency_ms": 1668.13,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -1748,7 +1748,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1565.21,
+      "latency_ms": 1814.49,
       "schema_tables_used": [
         "products",
         "categories",
@@ -1766,11 +1766,11 @@
       "category": "unknown",
       "should_be_valid": false,
       "expected_issue": "table_not_found",
-      "sql": "SELECT o.order_id, o.customer_id, o.order_date, o.status, o.total_amount, p.payment_id, p.payment_method, p.amount, p.payment_date, p.status \nFROM orders o\nJOIN payments p ON o.order_id = p.order_id\nLIMIT 1000;",
+      "sql": "SELECT o.order_id, o.customer_id, o.order_date, o.status, o.total_amount, p.payment_id, p.payment_method, p.amount, p.payment_date, p.status \nFROM orders o \nJOIN payments p ON o.order_id = p.order_id \nLIMIT 1000;",
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 2004.26,
+      "latency_ms": 2489.32,
       "schema_tables_used": [
         "payments",
         "orders",
@@ -1789,20 +1789,20 @@
       "category": "unknown",
       "should_be_valid": false,
       "expected_issue": "unsafe_operation",
-      "sql": "WITH updated_prices AS (\n    SELECT product_id, price * 1.10 AS new_price\n    FROM products\n)\nSELECT p.product_id, p.name, up.new_price\nFROM products p\nJOIN updated_prices up ON p.product_id = up.product_id\nLIMIT 100;",
-      "success": true,
-      "attempts": 3,
+      "sql": "",
+      "success": false,
+      "attempts": 1,
       "first_attempt_success": false,
-      "latency_ms": 2482.74,
+      "latency_ms": 0.15,
       "schema_tables_used": [
         "products",
         "order_items",
         "categories",
         "orders"
       ],
-      "error_type": null,
-      "error_message": null,
-      "correction_applied": true
+      "error_type": "unsafe_operation",
+      "error_message": "Query blocked: destructive intent detected before generation.",
+      "correction_applied": false
     },
     {
       "id": "adv_011",
@@ -1815,7 +1815,7 @@
       "success": true,
       "attempts": 1,
       "first_attempt_success": true,
-      "latency_ms": 1603.44,
+      "latency_ms": 1483.54,
       "schema_tables_used": [
         "order_items",
         "products",
@@ -1839,7 +1839,7 @@
       "success": true,
       "attempts": 3,
       "first_attempt_success": false,
-      "latency_ms": 2805.34,
+      "latency_ms": 2596.22,
       "schema_tables_used": [
         "products",
         "payments",

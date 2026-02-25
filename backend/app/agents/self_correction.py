@@ -441,7 +441,7 @@ def increment_attempt_node(state: SQLCorrectionState) -> SQLCorrectionState:
 # ============================================================================
 
 # Non-retryable errors (use imported constant from correction_strategies)
-NON_RETRYABLE = NON_RETRYABLE_ERRORS  # {"permission_denied", "connection_error"}
+NON_RETRYABLE = NON_RETRYABLE_ERRORS | {"unsafe_operation"}  # {"permission_denied", "connection_error"}
 # Note: timeout is now RETRYABLE (removed from this set)
 
 
@@ -812,8 +812,13 @@ class CorrectionAgent:
         # Initialize metrics
         self.metrics = CorrectionMetrics()
 
-        logger.info(f"[CorrectionAgent] Initialized with max_attempts={max_attempts}")
+        logger.info(f"[CorrectionAgent] Initialized with max_attempts={max_attempts}") 
 
+    UNSAFE_INTENT_RE = re.compile(
+        r'\b(delete|drop|update|truncate|alter|insert)\b',
+        re.IGNORECASE
+    )
+    
     def execute_with_retry(self, question: str) -> CorrectionResult:
         """Execute query with self-correction
 
@@ -826,6 +831,21 @@ class CorrectionAgent:
         Returns:
             CorrectionResult with execution outcome and metrics
         """
+        # ── Pre-generation safety guard ──────────────────────────────
+        if self.UNSAFE_INTENT_RE.search(question):
+            logger.warning(f"[SafetyGuard] Unsafe intent blocked: {question}")
+            return CorrectionResult(
+                question=question,
+                final_sql="",
+                success=False,
+                attempts=1,
+                execution_result={
+                    "success": False,
+                    "error_type": "unsafe_operation",
+                    "error_message": "Query blocked: destructive intent detected before generation.",
+                },
+                schema_tables_used=[]
+            )
         logger.info("\n" + "=" * 80)
         logger.info(f"[CorrectionAgent] NEW QUERY")
         logger.info(f"[CorrectionAgent] Question: {question}")
