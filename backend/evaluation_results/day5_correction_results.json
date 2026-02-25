@@ -1,29 +1,29 @@
 {
-  "timestamp": "2026-02-25T11:55:55.008057",
+  "timestamp": "2026-02-25T15:17:34.746420",
   "dataset": "backend/app/evaluation/datasets/core_eval.json",
   "total_tests": 20,
   "summary": {
-    "first_attempt_success": 19,
-    "first_attempt_rate": 0.95,
+    "first_attempt_success": 20,
+    "first_attempt_rate": 1.0,
     "corrected_success": 0,
-    "correction_effectiveness": 0.0,
-    "final_failures": 1,
-    "overall_success_rate": 0.95,
-    "avg_attempts": 1.05,
-    "total_attempts": 21
+    "correction_effectiveness": 1.0,
+    "final_failures": 0,
+    "overall_success_rate": 1.0,
+    "avg_attempts": 1.0,
+    "total_attempts": 20
   },
   "criteria": {
     "first_attempt_above_30": true,
-    "correction_above_60": false,
+    "correction_above_60": true,
     "overall_above_85": true,
-    "all_passed": false
+    "all_passed": true
   },
   "category_breakdown": {
     "core_eval": {
       "total": 20,
-      "first_success": 19,
+      "first_success": 20,
       "corrected": 0,
-      "failed": 1
+      "failed": 0
     }
   },
   "detailed_results": [
@@ -48,7 +48,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 44.94,
+        "execution_time_ms": 34.92,
         "row_count": 1
       },
       "validation_issues": []
@@ -131,7 +131,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.05,
+        "execution_time_ms": 5.46,
         "row_count": 20
       },
       "validation_issues": []
@@ -174,7 +174,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.55,
+        "execution_time_ms": 5.62,
         "row_count": 4
       },
       "validation_issues": []
@@ -222,7 +222,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.08,
+        "execution_time_ms": 5.25,
         "row_count": 5
       },
       "validation_issues": []
@@ -248,7 +248,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 8.17,
+        "execution_time_ms": 5.29,
         "row_count": 1
       },
       "validation_issues": []
@@ -263,7 +263,7 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT category_id, name, description FROM categories LIMIT 1000;",
+      "final_sql": "SELECT category_id, name, description FROM categories ORDER BY category_id LIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
@@ -296,7 +296,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.08,
+        "execution_time_ms": 7.88,
         "row_count": 5
       },
       "validation_issues": []
@@ -329,7 +329,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.75,
+        "execution_time_ms": 4.69,
         "row_count": 2
       },
       "validation_issues": []
@@ -400,7 +400,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 10.52,
+        "execution_time_ms": 10.31,
         "row_count": 6
       },
       "validation_issues": []
@@ -473,7 +473,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 12.48,
+        "execution_time_ms": 9.47,
         "row_count": 10
       },
       "validation_issues": []
@@ -596,7 +596,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 5.36,
+        "execution_time_ms": 5.47,
         "row_count": 20
       },
       "validation_issues": []
@@ -639,7 +639,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.88,
+        "execution_time_ms": 7.72,
         "row_count": 5
       },
       "validation_issues": []
@@ -667,7 +667,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.72,
+        "execution_time_ms": 5.0,
         "row_count": 1
       },
       "validation_issues": []
@@ -682,87 +682,105 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT customer_id, AVG(total_amount) AS average_order_value\nFROM orders\nGROUP BY customer_id\nORDER BY customer_id\nLIMIT 1000;",
+      "final_sql": "SELECT c.customer_id, c.name, AVG(o.total_amount) AS average_order_value\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name\nORDER BY average_order_value DESC\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "customer_id": 1,
-            "average_order_value": "418.3166666666666667"
-          },
-          {
-            "customer_id": 2,
-            "average_order_value": "29.9900000000000000"
-          },
-          {
-            "customer_id": 3,
-            "average_order_value": "39.9900000000000000"
-          },
-          {
-            "customer_id": 4,
-            "average_order_value": "254.9875000000000000"
-          },
-          {
-            "customer_id": 5,
-            "average_order_value": "89.9900000000000000"
-          },
-          {
-            "customer_id": 6,
-            "average_order_value": "89.9800000000000000"
-          },
-          {
-            "customer_id": 7,
-            "average_order_value": "89.9900000000000000"
-          },
-          {
-            "customer_id": 8,
-            "average_order_value": "749.9800000000000000"
-          },
-          {
-            "customer_id": 9,
-            "average_order_value": "39.9900000000000000"
-          },
-          {
-            "customer_id": 10,
-            "average_order_value": "393.9900000000000000"
-          },
-          {
-            "customer_id": 11,
-            "average_order_value": "462.4800000000000000"
-          },
-          {
-            "customer_id": 12,
-            "average_order_value": "49.9900000000000000"
-          },
-          {
-            "customer_id": 13,
-            "average_order_value": "79.9900000000000000"
-          },
-          {
             "customer_id": 14,
+            "name": "Nina Simone",
             "average_order_value": "999.9900000000000000"
           },
           {
-            "customer_id": 15,
-            "average_order_value": "59.9900000000000000"
+            "customer_id": 8,
+            "name": "Hannah White",
+            "average_order_value": "749.9800000000000000"
+          },
+          {
+            "customer_id": 11,
+            "name": "Kevin Hart",
+            "average_order_value": "462.4800000000000000"
+          },
+          {
+            "customer_id": 1,
+            "name": "Alice Johnson",
+            "average_order_value": "418.3166666666666667"
+          },
+          {
+            "customer_id": 10,
+            "name": "Julia Roberts",
+            "average_order_value": "393.9900000000000000"
+          },
+          {
+            "customer_id": 4,
+            "name": "Diana Prince",
+            "average_order_value": "254.9875000000000000"
+          },
+          {
+            "customer_id": 7,
+            "name": "George Miller",
+            "average_order_value": "89.9900000000000000"
+          },
+          {
+            "customer_id": 5,
+            "name": "Ethan Hunt",
+            "average_order_value": "89.9900000000000000"
           },
           {
             "customer_id": 16,
+            "name": "Priya Sharma",
             "average_order_value": "89.9850000000000000"
           },
           {
+            "customer_id": 6,
+            "name": "Fiona Green",
+            "average_order_value": "89.9800000000000000"
+          },
+          {
             "customer_id": 18,
+            "name": "Rachel Green",
             "average_order_value": "84.9900000000000000"
           },
           {
-            "customer_id": 19,
+            "customer_id": 13,
+            "name": "Mike Chen",
             "average_order_value": "79.9900000000000000"
+          },
+          {
+            "customer_id": 19,
+            "name": "Sam Wilson",
+            "average_order_value": "79.9900000000000000"
+          },
+          {
+            "customer_id": 15,
+            "name": "Oscar Wilde",
+            "average_order_value": "59.9900000000000000"
+          },
+          {
+            "customer_id": 12,
+            "name": "Laura Palmer",
+            "average_order_value": "49.9900000000000000"
+          },
+          {
+            "customer_id": 9,
+            "name": "Ivan Petrov",
+            "average_order_value": "39.9900000000000000"
+          },
+          {
+            "customer_id": 3,
+            "name": "Charlie Brown",
+            "average_order_value": "39.9900000000000000"
+          },
+          {
+            "customer_id": 2,
+            "name": "Bob Smith",
+            "average_order_value": "29.9900000000000000"
           }
         ],
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 3.63,
+        "execution_time_ms": 5.99,
         "row_count": 18
       },
       "validation_issues": []
@@ -860,7 +878,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 7.83,
+        "execution_time_ms": 5.93,
         "row_count": 15
       },
       "validation_issues": []
@@ -871,19 +889,36 @@
       "category": "core_eval",
       "expected_error": "N/A",
       "should_succeed": true,
-      "actual_success": false,
-      "attempts": 2,
+      "actual_success": true,
+      "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "SELECT payment_method, COUNT(order_id) AS order_count\nFROM payments\nJOIN orders ON payments.order_id = orders.order_id\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000;",
+      "final_sql": "SELECT payment_method, COUNT(DISTINCT o.order_id) AS order_count\nFROM payments p\nJOIN orders o ON p.order_id = o.order_id\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000;",
       "execution_result": {
-        "success": false,
-        "data": null,
-        "error_type": "join_error",
-        "error_message": "(psycopg2.errors.AmbiguousColumn) column reference \"order_id\" is ambiguous\nLINE 1: SELECT payment_method, COUNT(order_id) AS order_count\n                                     ^\n\n[SQL: SELECT payment_method, COUNT(order_id) AS order_count\nFROM payments\nJOIN orders ON payments.order_id = orders.order_id\nGROUP BY payment_method\nORDER BY order_count DESC\nLIMIT 1000]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
-        "error_feedback": "JOIN error - column reference is ambiguous. Use table aliases (e.g., p.product_id, o.order_id) to clarify which table's column.",
-        "execution_time_ms": 7.36,
-        "row_count": 0
+        "success": true,
+        "data": [
+          {
+            "payment_method": "credit_card",
+            "order_count": 14
+          },
+          {
+            "payment_method": "paypal",
+            "order_count": 9
+          },
+          {
+            "payment_method": "bank_transfer",
+            "order_count": 3
+          },
+          {
+            "payment_method": "apple_pay",
+            "order_count": 1
+          }
+        ],
+        "error_type": null,
+        "error_message": null,
+        "error_feedback": null,
+        "execution_time_ms": 7.97,
+        "row_count": 4
       },
       "validation_issues": []
     },
@@ -961,7 +996,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.44,
+        "execution_time_ms": 4.28,
         "row_count": 14
       },
       "validation_issues": []
@@ -976,14 +1011,14 @@
       "attempts": 1,
       "was_corrected": false,
       "used_fallback": false,
-      "final_sql": "WITH average_order_count AS (\n    SELECT AVG(order_count) AS avg_count\n    FROM (\n        SELECT customer_id, COUNT(order_id) AS order_count\n        FROM orders\n        GROUP BY customer_id\n    ) AS customer_orders\n)\nSELECT c.customer_id, c.name, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name\nHAVING COUNT(o.order_id) > (SELECT avg_count FROM average_order_count)\nORDER BY order_count DESC\nLIMIT 1000;",
+      "final_sql": "WITH average_order_count AS (\n    SELECT AVG(order_count) AS avg_count\n    FROM (\n        SELECT customer_id, COUNT(order_id) AS order_count\n        FROM orders\n        GROUP BY customer_id\n    ) AS customer_orders\n)\nSELECT c.customer_id, c.name, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.name\nHAVING COUNT(o.order_id) > (SELECT avg_count FROM average_order_count)\nLIMIT 1000;",
       "execution_result": {
         "success": true,
         "data": [
           {
-            "customer_id": 10,
-            "name": "Julia Roberts",
-            "order_count": 5
+            "customer_id": 11,
+            "name": "Kevin Hart",
+            "order_count": 2
           },
           {
             "customer_id": 4,
@@ -991,19 +1026,19 @@
             "order_count": 4
           },
           {
-            "customer_id": 1,
-            "name": "Alice Johnson",
-            "order_count": 3
-          },
-          {
-            "customer_id": 11,
-            "name": "Kevin Hart",
-            "order_count": 2
+            "customer_id": 10,
+            "name": "Julia Roberts",
+            "order_count": 5
           },
           {
             "customer_id": 16,
             "name": "Priya Sharma",
             "order_count": 2
+          },
+          {
+            "customer_id": 1,
+            "name": "Alice Johnson",
+            "order_count": 3
           },
           {
             "customer_id": 18,
@@ -1014,7 +1049,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.58,
+        "execution_time_ms": 7.45,
         "row_count": 6
       },
       "validation_issues": []
@@ -1065,7 +1100,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 6.14,
+        "execution_time_ms": 5.61,
         "row_count": 7
       },
       "validation_issues": []
@@ -1172,7 +1207,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.0,
+        "execution_time_ms": 5.3,
         "row_count": 14
       },
       "validation_issues": []
@@ -1283,7 +1318,7 @@
         "error_type": null,
         "error_message": null,
         "error_feedback": null,
-        "execution_time_ms": 4.07,
+        "execution_time_ms": 6.91,
         "row_count": 11
       },
       "validation_issues": []

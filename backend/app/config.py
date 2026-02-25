@@ -1,3 +1,4 @@
+# backend/app/config.py
 """
 Configuration module for QueryPilot
 Supports both Groq (primary) and OpenAI (backup) providers
@@ -13,38 +14,38 @@ from pathlib import Path
 def find_project_root():
     """Find project root by looking for .env file"""
     current = Path(__file__).resolve()
-    
+
     # Go up from backend/app/config.py to project root
     # backend/app/config.py -> backend/app -> backend -> project_root
     project_root = current.parent.parent.parent
-    
+
     return project_root
 
 
 class Settings(BaseSettings):
     """Application settings with environment variable loading"""
-    
+
     # LLM Provider
     LLM_PROVIDER: Literal["groq", "openai"] = "openai"  # Default to Groq
-    
+
     # Groq Configuration (FREE - PRIMARY)
     GROQ_API_KEY: str
     GROQ_MODEL_NAME: str = "llama-3.1-70b-versatile"
-    
+
     # OpenAI Configuration (BACKUP)
     OPENAI_API_KEY: str
     OPENAI_MODEL_NAME: str = "gpt-4o-mini"
-    
+
     # Database
     DATABASE_URL: str
-    
+
     # Chroma DB
     CHROMA_URL: str = "http://localhost:8000"
-    
+
     # System Settings
     MAX_RETRIES: int = 3
     QUERY_TIMEOUT: int = 30
-    
+
     class Config:
         # Dynamically find .env file in project root
         env_file = str(find_project_root() / ".env")
@@ -53,6 +54,26 @@ class Settings(BaseSettings):
 
 # Global settings instance
 settings = Settings()
+
+
+# ─────────────────────────────────────────────────────────────
+# SCHEMA PROFILES
+# Single source of truth for multi-schema support.
+# Maps schema_name → db_url, pg_schema, collection_name.
+# Add new schemas here only — no changes to agent code needed.
+# ─────────────────────────────────────────────────────────────
+SCHEMA_PROFILES = {
+    "ecommerce": {
+        "db_url":          settings.DATABASE_URL,
+        "pg_schema":       "public",
+        "collection_name": "querypilot_schema",
+    },
+    "library": {
+        "db_url":          settings.DATABASE_URL,
+        "pg_schema":       "library",
+        "collection_name": "library_schema",
+    },
+}
 
 
 def get_llm():
@@ -84,3 +105,6 @@ if __name__ == "__main__":
     print(f"Database: {settings.DATABASE_URL}")
     print(f"Chroma: {settings.CHROMA_URL}")
     print(f".env file location: {find_project_root() / '.env'}")
+    print("\nSchema Profiles:")
+    for name, profile in SCHEMA_PROFILES.items():
+        print(f"  {name}: pg_schema={profile['pg_schema']}, collection={profile['collection_name']}")
