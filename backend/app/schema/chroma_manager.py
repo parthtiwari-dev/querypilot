@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class ChromaManager:
     """Manages Chroma DB operations for schema storage"""
     
-    def __init__(self, chroma_url: str = "http://localhost:8000"):
+    def __init__(self, chroma_url: str = "http://localhost:8000", collection_name: str = "querypilot_schema"):
         """
         Initialize Chroma DB client
         
@@ -26,7 +26,7 @@ class ChromaManager:
             host=chroma_url.replace("http://", "").split(":")[0],
             port=int(chroma_url.split(":")[-1])
         )
-        self.collection_name = "querypilot_schema"
+        self.collection_name = collection_name
         self.collection = None
         logger.info(f"Connected to Chroma DB at {chroma_url}")
     

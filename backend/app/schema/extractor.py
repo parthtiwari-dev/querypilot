@@ -25,7 +25,7 @@ class SchemaMetadataExtractor:
         self.engine = create_engine(database_url)
         self.inspector = inspect(self.engine)
         
-    def extract_schema(self) -> Dict[str, Any]:
+    def extract_schema(self, pg_schema: str = "public") -> Dict[str, Any]:
         """
         Extract complete schema metadata from database
         
@@ -35,15 +35,15 @@ class SchemaMetadataExtractor:
         schema_metadata = {}
         
         # Get all table names
-        table_names = self.inspector.get_table_names()
+        table_names = self.inspector.get_table_names(schema=pg_schema)
         logger.info(f"Found {len(table_names)} tables in database")
         
         for table_name in table_names:
-            schema_metadata[table_name] = self._extract_table_metadata(table_name)
+            schema_metadata[table_name] = self._extract_table_metadata(table_name, pg_schema)
             
         return schema_metadata
     
-    def _extract_table_metadata(self, table_name: str) -> Dict[str, Any]:
+    def _extract_table_metadata(self, table_name: str, pg_schema: str = "public") -> Dict[str, Any]:
         """
         Extract metadata for a specific table
         
@@ -54,14 +54,14 @@ class SchemaMetadataExtractor:
             Dictionary with columns, data types, and foreign keys
         """
         # Get columns
-        columns = self.inspector.get_columns(table_name)
+        columns = self.inspector.get_columns(table_name, schema=pg_schema)
         column_names = [col['name'] for col in columns]
         
         # Get data types
         data_types = {col['name']: str(col['type']) for col in columns}
         
         # Get foreign keys
-        foreign_keys = self.inspector.get_foreign_keys(table_name)
+        foreign_keys = self.inspector.get_foreign_keys(table_name, schema=pg_schema)
         
         # ✅ FIX: Format FK as {column: referred_table.referred_column}
         # This matches what SQL Generator expects!
@@ -74,7 +74,7 @@ class SchemaMetadataExtractor:
                 fk_dict[col] = f"{ref_table}.{ref_col}"
         
         # Get primary key
-        pk_constraint = self.inspector.get_pk_constraint(table_name)
+        pk_constraint = self.inspector.get_pk_constraint(table_name, schema=pg_schema)
         primary_keys = pk_constraint.get('constrained_columns', [])
         
         return {

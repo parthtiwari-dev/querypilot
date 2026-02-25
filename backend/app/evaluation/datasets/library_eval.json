@@ -1,0 +1,122 @@
+[
+  {
+    "id": "lib_easy_001",
+    "question": "How many books are in the library?",
+    "complexity": "easy",
+    "category": "count",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT COUNT(*) AS total_books FROM books;"
+  },
+  {
+    "id": "lib_easy_002",
+    "question": "List all overdue loans.",
+    "complexity": "easy",
+    "category": "filter",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT * FROM loans WHERE status = 'overdue';"
+  },
+  {
+    "id": "lib_easy_003",
+    "question": "List all premium members.",
+    "complexity": "easy",
+    "category": "filter",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT * FROM members WHERE membership_type = 'premium';"
+  },
+  {
+    "id": "lib_easy_004",
+    "question": "What are the distinct genres available in the library?",
+    "complexity": "easy",
+    "category": "distinct",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT DISTINCT genre FROM books ORDER BY genre;"
+  },
+  {
+    "id": "lib_easy_005",
+    "question": "List all unpaid fines.",
+    "complexity": "easy",
+    "category": "filter",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT * FROM fines WHERE paid = FALSE;"
+  },
+  {
+    "id": "lib_medium_001",
+    "question": "Show members with their currently active loans and the book title.",
+    "complexity": "medium",
+    "category": "join",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT m.name, b.title, l.loan_date FROM loans l JOIN members m ON l.member_id = m.member_id JOIN books b ON l.book_id = b.book_id WHERE l.status = 'active';"
+  },
+  {
+    "id": "lib_medium_002",
+    "question": "What is the total fine amount owed by each member?",
+    "complexity": "medium",
+    "category": "aggregation",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT m.name, SUM(f.amount) AS total_fines FROM fines f JOIN loans l ON f.loan_id = l.loan_id JOIN members m ON l.member_id = m.member_id GROUP BY m.member_id, m.name ORDER BY total_fines DESC;"
+  },
+  {
+    "id": "lib_medium_003",
+    "question": "Which books have been borrowed the most times?",
+    "complexity": "medium",
+    "category": "aggregation",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT b.title, b.author, COUNT(l.loan_id) AS borrow_count FROM books b JOIN loans l ON b.book_id = l.book_id GROUP BY b.book_id, b.title, b.author ORDER BY borrow_count DESC LIMIT 5;"
+  },
+  {
+    "id": "lib_medium_004",
+    "question": "Show all overdue loans with the member name and book title.",
+    "complexity": "medium",
+    "category": "join",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT m.name, b.title, l.loan_date, l.return_date FROM loans l JOIN members m ON l.member_id = m.member_id JOIN books b ON l.book_id = b.book_id WHERE l.status = 'overdue';"
+  },
+  {
+    "id": "lib_medium_005",
+    "question": "Show a summary of paid versus unpaid fines with the count and total amount for each.",
+    "complexity": "medium",
+    "category": "aggregation",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT paid, COUNT(*) AS fine_count, SUM(amount) AS total_amount FROM fines GROUP BY paid;"
+  },
+  {
+    "id": "lib_hard_001",
+    "question": "Which members have never borrowed a book?",
+    "complexity": "hard",
+    "category": "subquery",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT name, email, membership_type FROM members WHERE member_id NOT IN (SELECT DISTINCT member_id FROM loans);"
+  },
+  {
+    "id": "lib_hard_002",
+    "question": "Which genre has been borrowed the most times overall?",
+    "complexity": "hard",
+    "category": "cte",
+    "should_be_valid": true,
+    "ground_truth_sql": "WITH genre_counts AS (SELECT b.genre, COUNT(l.loan_id) AS borrow_count FROM books b JOIN loans l ON b.book_id = l.book_id GROUP BY b.genre) SELECT genre, borrow_count FROM genre_counts ORDER BY borrow_count DESC LIMIT 1;"
+  },
+  {
+    "id": "lib_hard_003",
+    "question": "Which members have total fines exceeding $10?",
+    "complexity": "hard",
+    "category": "cte",
+    "should_be_valid": true,
+    "ground_truth_sql": "WITH member_fines AS (SELECT m.member_id, m.name, SUM(f.amount) AS total_fines FROM fines f JOIN loans l ON f.loan_id = l.loan_id JOIN members m ON l.member_id = m.member_id GROUP BY m.member_id, m.name) SELECT name, total_fines FROM member_fines WHERE total_fines > 10 ORDER BY total_fines DESC;"
+  },
+  {
+    "id": "lib_hard_004",
+    "question": "What is the average loan duration in days by membership type, for loans that have been returned?",
+    "complexity": "hard",
+    "category": "aggregation",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT m.membership_type, ROUND(AVG(l.return_date - l.loan_date), 1) AS avg_loan_days FROM loans l JOIN members m ON l.member_id = m.member_id WHERE l.status = 'returned' AND l.return_date IS NOT NULL GROUP BY m.membership_type;"
+  },
+  {
+    "id": "lib_hard_005",
+    "question": "Which books have been borrowed more than once?",
+    "complexity": "hard",
+    "category": "having",
+    "should_be_valid": true,
+    "ground_truth_sql": "SELECT b.title, b.author, COUNT(l.loan_id) AS times_borrowed FROM books b JOIN loans l ON b.book_id = l.book_id GROUP BY b.book_id, b.title, b.author HAVING COUNT(l.loan_id) > 1 ORDER BY times_borrowed DESC;"
+  }
+]

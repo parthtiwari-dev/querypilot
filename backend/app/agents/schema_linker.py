@@ -20,17 +20,18 @@ class SchemaLinker:
     This is the first step in preventing hallucinations!
     """
     
-    def __init__(self):
+    def __init__(self, collection_name: str = "querypilot_schema", pg_schema: str = "public"):
         """Initialize Schema Linker with all components"""
         logger.info("Initializing Schema Linker...")
         
         # Initialize components
+        self.pg_schema = pg_schema
         self.extractor = SchemaMetadataExtractor(settings.DATABASE_URL)
         self.embedder = SchemaEmbedder()
-        self.chroma = ChromaManager(settings.CHROMA_URL)
-        
+        self.chroma = ChromaManager(settings.CHROMA_URL, collection_name=collection_name)
+
         # Cache for schema metadata
-        self._schema_cache = None
+        self._schema_cache = self.extractor.extract_schema(pg_schema=self.pg_schema)
         
         logger.info("Schema Linker initialized successfully")
     
@@ -53,7 +54,7 @@ class SchemaLinker:
         logger.info("Starting schema indexing...")
         
         # Step 1: Extract schema from database
-        schema_metadata = self.extractor.extract_schema()
+        schema_metadata = self.extractor.extract_schema(pg_schema=self.pg_schema)
         self._schema_cache = schema_metadata
         logger.info(f"Extracted schema for {len(schema_metadata)} tables")
         
@@ -110,7 +111,7 @@ class SchemaLinker:
         logger.info(f"Found {len(relevant_schema)} relevant tables")
 
         # ---- FK EXPANSION ----
-        full_schema = self.extractor.extract_schema()
+        full_schema = self.extractor.extract_schema(pg_schema=self.pg_schema)
 
         expanded_schema = dict(relevant_schema)
 

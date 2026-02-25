@@ -1,0 +1,324 @@
+{
+  "timestamp": "2026-02-25T20:05:28.520237",
+  "schema": "library",
+  "total_tests": 15,
+  "results": [
+    {
+      "id": "lib_easy_001",
+      "question": "How many books are in the library?",
+      "complexity": "easy",
+      "category": "count",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT COUNT(*) AS total_books FROM books LIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1956.08,
+      "schema_tables_used": [
+        "books"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_easy_002",
+      "question": "List all overdue loans.",
+      "complexity": "easy",
+      "category": "filter",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT loan_id, book_id, member_id, loan_date, return_date, status \nFROM loans \nWHERE return_date < CURRENT_DATE AND status = 'active' \nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1794.17,
+      "schema_tables_used": [
+        "loans",
+        "fines",
+        "books",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_easy_003",
+      "question": "List all premium members.",
+      "complexity": "easy",
+      "category": "filter",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT member_id, name, email, joined_date, membership_type \nFROM members \nWHERE membership_type ILIKE 'premium' \nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1247.61,
+      "schema_tables_used": [
+        "members",
+        "loans",
+        "books",
+        "fines"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_easy_004",
+      "question": "What are the distinct genres available in the library?",
+      "complexity": "easy",
+      "category": "distinct",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT DISTINCT genre FROM books LIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1304.17,
+      "schema_tables_used": [
+        "books"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_easy_005",
+      "question": "List all unpaid fines.",
+      "complexity": "easy",
+      "category": "filter",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT fine_id, loan_id, amount FROM fines WHERE paid = FALSE LIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1170.13,
+      "schema_tables_used": [
+        "fines",
+        "loans",
+        "books",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_medium_001",
+      "question": "Show members with their currently active loans and the book title.",
+      "complexity": "medium",
+      "category": "join",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT m.member_id, m.name, b.title \nFROM members m\nJOIN loans l ON m.member_id = l.member_id\nJOIN books b ON l.book_id = b.book_id\nWHERE l.status ILIKE 'active'\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 2039.88,
+      "schema_tables_used": [
+        "loans",
+        "books",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_medium_002",
+      "question": "What is the total fine amount owed by each member?",
+      "complexity": "medium",
+      "category": "aggregation",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT m.member_id, m.name, SUM(f.amount) AS total_fine_amount\nFROM members m\nJOIN loans l ON m.member_id = l.member_id\nJOIN fines f ON l.loan_id = f.loan_id\nWHERE f.paid = FALSE\nGROUP BY m.member_id, m.name\nORDER BY total_fine_amount DESC\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 2865.76,
+      "schema_tables_used": [
+        "fines",
+        "loans",
+        "books",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_medium_003",
+      "question": "Which books have been borrowed the most times?",
+      "complexity": "medium",
+      "category": "aggregation",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT b.title, b.author, COUNT(l.loan_id) AS borrow_count\nFROM books b\nJOIN loans l ON b.book_id = l.book_id\nWHERE l.status = 'borrowed'\nGROUP BY b.book_id, b.title, b.author\nORDER BY borrow_count DESC\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1833.2,
+      "schema_tables_used": [
+        "books",
+        "loans",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_medium_004",
+      "question": "Show all overdue loans with the member name and book title.",
+      "complexity": "medium",
+      "category": "join",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT l.loan_id, m.name AS member_name, b.title AS book_title, l.loan_date, l.return_date\nFROM loans l\nJOIN members m ON l.member_id = m.member_id\nJOIN books b ON l.book_id = b.book_id\nWHERE l.return_date < CURRENT_DATE AND l.status ILIKE 'overdue'\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 3062.29,
+      "schema_tables_used": [
+        "loans",
+        "books",
+        "fines",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_medium_005",
+      "question": "Show a summary of paid versus unpaid fines with the count and total amount for each.",
+      "complexity": "medium",
+      "category": "aggregation",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT \n    paid, \n    COUNT(fine_id) AS fine_count, \n    SUM(amount) AS total_amount \nFROM \n    fines \nGROUP BY \n    paid \nORDER BY \n    paid \nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1624.86,
+      "schema_tables_used": [
+        "fines",
+        "loans",
+        "books",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_hard_001",
+      "question": "Which members have never borrowed a book?",
+      "complexity": "hard",
+      "category": "subquery",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT m.member_id, m.name, m.email \nFROM members m \nLEFT JOIN loans l ON m.member_id = l.member_id \nWHERE l.loan_id IS NULL \nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1603.47,
+      "schema_tables_used": [
+        "books",
+        "loans",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_hard_002",
+      "question": "Which genre has been borrowed the most times overall?",
+      "complexity": "hard",
+      "category": "cte",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT genre, COUNT(*) AS borrow_count\nFROM books b\nJOIN loans l ON b.book_id = l.book_id\nWHERE l.status = 'borrowed'\nGROUP BY genre\nORDER BY borrow_count DESC\nLIMIT 1;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 1564.93,
+      "schema_tables_used": [
+        "books",
+        "loans",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_hard_003",
+      "question": "Which members have total fines exceeding $10?",
+      "complexity": "hard",
+      "category": "cte",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT m.member_id, m.name, SUM(f.amount) AS total_fines\nFROM members m\nJOIN loans l ON m.member_id = l.member_id\nJOIN fines f ON l.loan_id = f.loan_id\nGROUP BY m.member_id, m.name\nHAVING SUM(f.amount) > 10\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 2948.79,
+      "schema_tables_used": [
+        "fines",
+        "members",
+        "loans"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_hard_004",
+      "question": "What is the average loan duration in days by membership type, for loans that have been returned?",
+      "complexity": "hard",
+      "category": "aggregation",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT m.membership_type, AVG(COALESCE(l.return_date - l.loan_date, 0)) AS average_loan_duration\nFROM loans l\nJOIN members m ON l.member_id = m.member_id\nWHERE l.status ILIKE 'returned'\nGROUP BY m.membership_type\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 2179.33,
+      "schema_tables_used": [
+        "loans",
+        "books",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    },
+    {
+      "id": "lib_hard_005",
+      "question": "Which books have been borrowed more than once?",
+      "complexity": "hard",
+      "category": "having",
+      "should_be_valid": true,
+      "expected_issue": null,
+      "sql": "SELECT b.book_id, b.title, b.author, COUNT(l.loan_id) AS borrow_count\nFROM books b\nJOIN loans l ON b.book_id = l.book_id\nGROUP BY b.book_id, b.title, b.author\nHAVING COUNT(l.loan_id) > 1\nORDER BY borrow_count DESC\nLIMIT 1000;",
+      "success": true,
+      "attempts": 1,
+      "first_attempt_success": true,
+      "latency_ms": 2520.97,
+      "schema_tables_used": [
+        "books",
+        "loans",
+        "members"
+      ],
+      "error_type": null,
+      "error_message": null,
+      "correction_applied": false
+    }
+  ]
+}
