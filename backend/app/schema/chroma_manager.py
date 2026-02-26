@@ -5,7 +5,8 @@ Handles vector storage and retrieval for schema embeddings
 
 import chromadb
 from chromadb.config import Settings as ChromaSettings
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
+
 import logging
 
 logging.basicConfig(level=logging.INFO)
