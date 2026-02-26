@@ -125,6 +125,10 @@ A query is counted as successful if:
 
 Semantic correctness is NOT measured.
 
+Remote 15-query API probes (Block 4) are used only as smoke tests for the deployed service
+(status codes, response shape, basic SQL sanity) and are not included in the core 70-query
+success rates.
+
 ### Adversarial Success Definition
 Successful handling means: system blocks the query (no SQL returned) **OR**
 the system detects the error + correction loop runs + no hallucinated table is used.
@@ -198,15 +202,20 @@ works correctly (3/3 unsafe operations blocked).
 
 ## Limitations
 
+
 1. **Semantic correctness not measured.** Execution success ≠ business logic correctness.
 2. **Ground truth SQL is manually authored.** Alternate correct formulations exist.
 3. **Small seed data (< 50 rows/table).** Time-window queries may return empty sets,
 counted as execution success regardless.
 4. **Library (15 queries) insufficient for statistical significance** — generalizability
 indicator only.
-5. **Adversarial intent rejection is schema-level only.** Queries using wrong-but-existing
+5. **Remote vs local latency differences.** Local eval runs against Dockerized services on
+the same machine. Remote eval runs over the public internet to Render, so reported
+latencies are not directly comparable and include network and cold-start overhead.
+6. **Adversarial intent rejection is schema-level only.** Queries using wrong-but-existing
 tables (e.g. "invoices" → resolved to `orders`) are not rejected; only unsafe DML
 operations are blocked.
+
 """
 
 OUT_FILE.parent.mkdir(parents=True, exist_ok=True)

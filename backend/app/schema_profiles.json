@@ -1,10 +1,10 @@
 {
   "ecommerce": {
-    "pg_schema": "public",
-    "collection_name": "querypilot_ecommerce_v2"
+    "pg_schema": "ecommerce",
+    "collection_name": "querypilot_schema"
   },
   "library": {
     "pg_schema": "library",
-    "collection_name": "querypilot_library_v2"
+    "collection_name": "library_schema"
   }
 }

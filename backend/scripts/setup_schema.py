@@ -36,9 +36,16 @@ def check_db_connection(pg_schema: str) -> list:
         ), {"schema": pg_schema}).fetchall()
     return [r[0] for r in rows]
 
-
 def load_profiles() -> dict:
-    return json.loads(PROFILES_PATH.read_text())
+    if not PROFILES_PATH.exists():
+        return {}
+    try:
+        return json.loads(PROFILES_PATH.read_text())
+    except json.JSONDecodeError as e:
+        print(f"ERROR: Failed to parse {PROFILES_PATH} as JSON.")
+        print("Fix the file (or delete it to regenerate) and re-run setup_schema.py.")
+        print(f"\nUnderlying exception:\n{e}")
+        sys.exit(1)
 
 
 def save_profiles(profiles: dict):
@@ -72,13 +79,23 @@ def main():
     try:
         tables = check_db_connection(args.pg_schema)
     except Exception as e:
-        print(f"ERROR: Could not connect to database.\n{e}")
+        print("ERROR: Could not connect to database using DATABASE_URL from .env.")
+        print("Check that:")
+        print("  - DATABASE_URL is set and points to a reachable PostgreSQL instance")
+        print("  - The username/password are correct")
+        print("  - The database exists and accepts connections from this host")
+        print(f"\nUnderlying exception:\n{e}")
         sys.exit(1)
 
+
     if not tables:
-        print(f"ERROR: No tables found in pg_schema '{args.pg_schema}'.")
-        print("Make sure your tables exist in the database before running setup.")
+        print(f"ERROR: No tables found in PostgreSQL schema '{args.pg_schema}'.")
+        print("This usually means either:")
+        print("  - The schema name is wrong, or")
+        print("  - You created the tables in a different schema (often 'public').")
+        print("Create your tables first, then re-run this command.")
         sys.exit(1)
+
 
     print(f"Found {len(tables)} tables: {', '.join(tables)}")
 
