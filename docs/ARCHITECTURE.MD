@@ -276,15 +276,15 @@ Example values:
 ```mermaid
 flowchart LR
     Q[Question] --> API[FastAPI /query]
-    API --> ORCH[LangGraph Orchestrator<br/>(CorrectionAgent)]
+    API --> ORCH[LangGraph Orchestrator]
 
     subgraph Pipeline
-        ORCH --> SL[Schema Linker<br/>Chroma + PG metadata]
-        SL --> SG[SQL Generator<br/>LLM]
-        SG --> CR[Critic<br/>static checks]
-        CR --> EX[Executor<br/>PostgreSQL]
+        ORCH --> SL[Schema Linker (Chroma + PG)]
+        SL --> SG[SQL Generator (LLM)]
+        SG --> CR[Critic (static checks)]
+        CR --> EX[Executor (PostgreSQL)]
         EX -->|success| R[Response]
-        EX -->|error| CO[Corrector<br/>LangGraph loop]
+        EX -->|error| CO[Corrector (retry loop)]
         CO --> SG
     end
 
