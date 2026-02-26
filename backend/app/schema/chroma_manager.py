@@ -90,26 +90,23 @@ class ChromaManager:
     def search_schema(
         self,
         query_embedding: List[float],
-        n_results: int = 10, 
-        where=None
+        n_results: int = 10,
+        where: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Search for relevant schema elements
-        
-        Args:
-            query_embedding: Embedding of user question
-            n_results: Number of results to return
-            
-        Returns:
-            Dictionary with documents, metadatas, and distances
+        Search for relevant schema elements.
         """
-        kwargs = {
+        # Ensure collection exists
+        if self.collection is None:
+            self.initialize_collection()
+
+        kwargs: Dict[str, Any] = {
             "query_embeddings": [query_embedding],
-            "n_results": n_results
+            "n_results": n_results,
         }
-        if where:
+        if where is not None:
             kwargs["where"] = where
-        
+
         return self.collection.query(**kwargs)
     
     def get_collection_stats(self) -> Dict[str, Any]:
