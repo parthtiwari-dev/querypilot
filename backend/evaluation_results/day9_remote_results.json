@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-02-26T19:33:48.767128",
+  "timestamp": "2026-02-26T20:27:33.827637",
   "api_url": "https://querypilot-backend.onrender.com",
   "summary": {
     "total": 15,
     "successful": 15,
     "success_rate": 100.0,
-    "latency_p50": 5.636,
-    "latency_p95": 18.685,
-    "latency_min": 0.652,
-    "latency_max": 18.685
+    "latency_p50": 3.7,
+    "latency_p95": 8.953,
+    "latency_min": 0.522,
+    "latency_max": 8.953
   },
   "results": [
     {
       "success": true,
-      "latency": 18.685063123703003,
+      "latency": 3.94640851020813,
       "sql": "SELECT COUNT(customer_id) AS total_customers FROM customers LIMIT 1000;",
       "result": "",
       "status": "",
@@ -24,7 +24,7 @@
     },
     {
       "success": true,
-      "latency": 3.1255719661712646,
+      "latency": 3.683412551879883,
       "sql": "SELECT name FROM products LIMIT 1000;",
       "result": "",
       "status": "",
@@ -35,7 +35,7 @@
     },
     {
       "success": true,
-      "latency": 3.054826021194458,
+      "latency": 3.6500792503356934,
       "sql": "SELECT COUNT(order_id) AS total_orders FROM orders LIMIT 1000;",
       "result": "",
       "status": "",
@@ -46,7 +46,7 @@
     },
     {
       "success": true,
-      "latency": 7.456528663635254,
+      "latency": 3.2081308364868164,
       "sql": "SELECT category_id, name, description FROM categories ORDER BY category_id LIMIT 1000;",
       "result": "",
       "status": "",
@@ -57,7 +57,7 @@
     },
     {
       "success": true,
-      "latency": 10.656544208526611,
+      "latency": 8.953466892242432,
       "sql": "SELECT COUNT(*) AS total_books FROM books LIMIT 1000;",
       "result": "",
       "status": "",
@@ -68,7 +68,7 @@
     },
     {
       "success": true,
-      "latency": 5.83559775352478,
+      "latency": 4.606348991394043,
       "sql": "SELECT SUM(amount) AS total_revenue FROM fines WHERE paid = TRUE;",
       "result": "",
       "status": "",
@@ -79,7 +79,7 @@
     },
     {
       "success": true,
-      "latency": 5.20422625541687,
+      "latency": 3.6616244316101074,
       "sql": "SELECT member_id, COUNT(loan_id) AS order_count\nFROM loans\nGROUP BY member_id\nHAVING COUNT(loan_id) > 2\nLIMIT 1000;",
       "result": "",
       "status": "",
@@ -90,7 +90,7 @@
     },
     {
       "success": true,
-      "latency": 6.616916656494141,
+      "latency": 5.215444087982178,
       "sql": "SELECT b.title, SUM(l.book_id) AS total_sold\nFROM loans l\nJOIN books b ON l.book_id = b.book_id\nGROUP BY b.title\nORDER BY total_sold DESC\nLIMIT 5;",
       "result": "",
       "status": "",
@@ -101,7 +101,7 @@
     },
     {
       "success": true,
-      "latency": 5.137803316116333,
+      "latency": 3.4661757946014404,
       "sql": "SELECT AVG(amount) AS average_order_value FROM fines;",
       "result": "",
       "status": "",
@@ -112,7 +112,7 @@
     },
     {
       "success": true,
-      "latency": 5.142488241195679,
+      "latency": 3.6999735832214355,
       "sql": "SELECT b.book_id, b.title, b.author, l.loan_date, l.return_date \nFROM books b\nJOIN loans l ON b.book_id = l.book_id\nWHERE l.status = 'checked out'\nLIMIT 1000;",
       "result": "",
       "status": "",
@@ -123,7 +123,7 @@
     },
     {
       "success": true,
-      "latency": 7.579942941665649,
+      "latency": 6.6499738693237305,
       "sql": "WITH monthly_revenue AS (\n    SELECT \n        DATE_TRUNC('month', l.loan_date) AS month,\n        SUM(f.amount) AS revenue\n    FROM \n        loans l\n    JOIN \n        fines f ON l.loan_id = f.loan_id\n    WHERE \n        f.paid = TRUE\n    GROUP BY \n        month\n)\nSELECT \n    month,\n    revenue,\n    LAG(revenue) OVER (ORDER BY month) AS previous_month_revenue,\n    revenue - LAG(revenue) OVER (ORDER BY month) AS revenue_change\nFROM \n    monthly_revenue\nORDER BY \n    month;",
       "result": "",
       "status": "",
@@ -134,7 +134,7 @@
     },
     {
       "success": true,
-      "latency": 5.636121988296509,
+      "latency": 4.836738586425781,
       "sql": "SELECT m.member_id, m.name, m.email \nFROM members m \nLEFT JOIN loans l ON m.member_id = l.member_id AND l.loan_date >= CURRENT_DATE - INTERVAL '30 days' \nWHERE l.loan_id IS NULL \nLIMIT 1000;",
       "result": "",
       "status": "",
@@ -145,8 +145,8 @@
     },
     {
       "success": true,
-      "latency": 6.875767230987549,
-      "sql": "SELECT AVG(return_date - loan_date) AS average_days_checked_out\nFROM loans\nWHERE return_date IS NOT NULL;",
+      "latency": 6.569092035293579,
+      "sql": "SELECT AVG(EXTRACT(DAY FROM (return_date - loan_date))) AS average_days_checked_out\nFROM loans\nWHERE return_date IS NOT NULL;",
       "result": "",
       "status": "",
       "id": "h3",
@@ -156,7 +156,7 @@
     },
     {
       "success": true,
-      "latency": 0.6523947715759277,
+      "latency": 0.7892379760742188,
       "sql": "",
       "result": "",
       "status": "",
@@ -167,7 +167,7 @@
     },
     {
       "success": true,
-      "latency": 0.7504947185516357,
+      "latency": 0.522430419921875,
       "sql": "",
       "result": "",
       "status": "",

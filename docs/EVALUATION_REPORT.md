@@ -5,7 +5,7 @@
 - Secondary schema: library (15 queries, generalizability test)
 - Evaluation date: 2026-02-26
 - Result file timestamp: 2026-02-25T21:34:00.029068
-- Code version (git SHA): `65af48a`
+- Code version (git SHA): `7d50980`
 
 ## Methodology
 
