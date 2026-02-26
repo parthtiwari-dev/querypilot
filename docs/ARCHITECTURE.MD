@@ -271,21 +271,21 @@ Example values:
 
 ---
 
-# High-Level Diagram
+# High-level diagram
 
 ```mermaid
 flowchart LR
     Q[Question] --> API[FastAPI /query]
-    API --> ORCH[LangGraph Orchestrator (CorrectionAgent)]
+    API --> ORCH[LangGraph Orchestrator<br/>(CorrectionAgent)]
 
     subgraph Pipeline
-        ORCH --> SL[Schema Linker - Chroma + PG metadata]
-        SL --> SG[SQL Generator - LLM]
-        SG --> CR[Critic - static checks]
-        CR --> EX[Executor - PostgreSQL]
+        ORCH --> SL[Schema Linker<br/>Chroma + PG metadata]
+        SL --> SG[SQL Generator<br/>LLM]
+        SG --> CR[Critic<br/>static checks]
+        CR --> EX[Executor<br/>PostgreSQL]
         EX -->|success| R[Response]
-        EX -->|error| CO[Corrector - LangGraph loop]
+        EX -->|error| CO[Corrector<br/>LangGraph loop]
         CO --> SG
     end
-```
+
 
