@@ -296,3 +296,120 @@ Then pass `"schema_name": "my_schema"` in `/query` requests.
 
 Neon is recommended for long-lived cloud Postgres so your demo data doesn’t expire. See `docs/DEPLOYMENT.md` for the exact connection string format and migration steps.
 
+---
+
+## Project Structure 
+```text
+querypilot/
+├── 📁 backend
+│   ├── 📁 app
+│   │   ├── 📁 agents
+│   │   │   ├── 🐍 __init__.py
+│   │   │   ├── 🐍 correction_strategies.py
+│   │   │   ├── 🐍 critic.py
+│   │   │   ├── 🐍 executor.py
+│   │   │   ├── 🐍 orchestrator.py
+│   │   │   ├── 🐍 schema_linker.py
+│   │   │   ├── 🐍 self_correction.py
+│   │   │   └── 🐍 sql_generator.py
+│   │   ├── 📁 api
+│   │   │   ├── 🐍 __init__.py
+│   │   │   ├── 🐍 models.py
+│   │   │   └── 🐍 routes.py
+│   │   ├── 📁 evaluation
+│   │   │   ├── 📁 datasets
+│   │   │   │   ├── ⚙️ adversarial_tests.json
+│   │   │   │   ├── ⚙️ core_eval.json
+│   │   │   │   ├── ⚙️ correction_tests.json
+│   │   │   │   ├── ⚙️ custom_customer.json
+│   │   │   │   ├── ⚙️ custom_product.json
+│   │   │   │   ├── ⚙️ custom_revenue.json
+│   │   │   │   ├── ⚙️ edge_cases.json
+│   │   │   │   ├── ⚙️ error_tests.json
+│   │   │   │   ├── ⚙️ library_eval.json
+│   │   │   │   ├── ⚙️ structured_easy.json
+│   │   │   │   ├── ⚙️ structured_hard.json
+│   │   │   │   └── ⚙️ structured_medium.json
+│   │   │   ├── 🐍 __init__.py
+│   │   │   └── 🐍 metrics.py
+│   │   ├── 📁 schema
+│   │   │   ├── 🐍 __init__.py
+│   │   │   ├── 🐍 chroma_manager.py
+│   │   │   ├── 🐍 embedder.py
+│   │   │   └── 🐍 extractor.py
+│   │   ├── 📁 utils
+│   │   │   └── 🐍 __init__.py
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 config.py
+│   │   ├── 🐍 main.py
+│   │   └── ⚙️ schema_profiles.json
+│   ├── 📁 evaluation_results
+│   │   ├── ⚙️ day2_baseline_results.json
+│   │   ├── ⚙️ day3_adversarial_results.json
+│   │   ├── ⚙️ day3_normal_results.json
+│   │   ├── ⚙️ day4_adversarial_results.json
+│   │   ├── ⚙️ day4_error_classification_results.json
+│   │   ├── ⚙️ day4_normal_results.json
+│   │   ├── ⚙️ day5_correction_results.json
+│   │   ├── ⚙️ day6_full_results.json
+│   │   ├── ⚙️ day7_library_results.json
+│   │   └── ⚙️ day9_remote_results.json
+│   ├── 📁 scripts
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 generate_eval_report.py
+│   │   ├── 🐍 index_schema.py
+│   │   ├── 🐍 run_day2_eval.py
+│   │   ├── 🐍 run_day3_eval.py
+│   │   ├── 🐍 run_day4_eval.py
+│   │   ├── 🐍 run_day5_eval.py
+│   │   ├── 🐍 run_full_eval.py
+│   │   ├── 🐍 run_library_eval.py
+│   │   ├── 🐍 setup_schema.py
+│   │   ├── 🐍 startup_index.py
+│   │   ├── 🐍 test_api_local.py
+│   │   ├── 🐍 test_api_remote.py
+│   │   └── 🐍 test_error_classifier.py
+│   ├── 📁 tests
+│   │   ├── 🐍 __init__.py
+│   │   └── 🐍 test_schema_retrieval.py
+│   ├── 🐳 Dockerfile
+│   ├── 📄 entrypoint.sh
+│   └── 📄 requirements.txt
+├── 📁 database
+│   ├── 📁 schemas
+│   │   ├── 📄 ecommerce.sql
+│   │   └── 📄 library.sql
+│   ├── 📄 library_seed.sql
+│   └── 📄 seed_data.sql
+├── 📁 docs
+│   ├── 📁 daily-logs
+│   │   ├── 📝 day-1.md
+│   │   ├── 📝 day-2.md
+│   │   ├── 📝 day-3.md
+│   │   ├── 📝 day-4.md
+│   │   ├── 📝 day-5.md
+│   │   ├── 📝 day-6.md
+│   │   ├── 📝 day-7.md
+│   │   ├── 📝 day-8_fast_api_layer.md
+│   │   ├── 📝 day-9_containerization_cloud_postgres_remote_evaluation.md
+│   │   └── 📝 day_10_final_fixes_evaluation_documentation_release.md
+│   ├── 📝 ARCHITECTURE.MD
+│   ├── 📝 DEPLOYMENT.md
+│   ├── 📝 EVALUATION_REPORT.md
+│   ├── 📝 day-1-overview.md
+│   ├── 📝 day2_sql_generator_baseline_report.md
+│   ├── 📝 day3_critic_design.md
+│   ├── 📝 day3_critic_evaluation_report.md
+│   ├── 📝 day4_executor_design.md
+│   ├── 📝 day4_executor_evaluation_report.md
+│   ├── 📝 day5_results.md
+│   ├── 📝 day5_self_correction_design.md
+│   ├── 📝 day6_results.md
+│   ├── 📝 day7_generalizability_report.md
+│   └── 📝 query_pilot_api.md
+├── ⚙️ .env.example
+├── ⚙️ .gitignore
+├── 📄 LICENSE
+├── 📝 README.md
+├── ⚙️ docker-compose.yml
+└── 📝 query_pilot_use_with_your_own_database.md
