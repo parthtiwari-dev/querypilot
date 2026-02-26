@@ -37,8 +37,9 @@ class SchemaEmbedder:
         logger.info("Embedding model loaded successfully")
     
     def embed_schema(
-        self, 
-        schema_metadata: Dict[str, Any]
+        self,
+        schema_metadata: Dict[str, Any],
+        pg_schema: str = "public",
     ) -> Tuple[List[str], List[List[float]], List[Dict[str, str]]]:
         """
         Generate embeddings for entire schema
@@ -62,7 +63,8 @@ class SchemaEmbedder:
             metadatas.append({
                 'type': 'table',
                 'table_name': table_name,
-                'column_count': str(table_info['column_count'])
+                'column_count': str(table_info['column_count']),
+                "schema_name": pg_schema,
             })
             
             # Create column-level embeddings
@@ -77,7 +79,8 @@ class SchemaEmbedder:
                     'type': 'column',
                     'table_name': table_name,
                     'column_name': col_name,
-                    'data_type': str(table_info['data_types'].get(col_name, 'UNKNOWN'))
+                    'data_type': str(table_info['data_types'].get(col_name, 'UNKNOWN')),
+                    "schema_name": pg_schema,
                 })
         
         # Generate embeddings in batch (faster)

@@ -59,7 +59,10 @@ class SchemaLinker:
         logger.info(f"Extracted schema for {len(schema_metadata)} tables")
         
         # Step 2: Generate embeddings
-        documents, embeddings, metadatas = self.embedder.embed_schema(schema_metadata)
+        documents, embeddings, metadatas = self.embedder.embed_schema(
+            schema_metadata,
+            pg_schema=self.pg_schema
+        )
         logger.info(f"Generated {len(embeddings)} embeddings")
         
         # Step 3: Store in Chroma DB
@@ -78,7 +81,8 @@ class SchemaLinker:
     def link_schema(
         self,
         question: str,
-        top_k: int = 7
+        top_k: int = 7, 
+        schema_name: str = None
     ) -> Dict[str, Any]:
         
         """
@@ -99,10 +103,13 @@ class SchemaLinker:
         # Step 1: Embed question
         question_embedding = self.embedder.embed_question(question)
 
+        where_filter = {"schema_name": schema_name} if schema_name else None
+
         # Step 2: Vector search
         results = self.chroma.search_schema(
             question_embedding,
-            n_results=top_k
+            n_results=top_k,
+            where=where_filter
         )
 
         # Step 3: Group by table
