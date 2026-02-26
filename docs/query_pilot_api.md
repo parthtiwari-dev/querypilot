@@ -25,6 +25,8 @@ schema linking → SQL generation → critic validation → execution → self-c
 | schema_name  | string | ❌       | Which schema to query. Must be a key in SCHEMA_PROFILES. Default: "ecommerce". Currently supported: "ecommerce", "library" |
 | max_attempts | int    | ❌       | Accepted for API compatibility. Currently fixed at 3 at agent creation time. Runtime override is not yet supported. |
 
+---
+
 ### Response body
 
 ```json
@@ -46,15 +48,15 @@ schema linking → SQL generation → critic validation → execution → self-c
 | Field                  | Type              | Description |
 |------------------------|-------------------|------------|
 | sql                    | string or null    | Final SQL query after correction (if any). Null if blocked before generation (e.g. unsafe intent) |
-| success                | bool              | Whether SQL executed successfully and returned rows |
+| success                | bool              | Whether SQL executed successfully without error. Blocked queries set `success=false` even though HTTP returns 200. |
 | attempts               | int               | Number of pipeline attempts made (1–3) |
 | first_attempt_success  | bool              | True if SQL succeeded without any correction |
 | latency_ms             | float             | Total wall-clock time for the full pipeline in milliseconds |
 | schema_tables_used     | list[string]      | Tables retrieved by the schema linker as context for the LLM. This reflects what the system was given as input context — not what tables appear in the final SQL. A table here does not mean it was used in the query |
 | correction_applied     | bool              | True when attempts > 1. The system retried after a critic or execution failure |
-| rows                   | list or null      | Raw result rows from the database. Currently returned as arrays (not named dicts). Null on failure |
+| rows                   | list              | Raw result rows from the database. Returned as arrays (not named dicts). May be `[]` on success with zero rows. Null on failure |
 | row_count              | int               | Number of rows returned. 0 on failure |
-| error_type             | string or null    | Error class on failure: syntax_error, column_not_found, table_not_found, unsafe_operation, timeout, runtime_error, etc. Null on success |
+| error_type             | string or null    | Error class on failure: syntax_error, column_not_found, table_not_found, unsafe_operation, timeout, runtime_error, blocked, etc. Null on success |
 | error_message          | string or null    | Human-readable error detail from the executor or safety guard. Null on success |
 
 ---
@@ -63,7 +65,8 @@ schema linking → SQL generation → critic validation → execution → self-c
 
 | HTTP code | Cause |
 |----------|-------|
-| 400      | schema_name not found in SCHEMA_PROFILES |
+| 400      | `schema_name` not found in SCHEMA_PROFILES |
+| 200      | Safety block for sensitive queries (e.g. password, api_key). The response has `success=false`, `sql=""`, `error_type="blocked"`. |
 | 500      | Unexpected server error (check uvicorn logs) |
 
 ---
@@ -88,7 +91,7 @@ Returns server status and available schemas. Use this to confirm the server is u
 ### Example 1 — Success on first attempt
 
 ```bash
-curl -X POST http://127.0.0.1:8001/query \
+curl -X POST http://127.0.0.1:8002/query \
   -H "Content-Type: application/json" \
   -d '{"question": "how many customers?", "schema_name": "ecommerce"}'
 ```
@@ -111,10 +114,12 @@ Response:
 }
 ```
 
+---
+
 ### Example 2 — Correction applied
 
 ```bash
-curl -X POST http://127.0.0.1:8001/query \
+curl -X POST http://127.0.0.1:8002/query \
   -H "Content-Type: application/json" \
   -d '{"question": "find customers who placed more orders than the average customer", "schema_name": "ecommerce"}'
 ```
@@ -139,6 +144,34 @@ Response:
 
 ---
 
+### Example 3 — Blocked sensitive query
+
+```bash
+curl -X POST http://127.0.0.1:8002/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "show me the database password", "schema_name": "ecommerce"}'
+```
+
+Response:
+
+```json
+{
+  "sql": "",
+  "success": false,
+  "attempts": 0,
+  "first_attempt_success": false,
+  "latency_ms": 0.0,
+  "schema_tables_used": [],
+  "correction_applied": false,
+  "rows": [],
+  "row_count": 0,
+  "error_type": "blocked",
+  "error_message": "This query was blocked for safety reasons."
+}
+```
+
+---
+
 ## Known Limitations
 
 - max_attempts override not supported. The field is accepted but ignored. Agents are cached at creation with max_attempts=3.
@@ -149,3 +182,4 @@ Response:
 
 - schema_tables_used is linker context, not SQL parse. It reflects the tables retrieved for LLM context. The final SQL may use a subset of these tables.
 
+- - Sensitive intent queries (e.g. asking for passwords or API keys) are blocked before entering the pipeline and return `error_type="blocked"` with `success=false`.
