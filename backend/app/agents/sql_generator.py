@@ -9,8 +9,13 @@ from app.config import get_llm
 
 
 # Prompt Template Version 1
-SQL_GENERATION_PROMPT_V1 = """You are a PostgreSQL SQL expert. Generate accurate SQL queries based on the provided database schema. 
+SQL_GENERATION_PROMPT_V1 = """You are a PostgreSQL SQL expert generating SQL for the '{schema_name}' database schema ONLY.
 
+STRICT RULES:
+1. You may ONLY use these tables: {available_tables}
+2. Never reference tables from any other schema.
+3. Never use tables not listed above, even if they seem relevant.
+4. Every table reference in your SQL must be one of the tables listed above.
 
 
 DATABASE SCHEMA:
@@ -146,6 +151,7 @@ class SQLGenerator:
         self,
         question: str,
         filtered_schema: Dict,
+        schema_name: str = "unknown",  
         conversation_history: Optional[list] = None
     ) -> str:
         """
@@ -173,11 +179,17 @@ class SQLGenerator:
         schema_text = format_schema_to_text(filtered_schema)
 
         # Build prompt
+        
+        
+        available_tables = ', '.join(filtered_schema.keys())
         prompt = self.prompt_template.format(
             filtered_schema=schema_text,
-            question=question.strip()
+            question=question.strip(),
+            schema_name=schema_name,
+            available_tables=available_tables
         )
 
+        
         # Generate SQL via LLM
         response = self.llm.invoke(prompt)
 

@@ -105,7 +105,7 @@ class CriticAgent:
             issues.extend(schema_result['issues'])
         
         # Layer 3: Safety Validation
-        safety_result = self._validate_safety(generated_sql)
+        safety_result = self._validate_safety(generated_sql, question)
         layer_results['safety'] = safety_result
         if not safety_result['valid']:
             confidence = 0.0  # Hard override
@@ -219,19 +219,17 @@ class CriticAgent:
         
         return {'valid': len(issues) == 0, 'issues': issues}
     
-    def _validate_safety(self, sql: str) -> Dict:
+    def _validate_safety(self, sql: str, question: str = "") -> Dict:
         """
-        Layer 3: Check for dangerous operations.
-
-        Only block when SQL actually starts with
-        destructive commands, not when keywords appear
-        inside valid syntax or CTE names.
+        Layer 3: Check for dangerous operations and sensitive data queries.
+        Checks both the incoming question AND the generated SQL.
         """
         issues = []
 
         sql_upper = sql.upper().strip()
+        question_upper = question.upper().strip()
 
-        # Only check first command
+        # Check 1: Destructive SQL commands (must start with these)
         destructive_patterns = [
             r'^DROP\s+',
             r'^DELETE\s+',
@@ -248,7 +246,20 @@ class CriticAgent:
                 cmd = pattern.replace(r'^', '').replace(r'\s+', '').strip('\\')
                 issues.append(f"Unsafe operation detected: {cmd}")
 
+        # Check 2: Sensitive keywords in question OR SQL
+        SENSITIVE_KEYWORDS = [
+            "password", "passwd", "secret", "credential", "credentials",
+            "api_key", "apikey", "token", "private_key",
+            "pg_shadow", "pg_authid", "information_schema.tables",
+        ]
+
+        for keyword in SENSITIVE_KEYWORDS:
+            if keyword in sql_upper.lower() or keyword in question_upper.lower():
+                issues.append(f"Sensitive keyword detected: '{keyword}'")
+                break  # One match is enough to block
+
         return {'valid': len(issues) == 0, 'issues': issues}
+
 
     
     def _validate_semantics(self, sql: str) -> Dict:

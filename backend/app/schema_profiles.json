@@ -1,0 +1,10 @@
+{
+  "ecommerce": {
+    "pg_schema": "public",
+    "collection_name": "querypilot_schema"
+  },
+  "library": {
+    "pg_schema": "library",
+    "collection_name": "library_schema"
+  }
+}

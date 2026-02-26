@@ -16,6 +16,28 @@ def query(request: QueryRequest):
                 f"Available: {list(SCHEMA_PROFILES.keys())}"
             ),
         )
+    
+        # Block sensitive queries before they enter the pipeline
+    SENSITIVE_KEYWORDS = [
+        "password", "passwd", "secret", "credential", "credentials",
+        "api_key", "apikey", "token", "private_key",
+        "pg_shadow", "pg_authid", "information_schema.tables",
+    ]
+    question_lower = request.question.lower()
+    if any(kw in question_lower for kw in SENSITIVE_KEYWORDS):
+        return {
+            "sql": "",
+            "success": False,
+            "attempts": 0,
+            "first_attempt_success": False,
+            "latency_ms": 0.0,
+            "schema_tables_used": [],
+            "correction_applied": False,
+            "rows": [],
+            "row_count": 0,
+            "error_type": "blocked",
+            "error_message": "This query was blocked for safety reasons.",
+        }
 
     # Orchestrator already returns the exact shape QueryResponse expects.
     result = run_query(

@@ -265,8 +265,10 @@ def generate_sql_node(state: SQLCorrectionState) -> SQLCorrectionState:
         logger.info("[Generate] First attempt - generating SQL...")
         sql = _sql_generator.generate(
             question=state["question"],
-            filtered_schema=state["filtered_schema"]
+            filtered_schema=state["filtered_schema"],
+            schema_name=state.get("schema_name", "unknown")
         )
+
     
     # ---------- ATTEMPT 2 ----------
     elif attempt == 2:

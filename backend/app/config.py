@@ -62,18 +62,15 @@ settings = Settings()
 # Maps schema_name → db_url, pg_schema, collection_name.
 # Add new schemas here only — no changes to agent code needed.
 # ─────────────────────────────────────────────────────────────
-SCHEMA_PROFILES = {
-    "ecommerce": {
-        "db_url":          settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://"),
-        "pg_schema":       "public",
-        "collection_name": "querypilot_schema",
-    },
-    "library": {
-        "db_url":          settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://"),
-        "pg_schema":       "library",
-        "collection_name": "library_schema",
-    },
-}
+import json
+
+_profiles_path = Path(__file__).parent / "schema_profiles.json"
+SCHEMA_PROFILES = json.loads(_profiles_path.read_text())
+
+# Inject db_url at runtime — not stored in JSON
+for _name, _profile in SCHEMA_PROFILES.items():
+    _profile["db_url"] = settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://")
+
 DEFAULT_SCHEMA = "ecommerce"
 
 
