@@ -246,6 +246,20 @@ For adversarial queries, "Success" means the system either blocked the query or 
 
 ---
 
+## Known Limitations
+
+**Evaluation measures execution success, not semantic correctness.** A query is marked successful if it ran without error and returned a result set. Whether the result actually answers the business question is not validated — that would require ground-truth expected outputs per query.
+
+**Single-threaded only.** The LangGraph correction loop stores agent references in module-level globals. Concurrent requests targeting different schemas can overwrite each other mid-execution. Do not run with `--workers > 1` until this is redesigned.
+
+**`max_attempts` runtime override is ignored.** The API accepts a `max_attempts` parameter for compatibility but the value is fixed at 3 at agent initialisation time. Passing a different value has no effect.
+
+**No frontend.** QueryPilot is a backend API only. All interaction is via HTTP — there is no query UI, result visualisation, or chat interface.
+
+**Adversarial detection is keyword-based.** Sensitive query blocking (passwords, credentials, etc.) and unsafe intent detection use static keyword lists. Cleverly phrased adversarial queries that avoid those keywords will not be caught.
+
+---
+
 ## Documentation
 
 Everything you need to understand and run QueryPilot is under `docs/`.
