@@ -321,7 +321,7 @@ flowchart TD
     ORCH --> SL["Schema Linker\nChroma vector search"]
     SL -->|filtered schema| SG
 
-    subgraph CorrectionLoop ["LangGraph Self-Correction Loop (max 3 attempts)"]
+    subgraph CorrectionLoop ["LangGraph Self-Correction Loop -max 3 attempts"]
         direction TB
         SG["SQL Generator\nLLM call"]
         CR["Critic\nstatic validation"]
