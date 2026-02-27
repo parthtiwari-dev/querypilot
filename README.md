@@ -29,7 +29,7 @@ The whole flow is orchestrated with LangGraph as a small state machine:
 
 Maximum of 3 attempts before marking a query as failed.
 
-Full pipeline details: `docs/ARCHITECTURE.md`.
+Full pipeline details: `docs/ARCHITECTURE.MD`.
 
 ---
 
@@ -72,7 +72,7 @@ CHROMA_PORT=8000
 
 ### 2. Register your schema (one command)
 
-Use the helper script so you don’t have to edit Python files:
+Use the helper script so you don't have to edit Python files:
 
 ```bash
 cd backend
@@ -84,10 +84,10 @@ python scripts/setup_schema.py \
 This script will:
 
 - Connect to `DATABASE_URL` and confirm that `public` has at least one table.
-- Add an entry for `my_schema` to `backend/app/schema_profiles.json` (if it doesn’t already exist).
+- Add an entry for `my_schema` to `backend/app/schema_profiles.json` (if it doesn't already exist).
 - Run `scripts/index_schema.py` to build embeddings and create a dedicated Chroma collection.
 
-You’ll see output like:
+You'll see output like:
 
 ```text
 === QueryPilot Schema Setup ===
@@ -101,9 +101,9 @@ Added 'my_schema' to schema_profiles.json
 ✅ Done.
 ```
 
-If the schema is already registered, it will print a clear “already registered, skipping JSON update” message and go straight to re-indexing.
+If the schema is already registered, it will print a clear "already registered, skipping JSON update" message and go straight to re-indexing.
 
-Full “your own DB” guide: `docs/GETTING_STARTED.md`.
+Full "your own DB" guide: `query_pilot_use_with_your_own_database.md`.
 
 ---
 
@@ -169,7 +169,7 @@ Example response shape:
 }
 ```
 
-More examples and field definitions: `docs/API.md`.
+More examples and field definitions: `docs/query_pilot_api.md`.
 
 ---
 
@@ -215,7 +215,7 @@ These metrics measure execution success only: the SQL ran without error against 
 | **Core Total**  | 70    | 67      | 95.7%  |
 | Adversarial     | 12    | 9       | 75.0%  |
 
-For adversarial queries, “Success” means the system either blocked the query or avoided hallucinating non-existent tables according to the adversarial success definition in docs/EVALUATION_REPORT.md.
+For adversarial queries, "Success" means the system either blocked the query or avoided hallucinating non-existent tables according to the adversarial success definition in docs/EVALUATION_REPORT.md.
 
 **First-attempt success rate:** 63/70 = 90.0%  
 **Final success rate (with self-correction):** 67/70 = 95.7%  
@@ -252,9 +252,9 @@ Everything you need to understand and run QueryPilot is under `docs/`.
 
 | Document | What it covers |
 |----------|---------------|
-| docs/GETTING_STARTED.md | Use QueryPilot with your own DB in ~10 minutes |
-| docs/ARCHITECTURE.md | Agent design, LangGraph state machine, schema profiles |
-| docs/API.md | HTTP endpoints, request/response models, examples |
+| query_pilot_use_with_your_own_database.md | Use QueryPilot with your own DB in ~10 minutes |
+| docs/ARCHITECTURE.MD | Agent design, LangGraph state machine, schema profiles |
+| docs/query_pilot_api.md | HTTP endpoints, request/response models, examples |
 | docs/EVALUATION_REPORT.md | Full evaluation metrics and methodology |
 | docs/DEPLOYMENT.md | Local Docker and cloud (Render / Neon) deployment |
 | docs/daily-logs/ | Day-by-day build log and decisions |
@@ -288,13 +288,13 @@ Then pass `"schema_name": "my_schema"` in `/query` requests.
 |------------|------------|
 | API | FastAPI |
 | Orchestration | LangGraph |
-| LLM | Groq llama-3.3-70b or OpenAI gpt-4o-mini |
+| LLM | Groq llama-3.1-70b-versatile or OpenAI gpt-4o-mini |
 | Embeddings | sentence-transformers/all-MiniLM-L6-v2 |
 | Vector DB | ChromaDB (file-based persistence) |
 | SQL DB | PostgreSQL 16 (local Docker / Neon in the cloud) |
 | Deployment | Docker + docker-compose · Render for public demo |
 
-Neon is recommended for long-lived cloud Postgres so your demo data doesn’t expire. See `docs/DEPLOYMENT.md` for the exact connection string format and migration steps.
+Neon is recommended for long-lived cloud Postgres so your demo data doesn't expire. See `docs/DEPLOYMENT.md` for the exact connection string format and migration steps.
 
 ---
 
@@ -413,3 +413,4 @@ querypilot/
 ├── 📝 README.md
 ├── ⚙️ docker-compose.yml
 └── 📝 query_pilot_use_with_your_own_database.md
+```

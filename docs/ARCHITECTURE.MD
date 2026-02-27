@@ -139,28 +139,30 @@ Safely executes SQL against PostgreSQL and abstracts connection pooling and erro
   SCHEMA_LINK → SQL_GENERATION → CRITIC_VALIDATION → EXECUTION → [SUCCESS | CORRECTION]
   ```
 
-- On error, builds correction prompt containing:
-  - Failed SQL
-  - Error type
-  - Database error message
-  - Original question
-- Calls:
+- Uses a **3-attempt strategy** — each attempt has a different correction approach:
+  - **Attempt 1**: Fresh SQL generation from the original question.
+  - **Attempt 2**: `auto_fix_columns()` — regex + fuzzy-match repair of invalid column references against the filtered schema. No LLM call, fast and cheap.
+  - **Attempt 3**: Full LLM correction via `SQLGenerator.generate_with_correction()`, with a correction prompt built from either Critic issues or Executor error feedback.
 
-  ```python
-  SQLGenerator.generate_with_correction(...)
-  ```
+- Correction prompt (Attempt 3) contains:
+  - Failed SQL
+  - Error type and database error message
+  - Original question
+  - Strategy-specific guidance via `CorrectionStrategyRouter` (`backend/app/agents/correction_strategies.py`)
 
 - Tracks:
   - `attempts`
   - `schema_tables_used`
-  - Correction flag
+  - `correction_applied` flag
   - Final `error_type` / `error_message`
-- Stops after 3 attempts.
-- Returns `MAX_RETRIES_EXCEEDED` if still failing.
+
+- Stops after 3 attempts. If still failing, final state has `final_success=False`.
+- Includes a **retry guard**: if the generated SQL is identical to the previous attempt (after normalisation), the loop exits early to avoid infinite repetition.
+- Non-retryable errors (`permission_denied`, `connection_error`, `unsafe_operation`) exit immediately.
 
 ### Why
 
-Enables self-healing SQL generation and surfaces clear telemetry for evaluation.
+Enables self-healing SQL generation. The two-stage correction (cheap regex first, LLM second) minimises token usage while recovering most common column-name errors on attempt 2 before spending an LLM call on attempt 3.
 
 ---
 
@@ -180,14 +182,14 @@ SCHEMA_LINKING → SQL_GENERATION → CRITIC_VALIDATION → EXECUTION → [SUCCE
 
 ### SCHEMA_LINKING
 
-- Calls `SchemaLinker.link_schema(question, schema_name=...)`
+- Calls `SchemaLinker.link_schema(question)` (the linker is built per-schema, so no schema_name arg is needed at call time)
 - Stores:
   - `schema_dict`
   - `schema_tables_used`
 
 ### SQL_GENERATION
 
-- Calls `SQLGenerator.generate_sql(question, filtered_schema, schema_name=...)`
+- Calls `SQLGenerator.generate(question, filtered_schema, schema_name)`
 
 ### CRITIC_VALIDATION
 
@@ -203,11 +205,49 @@ SCHEMA_LINKING → SQL_GENERATION → CRITIC_VALIDATION → EXECUTION → [SUCCE
 
 ### CORRECTION
 
-- If failure and `attempts < 3`
-  - Builds correction prompt
-  - Loops back to `SQL_GENERATION`
-- If `attempts == 3`
-  - Emits final failure with `MAX_RETRIES_EXCEEDED`
+- If failure and `attempts < 3`, loops back to `SQL_GENERATION` with attempt-specific strategy:
+  - Attempt 2 → `auto_fix_columns()` column repair (no LLM)
+  - Attempt 3 → LLM correction via `CorrectionStrategyRouter`
+- If `attempts == 3` or error is non-retryable, ends with `final_success=False`
+- Retry guard: exits early if generated SQL is unchanged from previous attempt
+
+---
+
+# Correction Strategies
+
+**File**: `backend/app/agents/correction_strategies.py`
+
+`CorrectionStrategyRouter` selects the right repair prompt based on the Executor's classified error type:
+
+| Error type | Strategy |
+|------------|----------|
+| `column_error` | Lists valid columns for the referenced table |
+| `aggregation_error` | Reminds generator of GROUP BY rules |
+| `timeout_error` | Asks for a more selective query (add WHERE / tighten LIMIT) |
+| `generic` / unknown | General "fix the SQL" prompt with full error message |
+
+Critic-blocked queries (never reached the Executor) use `build_critic_correction_prompt()`, which passes the Critic's issue list directly into the correction prompt.
+
+---
+
+# Orchestrator & Agent Caching
+
+**File**: `backend/app/agents/orchestrator.py`
+
+`run_query()` is the single public entrypoint for the pipeline, used by API routes, evaluation scripts, and CLI tools.
+
+## Agent Caching
+
+Agents are expensive to initialise:
+- `SchemaLinker` loads the `all-MiniLM-L6-v2` model (~400 ms on cold start).
+- `CorrectionAgent` compiles a LangGraph graph.
+- `ExecutorAgent` creates a SQLAlchemy connection pool.
+
+The orchestrator caches a fully-built `CorrectionAgent` per schema name in `_agent_cache`. On first request for a schema the cache is populated; all subsequent requests reuse the same instance.
+
+## Known Threading Limitation
+
+`create_self_correction_graph()` writes the four sub-agents to **module-level globals** in `self_correction.py`. Concurrent requests that target **different schemas** may overwrite each other's globals mid-execution. The system is safe for a single-threaded uvicorn dev server but **must not be run with `--workers > 1`** until the graph internals are redesigned to use closures or instance-level state.
 
 ---
 
@@ -248,7 +288,7 @@ Example values:
 2. Run:
 
    ```bash
-   docker-compose exec backend python scripts/setup_schema.py --schema-name <name> --pg-schema <pg_schema>
+   docker-compose exec backend python scripts/setup_schema.py --schema-name <n> --pg-schema <pg_schema>
    ```
 
 3. Redeploy.
@@ -271,19 +311,33 @@ Example values:
 
 ---
 
-# High-level diagram
+# High-level Diagram
 
 ```mermaid
-flowchart LR
-    Q[Question] --> API[FastAPI query]
-    API --> ORCH[LangGraph Orchestrator]
+flowchart TD
+    Q([Natural Language Question]) --> API["POST /query\nFastAPI"]
+    API --> ORCH["Orchestrator\norchestrator.py"]
 
-    subgraph Pipeline
-        ORCH --> SL[Schema Linker]
-        SL --> SG[SQL Generator]
-        SG --> CR[Critic]
-        CR --> EX[Executor]
-        EX -->|success| R[Response]
-        EX -->|error| CO[Corrector]
-        CO --> SG
+    ORCH --> SL["Schema Linker\nChroma vector search"]
+    SL -->|filtered schema| SG
+
+    subgraph CorrectionLoop ["LangGraph Self-Correction Loop (max 3 attempts)"]
+        direction TB
+        SG["SQL Generator\nLLM call"]
+        CR["Critic\nstatic validation"]
+        EX["Executor\nPostgreSQL"]
+        A2["Attempt 2\nauto_fix_columns"]
+        A3["Attempt 3\nLLM correction"]
+
+        SG --> CR
+        CR -->|valid| EX
+        CR -->|invalid| A3
+        EX -->|success| DONE([Response])
+        EX -->|column error| A2
+        EX -->|other error| A3
+        A2 --> CR
+        A3 --> CR
     end
+
+    DONE --> RESP["Return SQL + rows\n+ attempt metadata"]
+```
