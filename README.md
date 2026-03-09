@@ -1,6 +1,7 @@
 # QueryPilot
 
 QueryPilot explores a simple question: how can LLM based systems reliably convert natural language into executable database queries while remaining safe, transparent, and self correcting.
+
 QueryPilot lets analysts and engineers query PostgreSQL in natural language, while still seeing the exact SQL that was executed and how many correction attempts it needed.
 
 Multi-agent Text-to-SQL system.  
